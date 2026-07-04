@@ -17,6 +17,7 @@ def _to_response(p: Professional) -> ProfessionalResponse:
         council=p.council,
         email=p.email,
         phone=p.phone,
+        cpf=p.cpf or "",
         avatar_color=p.avatar_color,
     )
 

@@ -10,6 +10,7 @@ class ProfessionalResponse(CamelModel):
     council: str
     email: EmailStr
     phone: str
+    cpf: str = ""
     avatar_color: str
 
 

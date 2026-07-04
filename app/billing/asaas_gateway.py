@@ -1,0 +1,448 @@
+"""Asaas payment gateway — recurring subscriptions with hosted first invoice."""
+
+from __future__ import annotations
+
+import asyncio
+import re
+from datetime import date, timedelta
+from typing import Any
+from urllib.parse import urlencode
+
+from app.billing.errors import PaymentGatewayConfigError, PaymentGatewayError
+from app.billing.http_client import request_json
+from app.core.config import get_settings
+
+_ASAAS_CYCLE_MAP = {
+    "monthly": "MONTHLY",
+    "yearly": "YEARLY",
+    "weekly": "WEEKLY",
+    "quarterly": "QUARTERLY",
+    "semiannually": "SEMIANNUALLY",
+}
+
+_PAYMENT_PENDING_STATUSES = frozenset({"PENDING", "OVERDUE", "AWAITING_RISK_ANALYSIS"})
+_PAYMENT_SUCCESS_STATUSES = frozenset({"RECEIVED", "CONFIRMED", "RECEIVED_IN_CASH"})
+
+
+class AsaasPaymentGateway:
+    provider_key = "asaas"
+
+    def __init__(self) -> None:
+        settings = get_settings()
+        if not settings.asaas_api_key:
+            raise PaymentGatewayConfigError(
+                "ASAAS_API_KEY não configurada. Defina a chave de API do Asaas."
+            )
+        self._api_key = settings.asaas_api_key
+        self._base_url = settings.asaas_api_base_url.rstrip("/")
+
+    def _headers(self) -> dict[str, str]:
+        return {
+            "access_token": self._api_key,
+            "Content-Type": "application/json",
+            "User-Agent": "korus-one-api",
+        }
+
+    @staticmethod
+    def _next_due_date() -> str:
+        return (date.today() + timedelta(days=1)).isoformat()
+
+    @staticmethod
+    def _cycle_from_interval(interval: str | None) -> str:
+        key = (interval or "monthly").lower().strip()
+        return _ASAAS_CYCLE_MAP.get(key, "MONTHLY")
+
+    @staticmethod
+    def _digits_only(value: Any) -> str:
+        return re.sub(r"\D", "", str(value or ""))
+
+    @staticmethod
+    def _payment_checkout_url(payment: dict[str, Any]) -> str:
+        for key in ("invoiceUrl", "bankSlipUrl", "transactionReceiptUrl"):
+            value = payment.get(key)
+            if value:
+                return str(value)
+        raise PaymentGatewayError(
+            "Asaas não retornou URL de pagamento da primeira cobrança da assinatura"
+        )
+
+    @staticmethod
+    def _pick_payment(payments: list[dict[str, Any]]) -> dict[str, Any] | None:
+        for payment in payments:
+            if str(payment.get("status", "")).upper() in _PAYMENT_PENDING_STATUSES:
+                return payment
+        return None
+
+    @staticmethod
+    def _matches_external_reference(
+        payment: dict[str, Any], *, account_id: str, plan_slug: str
+    ) -> bool:
+        return payment.get("externalReference") == f"{account_id}:{plan_slug}"
+
+    async def create_customer(
+        self, *, account_id: str, email: str, name: str, metadata: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        document = self._digits_only((metadata or {}).get("customer_document"))
+        payload = {
+            "name": name or email,
+            "email": email,
+            "externalReference": account_id,
+        }
+        if document:
+            payload["cpfCnpj"] = document
+        data = await request_json(
+            "POST",
+            f"{self._base_url}/customers",
+            headers=self._headers(),
+            json_body=payload,
+        )
+        customer_id = data.get("id")
+        if not customer_id:
+            raise PaymentGatewayError("Asaas não retornou id do cliente")
+        return {"external_customer_id": str(customer_id)}
+
+    async def update_customer_document(self, *, customer_id: str, document: str) -> None:
+        document_digits = self._digits_only(document)
+        if not document_digits:
+            return
+        await request_json(
+            "POST",
+            f"{self._base_url}/customers/{customer_id}",
+            headers=self._headers(),
+            json_body={"cpfCnpj": document_digits},
+        )
+
+    async def list_subscription_payments(self, subscription_id: str) -> list[dict[str, Any]]:
+        data = await request_json(
+            "GET",
+            f"{self._base_url}/subscriptions/{subscription_id}/payments",
+            headers=self._headers(),
+        )
+        if isinstance(data.get("data"), list):
+            return [p for p in data["data"] if isinstance(p, dict)]
+        if isinstance(data, list):
+            return [p for p in data if isinstance(p, dict)]
+        return []
+
+    async def get_payment(self, payment_id: str) -> dict[str, Any]:
+        data = await request_json(
+            "GET",
+            f"{self._base_url}/payments/{payment_id}",
+            headers=self._headers(),
+        )
+        if not isinstance(data, dict) or not data.get("id"):
+            raise PaymentGatewayError("Asaas não retornou a cobrança solicitada")
+        return data
+
+    async def _get_reusable_checkout_payment(
+        self,
+        *,
+        payment_id: str | None,
+        account_id: str,
+        plan_slug: str,
+    ) -> dict[str, Any] | None:
+        if not payment_id:
+            return None
+        payment = await self.get_payment(str(payment_id))
+        if not self._matches_external_reference(payment, account_id=account_id, plan_slug=plan_slug):
+            return None
+        status = str(payment.get("status", "")).upper()
+        if status in _PAYMENT_PENDING_STATUSES or status in _PAYMENT_SUCCESS_STATUSES:
+            return payment
+        return None
+
+    async def _get_first_payment(self, subscription_id: str, *, retries: int = 3) -> dict[str, Any]:
+        for attempt in range(retries):
+            payments = await self.list_subscription_payments(subscription_id)
+            payment = self._pick_payment(payments)
+            if payment:
+                return payment
+            if attempt < retries - 1:
+                await asyncio.sleep(0.4)
+        raise PaymentGatewayError(
+            "Asaas ainda não gerou a primeira cobrança da assinatura. Tente novamente."
+        )
+
+    async def _create_subscription(
+        self,
+        *,
+        customer_id: str,
+        account_id: str,
+        plan_slug: str,
+        price_cents: int,
+        plan_name: str,
+        billing_interval: str | None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "customer": customer_id,
+            "billingType": "UNDEFINED",
+            "value": round(price_cents / 100, 2),
+            "nextDueDate": self._next_due_date(),
+            "cycle": self._cycle_from_interval(billing_interval),
+            "description": f"Assinatura {plan_name} — FonoFlow",
+            "externalReference": f"{account_id}:{plan_slug}",
+        }
+        data = await request_json(
+            "POST",
+            f"{self._base_url}/subscriptions",
+            headers=self._headers(),
+            json_body=payload,
+        )
+        sub_id = data.get("id")
+        if not sub_id:
+            raise PaymentGatewayError("Asaas não retornou id da assinatura")
+        return data
+
+    async def create_checkout_session(
+        self,
+        *,
+        account_id: str,
+        plan_slug: str,
+        success_url: str,
+        cancel_url: str,
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        meta = metadata or {}
+        price_cents = int(meta.get("price_cents") or 0)
+        if price_cents <= 0:
+            raise PaymentGatewayError("Valor do plano inválido para checkout Asaas")
+
+        plan_name = str(meta.get("plan_name") or plan_slug)
+        billing_interval = meta.get("billing_interval")
+
+        customer_id = meta.get("customer_external_id")
+        customer_document = self._digits_only(meta.get("customer_document"))
+        if not customer_id:
+            customer = await self.create_customer(
+                account_id=account_id,
+                email=str(meta.get("customer_email") or ""),
+                name=str(meta.get("customer_name") or meta.get("customer_email") or "Cliente"),
+                metadata=meta,
+            )
+            customer_id = customer["external_customer_id"]
+        elif customer_document:
+            await self.update_customer_document(customer_id=str(customer_id), document=customer_document)
+
+        existing_sub_id = meta.get("existing_external_subscription_id")
+        if existing_sub_id:
+            try:
+                await request_json(
+                    "POST",
+                    f"{self._base_url}/subscriptions/{existing_sub_id}",
+                    headers=self._headers(),
+                    json_body={
+                        "value": round(price_cents / 100, 2),
+                        "description": f"Assinatura {plan_name} — FonoFlow",
+                        "externalReference": f"{account_id}:{plan_slug}",
+                        "updatePendingPayments": True,
+                    },
+                )
+            except PaymentGatewayError as exc:
+                if exc.status_code != 404:
+                    raise
+                existing_sub_id = None
+
+        if existing_sub_id:
+            subscription_id = str(existing_sub_id)
+            payment = await self._get_reusable_checkout_payment(
+                payment_id=meta.get("existing_external_checkout_id"),
+                account_id=account_id,
+                plan_slug=plan_slug,
+            )
+            if payment and str(payment.get("status", "")).upper() in _PAYMENT_SUCCESS_STATUSES:
+                payment_id = str(payment.get("id") or subscription_id)
+                return {
+                    "external_subscription_id": subscription_id,
+                    "external_checkout_id": payment_id,
+                    "session_id": payment_id,
+                    "checkout_url": success_url,
+                    "status": "completed",
+                    "external_customer_id": str(customer_id),
+                }
+            payments = await self.list_subscription_payments(subscription_id)
+            payment = payment or self._pick_payment(payments)
+            if not payment:
+                raise PaymentGatewayError("Nenhuma cobrança pendente encontrada para esta assinatura.")
+        else:
+            created = await self._create_subscription(
+                customer_id=str(customer_id),
+                account_id=account_id,
+                plan_slug=plan_slug,
+                price_cents=price_cents,
+                plan_name=plan_name,
+                billing_interval=str(billing_interval) if billing_interval else None,
+            )
+            subscription_id = str(created["id"])
+            payment = await self._get_first_payment(subscription_id)
+
+        from app.billing.checkout_urls import build_in_app_payment_url
+
+        payment_id = str(payment.get("id") or subscription_id)
+
+        return {
+            "external_subscription_id": subscription_id,
+            "external_checkout_id": payment_id,
+            "session_id": payment_id,
+            "checkout_url": build_in_app_payment_url(payment_id),
+            "status": "pending",
+            "external_customer_id": str(customer_id),
+        }
+
+    async def ensure_pix_billing(self, payment_id: str) -> dict[str, Any]:
+        payment = await self.get_payment(payment_id)
+        billing_type = str(payment.get("billingType", "")).upper()
+        if billing_type != "PIX":
+            payment = await request_json(
+                "POST",
+                f"{self._base_url}/payments/{payment_id}",
+                headers=self._headers(),
+                json_body={"billingType": "PIX"},
+            )
+        return payment
+
+    async def get_pix_qr_code(self, payment_id: str) -> dict[str, Any]:
+        await self.ensure_pix_billing(payment_id)
+        last: dict[str, Any] = {}
+        for attempt in range(4):
+            data = await request_json(
+                "GET",
+                f"{self._base_url}/payments/{payment_id}/pixQrCode",
+                headers=self._headers(),
+            )
+            last = data
+            encoded = data.get("encodedImage") or data.get("encoded_image")
+            payload = data.get("payload")
+            if encoded and payload:
+                break
+            if attempt < 3:
+                await asyncio.sleep(0.6)
+        return {
+            "encoded_image": last.get("encodedImage") or last.get("encoded_image"),
+            "payload": last.get("payload"),
+            "expiration_date": last.get("expirationDate") or last.get("expiration_date"),
+        }
+
+    async def pay_with_credit_card(
+        self,
+        *,
+        payment_id: str,
+        holder_name: str,
+        number: str,
+        expiry_month: str,
+        expiry_year: str,
+        ccv: str,
+        holder_info: dict[str, Any],
+    ) -> dict[str, Any]:
+        return await request_json(
+            "POST",
+            f"{self._base_url}/payments/{payment_id}/payWithCreditCard",
+            headers=self._headers(),
+            json_body={
+                "creditCard": {
+                    "holderName": holder_name,
+                    "number": number,
+                    "expiryMonth": expiry_month,
+                    "expiryYear": expiry_year,
+                    "ccv": ccv,
+                },
+                "creditCardHolderInfo": holder_info,
+            },
+        )
+
+    async def create_subscription(
+        self,
+        *,
+        account_id: str,
+        plan_slug: str,
+        customer_external_id: str,
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        meta = metadata or {}
+        price_cents = int(meta.get("price_cents") or 0)
+        if price_cents <= 0:
+            raise PaymentGatewayError("Valor do plano inválido")
+
+        created = await self._create_subscription(
+            customer_id=customer_external_id,
+            account_id=account_id,
+            plan_slug=plan_slug,
+            price_cents=price_cents,
+            plan_name=str(meta.get("plan_name") or plan_slug),
+            billing_interval=meta.get("billing_interval"),
+        )
+        return {
+            "external_subscription_id": str(created["id"]),
+            "status": str(created.get("status", "ACTIVE")).lower(),
+        }
+
+    async def create_single_payment(
+        self,
+        *,
+        customer_id: str,
+        value_cents: int,
+        description: str,
+        external_reference: str,
+    ) -> dict[str, Any]:
+        payload = {
+            "customer": customer_id,
+            "billingType": "UNDEFINED",
+            "value": round(value_cents / 100, 2),
+            "dueDate": date.today().isoformat(),
+            "description": description,
+            "externalReference": external_reference,
+        }
+        data = await request_json(
+            "POST",
+            f"{self._base_url}/payments",
+            headers=self._headers(),
+            json_body=payload,
+        )
+        payment_id = data.get("id")
+        if not payment_id:
+            raise PaymentGatewayError("Asaas não retornou id da cobrança avulsa")
+        return {"payment_id": str(payment_id), "id": str(payment_id)}
+
+    async def update_subscription_plan(
+        self,
+        *,
+        subscription_id: str,
+        value_cents: int,
+        cycle: str,
+        plan_slug: str,
+        account_id: str,
+        next_due_date: str | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "value": round(value_cents / 100, 2),
+            "cycle": cycle,
+            "externalReference": f"{account_id}:{plan_slug}",
+            "updatePendingPayments": False,
+        }
+        if next_due_date:
+            payload["nextDueDate"] = next_due_date
+        return await request_json(
+            "POST",
+            f"{self._base_url}/subscriptions/{subscription_id}",
+            headers=self._headers(),
+            json_body=payload,
+        )
+
+    async def cancel_subscription(self, *, external_subscription_id: str) -> dict[str, Any]:
+        data = await request_json(
+            "DELETE",
+            f"{self._base_url}/subscriptions/{external_subscription_id}",
+            headers=self._headers(),
+        )
+        return {"status": data.get("status", "canceled")}
+
+    async def get_subscription_status(self, *, external_subscription_id: str) -> dict[str, Any]:
+        data = await request_json(
+            "GET",
+            f"{self._base_url}/subscriptions/{external_subscription_id}",
+            headers=self._headers(),
+        )
+        return {
+            "status": str(data.get("status", "unknown")).lower(),
+            "external_subscription_id": external_subscription_id,
+            "external_reference": data.get("externalReference"),
+        }

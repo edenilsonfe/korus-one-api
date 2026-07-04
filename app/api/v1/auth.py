@@ -1,9 +1,12 @@
+from datetime import UTC, datetime, timedelta
+
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
 from app.core.security import (
     create_access_token,
     create_refresh_token,
@@ -23,6 +26,9 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
     existing = await db.execute(select(Professional).where(Professional.email == body.email))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="E-mail já cadastrado")
+    settings = get_settings()
+    now = datetime.now(UTC)
+    trial_days = settings.trial_days
     professional = Professional(
         email=body.email,
         password_hash=hash_password(body.password),
@@ -30,6 +36,10 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
         specialty=body.specialty,
         council=body.council,
         phone=body.phone,
+        cpf=body.cpf,
+        subscription_status="trialing",
+        trial_started_at=now,
+        trial_ends_at=now + timedelta(days=trial_days),
     )
     db.add(professional)
     await db.flush()

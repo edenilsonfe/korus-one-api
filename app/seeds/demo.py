@@ -39,6 +39,7 @@ async def seed_demo(session) -> None:
         council="CRFa 2-12345",
         phone="(11) 98888-1010",
         avatar_color="oklch(0.58 0.12 205)",
+        subscription_status="active",
     )
     session.add(professional)
     await session.flush()
@@ -106,7 +107,10 @@ async def seed_demo(session) -> None:
 
 async def run_seed() -> None:
     async with AsyncSessionLocal() as session:
+        from app.services.plan_catalog_seed import seed_plan_catalog
+
         await seed_protocols(session)
+        await seed_plan_catalog(session)
         await seed_demo(session)
         await session.commit()
     await engine.dispose()

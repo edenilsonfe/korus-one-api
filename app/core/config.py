@@ -49,6 +49,30 @@ class Settings(BaseSettings):
     whatsapp_reminder_tolerance_minutes: int = 15
     whatsapp_billing_reminder_days_before: int = 3
 
+    billing_provider: str = "stub"
+    asaas_api_key: str = ""
+    asaas_api_base_url: str = "https://sandbox.asaas.com/api/v3"
+    asaas_webhook_token: str = ""
+    frontend_url: str = "http://localhost:5173"
+    trial_days: int = 7
+
+    @property
+    def effective_billing_provider(self) -> str:
+        provider = self.billing_provider.lower().strip() or "stub"
+        asaas_key = self.asaas_api_key.strip()
+        if provider == "asaas":
+            if not asaas_key:
+                return "stub"
+            # Chaves reais Asaas começam com $aact_; placeholders em dev usam stub.
+            if self.debug and not asaas_key.startswith("$aact_"):
+                return "stub"
+            return "asaas"
+        return provider
+
+    @property
+    def billing_frontend_base_url(self) -> str:
+        return (self.frontend_url or "").rstrip("/") or self.cors_origin_list[0]
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
