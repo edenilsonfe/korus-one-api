@@ -1,0 +1,93 @@
+import hashlib
+import json
+from uuid import UUID
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.config import get_settings
+from app.core.utils import utcnow
+from app.models.ai import AIJob
+from app.models.patient import Patient
+from app.models.professional import Professional
+from app.services.patient import get_patient_aggregates
+
+
+def hash_input(data: dict) -> str:
+    return hashlib.sha256(json.dumps(data, sort_keys=True, default=str).encode()).hexdigest()
+
+
+async def create_ai_job(
+    db: AsyncSession,
+    *,
+    professional_id: UUID,
+    patient_id: UUID | None,
+    job_type: str,
+    input_data: dict,
+) -> AIJob:
+    job = AIJob(
+        professional_id=professional_id,
+        patient_id=patient_id,
+        job_type=job_type,
+        status="pending",
+        input_hash=hash_input(input_data),
+        input_data=json.dumps(input_data, default=str),
+    )
+    db.add(job)
+    await db.flush()
+    return job
+
+
+async def get_job(db: AsyncSession, job_id: UUID, professional_id: UUID) -> AIJob | None:
+    result = await db.execute(
+        select(AIJob).where(AIJob.id == job_id, AIJob.professional_id == professional_id)
+    )
+    return result.scalar_one_or_none()
+
+
+async def build_patient_context(db: AsyncSession, patient_id: UUID) -> str:
+    from app.models.evolution import Evolution
+    from app.models.goal import Goal
+    from app.models.assessment import Assessment
+
+    patient = await db.get(Patient, patient_id)
+    if not patient:
+        return ""
+    aggregates = await get_patient_aggregates(db, patient_id)
+    goals = (await db.execute(select(Goal).where(Goal.patient_id == patient_id).limit(5))).scalars().all()
+    evolutions = (
+        await db.execute(select(Evolution).where(Evolution.patient_id == patient_id).order_by(Evolution.date.desc()).limit(3))
+    ).scalars().all()
+    assessments = (
+        await db.execute(select(Assessment).where(Assessment.patient_id == patient_id).order_by(Assessment.date.desc()).limit(3))
+    ).scalars().all()
+
+    lines = [
+        f"Paciente: {patient.name}",
+        f"Diagnóstico: {patient.diagnosis_key}",
+        f"Status: {patient.status}",
+        f"Sessões: {aggregates['sessions_count']}",
+        f"Metas atingidas: {aggregates['goals_achieved']}/{aggregates['total_goals']}",
+    ]
+    if goals:
+        lines.append("Metas: " + "; ".join(f"{g.title} ({g.progress}%)" for g in goals))
+    if evolutions:
+        lines.append("Evoluções recentes: " + "; ".join(e.title for e in evolutions))
+    if assessments:
+        lines.append("Avaliações: " + "; ".join(f"{a.protocol_id} ({a.percentage}%)" for a in assessments))
+    return "\n".join(lines)
+
+
+async def run_llm(prompt: str, system: str = "") -> str:
+    settings = get_settings()
+    if not settings.openai_api_key:
+        return "[Resposta simulada — configure OPENAI_API_KEY para respostas reais]\n\n" + prompt[:500]
+    from openai import AsyncOpenAI
+
+    client = AsyncOpenAI(api_key=settings.openai_api_key, base_url=settings.openai_base_url)
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
+    response = await client.chat.completions.create(model=settings.openai_model, messages=messages)
+    return response.choices[0].message.content or ""

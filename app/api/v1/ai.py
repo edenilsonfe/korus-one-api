@@ -1,0 +1,275 @@
+import json
+from datetime import date
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
+from app.core.deps import get_current_professional, get_patient_for_professional
+from app.core.utils import utcnow
+from app.db.session import get_db
+from app.models.ai import AIJob, AIReport, ChatMessage, Conversation
+from app.models.professional import Professional
+from app.schemas.ai import (
+    AIJobResponse,
+    AIReportCreate,
+    AIReportResponse,
+    AIToolRequest,
+    ConversationCreate,
+    ConversationResponse,
+    MessageCreate,
+)
+from app.services.ai_service import build_patient_context, create_ai_job, get_job, run_llm
+from app.services.timeline import create_timeline_event
+
+router = APIRouter(prefix="/ai", tags=["ai"])
+
+REPORT_PROMPTS = {
+    "clinico": "Gere um relatório clínico detalhado em português (Brasil) para o profissional de saúde.",
+    "escolar": "Gere um relatório escolar com orientações pedagógicas em português (Brasil).",
+    "pais": "Gere um relatório acessível para os pais/responsáveis em português (Brasil).",
+    "evolutivo": "Gere um relatório evolutivo comparando progresso ao longo do tempo em português (Brasil).",
+}
+
+
+@router.get("/jobs/{job_id}", response_model=AIJobResponse)
+async def poll_job(
+    job_id: UUID,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    job = await get_job(db, job_id, professional.id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job não encontrado")
+    return AIJobResponse(
+        id=str(job.id),
+        job_type=job.job_type,
+        status=job.status,
+        result=job.result,
+        error=job.error,
+    )
+
+
+@router.get("/reports", response_model=list[AIReportResponse])
+async def list_reports(
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    from app.models.patient import Patient
+
+    result = await db.execute(
+        select(AIReport, Patient.name)
+        .join(Patient, AIReport.patient_id == Patient.id)
+        .where(AIReport.professional_id == professional.id)
+        .order_by(AIReport.date.desc())
+    )
+    return [
+        AIReportResponse(
+            id=str(r.id),
+            type=r.type,
+            patient_id=str(r.patient_id),
+            patient=name,
+            date=r.date.isoformat(),
+            preview=r.preview,
+            content=r.content,
+            status=r.status,
+        )
+        for r, name in result.all()
+    ]
+
+
+@router.post("/reports", status_code=status.HTTP_202_ACCEPTED)
+async def create_report(
+    body: AIReportCreate,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    patient = await get_patient_for_professional(UUID(body.patient_id), professional, db)
+    job = await create_ai_job(
+        db,
+        professional_id=professional.id,
+        patient_id=patient.id,
+        job_type="report",
+        input_data=body.model_dump(),
+    )
+    context = await build_patient_context(db, patient.id)
+    prompt = REPORT_PROMPTS.get(body.type, REPORT_PROMPTS["clinico"])
+    if body.prompt:
+        prompt += f"\n\nInstruções adicionais: {body.prompt}"
+    content = await run_llm(f"{prompt}\n\nContexto clínico:\n{context}")
+    preview = content[:200] + "..." if len(content) > 200 else content
+    report = AIReport(
+        professional_id=professional.id,
+        patient_id=patient.id,
+        type=body.type,
+        date=date.today(),
+        preview=preview,
+        content=content,
+        status="draft",
+    )
+    db.add(report)
+    job.status = "completed"
+    job.result = json.dumps({"reportId": str(report.id)})
+    job.completed_at = utcnow()
+    await db.flush()
+    await create_timeline_event(
+        db,
+        patient_id=patient.id,
+        professional_id=professional.id,
+        event_type="relatorio",
+        title=f"Relatório {body.type} gerado por IA",
+        description=preview,
+        source_id=report.id,
+    )
+    return {"jobId": str(job.id), "reportId": str(report.id), "status": "completed"}
+
+
+@router.get("/conversations", response_model=list[ConversationResponse])
+async def list_conversations(
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Conversation)
+        .where(Conversation.professional_id == professional.id)
+        .options(selectinload(Conversation.messages))
+        .order_by(Conversation.updated_at.desc())
+    )
+    convs = result.scalars().all()
+    return [
+        ConversationResponse(
+            id=str(c.id),
+            title=c.title,
+            patient_id=str(c.patient_id) if c.patient_id else None,
+            created_at=c.created_at.isoformat(),
+            updated_at=c.updated_at.isoformat(),
+            messages=[
+                {"id": str(m.id), "role": m.role, "content": m.content, "createdAt": m.created_at.isoformat()}
+                for m in c.messages
+            ],
+        )
+        for c in convs
+    ]
+
+
+@router.post("/conversations", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
+async def create_conversation(
+    body: ConversationCreate,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    patient_id = UUID(body.patient_id) if body.patient_id else None
+    if patient_id:
+        await get_patient_for_professional(patient_id, professional, db)
+    conv = Conversation(
+        professional_id=professional.id,
+        patient_id=patient_id,
+        title=body.title or "Nova conversa",
+    )
+    db.add(conv)
+    await db.flush()
+    return ConversationResponse(
+        id=str(conv.id),
+        title=conv.title,
+        patient_id=str(conv.patient_id) if conv.patient_id else None,
+        created_at=conv.created_at.isoformat(),
+        updated_at=conv.updated_at.isoformat(),
+        messages=[],
+    )
+
+
+@router.post("/conversations/{conversation_id}/messages")
+async def send_message(
+    conversation_id: UUID,
+    body: MessageCreate,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Conversation)
+        .where(Conversation.id == conversation_id, Conversation.professional_id == professional.id)
+        .options(selectinload(Conversation.messages))
+    )
+    conv = result.scalar_one_or_none()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversa não encontrada")
+
+    user_msg = ChatMessage(conversation_id=conv.id, role="user", content=body.content)
+    db.add(user_msg)
+    await db.flush()
+
+    context = ""
+    if conv.patient_id:
+        context = await build_patient_context(db, conv.patient_id)
+    system = "Você é um assistente clínico para fonoaudiologia pediátrica. Responda em português (Brasil)."
+    if context:
+        system += f"\n\nContexto do paciente:\n{context}"
+    reply = await run_llm(body.content, system=system)
+    assistant_msg = ChatMessage(conversation_id=conv.id, role="assistant", content=reply)
+    db.add(assistant_msg)
+    await db.flush()
+
+    async def stream():
+        yield f"data: {json.dumps({'role': 'assistant', 'content': reply})}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(stream(), media_type="text/event-stream")
+
+
+async def _run_tool_job(
+    db: AsyncSession,
+    professional: Professional,
+    job_type: str,
+    body: AIToolRequest,
+    prompt_builder,
+) -> dict:
+    patient_id = UUID(body.patient_id) if body.patient_id else None
+    if patient_id:
+        await get_patient_for_professional(patient_id, professional, db)
+    job = await create_ai_job(
+        db,
+        professional_id=professional.id,
+        patient_id=patient_id,
+        job_type=job_type,
+        input_data=body.model_dump(),
+    )
+    context = await build_patient_context(db, patient_id) if patient_id else ""
+    prompt = prompt_builder(body, context)
+    result = await run_llm(prompt)
+    job.status = "completed"
+    job.result = result
+    job.completed_at = utcnow()
+    await db.flush()
+    return {"jobId": str(job.id), "status": "completed", "result": result}
+
+
+@router.post("/transcribe", status_code=status.HTTP_202_ACCEPTED)
+async def transcribe(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "transcribe", body, lambda b, c: f"Transcreva o seguinte áudio (simulado):\n{b.text or ''}")
+
+@router.post("/speech-analysis", status_code=status.HTTP_202_ACCEPTED)
+async def speech_analysis(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "speech-analysis", body, lambda b, c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{c}")
+
+@router.post("/clinical-trends", status_code=status.HTTP_202_ACCEPTED)
+async def clinical_trends(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "clinical-trends", body, lambda b, c: f"Identifique tendências clínicas:\n{c}")
+
+@router.post("/suggest-goals", status_code=status.HTTP_202_ACCEPTED)
+async def suggest_goals(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "suggest-goals", body, lambda b, c: f"Sugira metas terapêuticas:\n{c}")
+
+@router.post("/therapy-plan", status_code=status.HTTP_202_ACCEPTED)
+async def therapy_plan(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "therapy-plan", body, lambda b, c: f"Monte plano terapêutico trimestral:\n{c}")
+
+@router.post("/session-summary", status_code=status.HTTP_202_ACCEPTED)
+async def session_summary(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "session-summary", body, lambda b, c: f"Resuma a sessão:\n{b.session_notes or b.text or ''}")
+
+@router.post("/proofread", status_code=status.HTTP_202_ACCEPTED)
+async def proofread(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
+    return await _run_tool_job(db, professional, "proofread", body, lambda b, c: f"Revise o texto clínico:\n{b.text or ''}")

@@ -1,0 +1,84 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: korus
+      POSTGRES_PASSWORD: korus
+      POSTGRES_DB: korus_one
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U korus -d korus_one"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    profiles: ["tools"]
+    image: ghcr.io/astral-sh/uv:python3.11-bookworm-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://korus:korus@postgres:5432/korus_one
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "uv sync && uv run alembic upgrade head && uv run python -m app.seeds.demo"
+
+  api:
+    profiles: ["app"]
+    image: ghcr.io/astral-sh/uv:python3.11-bookworm-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://korus:korus@postgres:5432/korus_one
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000,http://127.0.0.1:5173,http://127.0.0.1:4173
+      DEBUG: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    command: sh -c "uv sync && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+volumes:
+  postgres_data:
+  minio_data:

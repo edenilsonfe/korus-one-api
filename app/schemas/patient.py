@@ -1,0 +1,147 @@
+from datetime import date as DateType
+
+from pydantic import Field
+
+from app.schemas.common import CamelModel
+
+
+class CaregiverCreate(CamelModel):
+    name: str
+    relation: str = ""
+    phone: str = ""
+    email: str = ""
+    notes: str = ""
+    contact: str | None = None  # alias from frontend AddPatientDialog
+    is_primary: bool = False
+
+
+class CaregiverUpdate(CamelModel):
+    name: str | None = None
+    relation: str | None = None
+    phone: str | None = None
+    email: str | None = None
+    notes: str | None = None
+    is_primary: bool | None = None
+
+
+class CaregiverResponse(CamelModel):
+    id: str
+    name: str
+    relation: str
+    phone: str
+    email: str
+    notes: str = ""
+    is_primary: bool = False
+
+
+class PatientCreate(CamelModel):
+    name: str
+    birth_date: DateType
+    diagnosis_key: str
+    status: str = "avaliacao"
+    guardians: list[CaregiverCreate] = Field(default_factory=list)
+
+
+class PatientUpdate(CamelModel):
+    name: str | None = None
+    birth_date: DateType | None = None
+    diagnosis_key: str | None = None
+    status: str | None = None
+
+
+class GoalResponse(CamelModel):
+    id: str
+    title: str
+    progress: int
+    area: str
+    professional: str
+    start_date: str
+    status: str
+
+
+class ClinicalDomainResponse(CamelModel):
+    key: str
+    label: str
+    score: int
+    delta: int
+    history: list[int]
+
+
+class AssessmentField(CamelModel):
+    label: str
+    value: str
+
+
+class AssessmentResponse(CamelModel):
+    id: str
+    protocol: str
+    protocol_id: str
+    date: str
+    professional: str
+    result: str
+    percentage: int
+    interpretation: str
+    fields: list[AssessmentField] = Field(default_factory=list)
+    patient_id: str | None = None
+    patient_name: str | None = None
+    avatar_color: str | None = None
+
+
+class SessionResponse(CamelModel):
+    id: str
+    date: str
+    duration: int
+    therapist: str
+    objectives: list[str]
+    notes: str
+    type: str
+
+
+class TimelineEventResponse(CamelModel):
+    id: str
+    type: str
+    title: str
+    description: str
+    date: str
+    patient_id: str | None = None
+    patient_name: str | None = None
+    source_id: str | None = None
+
+
+class AttachmentResponse(CamelModel):
+    id: str
+    name: str
+    category: str
+    date: str
+    size_bytes: int
+    size: str | None = None  # formatted for UI compat
+
+
+class PatientSummary(CamelModel):
+    id: str
+    name: str
+    age: int
+    birth_date: str
+    guardian: str
+    guardian_label: str
+    diagnosis: str
+    diagnosis_key: str
+    therapist: str
+    status: str
+    start_date: str
+    last_session: str | None = None
+    sessions_count: int
+    protocols_done: int
+    goals_achieved: int
+    total_goals: int
+    avatar_color: str
+
+
+class PatientDetail(PatientSummary):
+    caregivers: list[CaregiverResponse] = Field(default_factory=list)
+    goals: list[GoalResponse] = Field(default_factory=list)
+    clinical_domains: list[ClinicalDomainResponse] = Field(default_factory=list)
+    assessments: list[AssessmentResponse] = Field(default_factory=list)
+    sessions: list[SessionResponse] = Field(default_factory=list)
+    timeline: list[TimelineEventResponse] = Field(default_factory=list)
+    files: list[AttachmentResponse] = Field(default_factory=list)

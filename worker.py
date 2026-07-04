@@ -1,0 +1,46 @@
+import asyncio
+import json
+from datetime import UTC, datetime
+from uuid import UUID
+
+from arq import cron
+from arq.connections import RedisSettings
+from sqlalchemy import select
+
+from app.core.config import get_settings
+from app.core.utils import utcnow
+from app.db.session import AsyncSessionLocal
+from app.models.ai import AIJob
+from app.services.ai_service import run_llm
+
+
+async def process_ai_job(ctx, job_id: str) -> None:
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(AIJob).where(AIJob.id == UUID(job_id)))
+        job = result.scalar_one_or_none()
+        if not job or job.status != "pending":
+            return
+        job.status = "processing"
+        await session.commit()
+
+        try:
+            input_data = json.loads(job.input_data)
+            prompt = input_data.get("prompt", str(input_data))
+            result_text = await run_llm(prompt)
+            job.status = "completed"
+            job.result = result_text
+            job.completed_at = utcnow()
+        except Exception as exc:
+            job.status = "failed"
+            job.error = str(exc)
+            job.completed_at = utcnow()
+        await session.commit()
+
+
+class WorkerSettings:
+    redis_settings = RedisSettings.from_dsn(get_settings().redis_url)
+    functions = [process_ai_job]
+
+    @staticmethod
+    async def on_startup(ctx):
+        pass

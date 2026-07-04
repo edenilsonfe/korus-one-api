@@ -1,0 +1,32 @@
+from datetime import date as DateType, time as TimeType
+
+from app.schemas.common import CamelModel
+
+
+class AppointmentCreate(CamelModel):
+    patient_id: str
+    date: DateType
+    time: TimeType
+    type: str
+    duration: int = 45
+    status: str = "pendente"
+
+
+class AppointmentUpdate(CamelModel):
+    date: DateType | None = None
+    time: TimeType | None = None
+    type: str | None = None
+    duration: int | None = None
+    status: str | None = None
+
+
+class AppointmentResponse(CamelModel):
+    id: str
+    patient_id: str
+    patient: str
+    date: str
+    time: str
+    type: str
+    therapist: str
+    duration: int
+    status: str
