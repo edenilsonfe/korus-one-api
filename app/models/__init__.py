@@ -6,10 +6,13 @@ from app.models.attachment import Attachment
 from app.models.caregiver import Caregiver
 from app.models.evolution import Evolution
 from app.models.goal import ClinicalDomainSnapshot, Goal
+from app.models.notification_message_log import NotificationMessageLog
+from app.models.notification_settings import NotificationSettings
 from app.models.patient import Patient
 from app.models.professional import Professional
 from app.models.session import Session
 from app.models.timeline import TimelineEvent
+from app.models.whatsapp_connection import WhatsAppConnection
 
 __all__ = [
     "Professional",
@@ -29,4 +32,7 @@ __all__ = [
     "Conversation",
     "ChatMessage",
     "AIJob",
+    "WhatsAppConnection",
+    "NotificationSettings",
+    "NotificationMessageLog",
 ]

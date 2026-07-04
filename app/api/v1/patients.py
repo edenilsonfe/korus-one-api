@@ -41,6 +41,7 @@ def _caregiver_response(c: Caregiver) -> CaregiverResponse:
         email=c.email,
         notes=c.notes,
         is_primary=c.is_primary,
+        whatsapp_opt_in=c.whatsapp_opt_in,
     )
 
 
@@ -273,6 +274,7 @@ async def create_patient(
             phone=g.phone,
             email=g.email,
             is_primary=i == 0,
+            whatsapp_opt_in=g.whatsapp_opt_in,
         )
         db.add(caregiver)
 
@@ -311,6 +313,7 @@ async def create_caregiver(
         email=body.email.strip(),
         notes=body.notes.strip(),
         is_primary=is_primary,
+        whatsapp_opt_in=body.whatsapp_opt_in,
     )
     db.add(caregiver)
     await db.flush()
@@ -342,6 +345,8 @@ async def update_caregiver(
         caregiver.email = data["email"].strip()
     if "notes" in data and data["notes"] is not None:
         caregiver.notes = data["notes"].strip()
+    if "whatsapp_opt_in" in data and data["whatsapp_opt_in"] is not None:
+        caregiver.whatsapp_opt_in = data["whatsapp_opt_in"]
 
     if data.get("is_primary") is True:
         await _set_primary_caregiver(db, patient_id, caregiver.id)

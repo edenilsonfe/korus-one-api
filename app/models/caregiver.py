@@ -20,5 +20,6 @@ class Caregiver(Base, TimestampMixin):
     email: Mapped[str] = mapped_column(String(255), default="", nullable=False)
     notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
     is_primary: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    whatsapp_opt_in: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     patient: Mapped["Patient"] = relationship(back_populates="caregivers")  # noqa: F821

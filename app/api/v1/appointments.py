@@ -94,7 +94,13 @@ async def create_appointment(
         status=body.status,
     )
     db.add(appt)
-    await db.flush()
+    await db.commit()
+    await db.refresh(appt)
+
+    from app.services.whatsapp_notification_service import WhatsAppNotificationService
+
+    await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "confirmation")
+
     return _to_response(appt, patient.name, professional.name)
 
 
@@ -115,6 +121,9 @@ async def update_appointment(
         raise HTTPException(status_code=404, detail="Agendamento não encontrado")
     appt, patient = row
     data = body.model_dump(exclude_unset=True)
+    old_date = appt.date
+    old_time = appt.time
+    old_status = appt.status
     new_date = data.get("date", appt.date)
     new_time = data.get("time", appt.time)
     new_duration = data.get("duration", appt.duration)
@@ -122,7 +131,16 @@ async def update_appointment(
         await _check_conflict(db, professional.id, new_date, new_time, new_duration, appt.id)
     for field, value in data.items():
         setattr(appt, field, value)
-    await db.flush()
+    await db.commit()
+    await db.refresh(appt)
+
+    from app.services.whatsapp_notification_service import WhatsAppNotificationService
+
+    if data.get("status") == "cancelado" and old_status != "cancelado":
+        await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "cancelled")
+    elif (appt.date != old_date or appt.time != old_time) and appt.status != "cancelado":
+        await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "rescheduled")
+
     return _to_response(appt, patient.name, professional.name)
 
 

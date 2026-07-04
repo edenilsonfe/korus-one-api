@@ -37,9 +37,33 @@ class Settings(BaseSettings):
     openai_base_url: str = "https://api.openai.com/v1"
     openai_model: str = "gpt-4o-mini"
 
+    whatsapp_provider: str = "evolution"
+    whatsapp_credential_encryption_key: str = ""
+    app_public_url: str = ""
+    evolution_api_base_url: str = "http://localhost:8080"
+    evolution_global_api_key: str = ""
+    evolution_webhook_secret: str = ""
+    clinic_timezone: str = "America/Sao_Paulo"
+    whatsapp_scheduler_interval_seconds: int = 900
+    whatsapp_reminder_window_hours: int = 24
+    whatsapp_reminder_tolerance_minutes: int = 15
+    whatsapp_billing_reminder_days_before: int = 3
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def public_api_base_url(self) -> str | None:
+        base = (self.app_public_url or "").strip()
+        return base or None
+
+    @property
+    def evolution_webhook_url(self) -> str | None:
+        base = self.public_api_base_url
+        if not base:
+            return None
+        return f"{base.rstrip('/')}/api/v1/webhooks/evolution/whatsapp"
 
 
 @lru_cache

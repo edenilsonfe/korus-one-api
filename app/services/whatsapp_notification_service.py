@@ -1,0 +1,268 @@
+"""Dispatch WhatsApp notifications for clinical events."""
+
+from __future__ import annotations
+
+import logging
+import uuid
+from datetime import UTC, date, datetime, time
+from uuid import UUID
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
+
+from app.constants.whatsapp_events import (
+    APPOINTMENT_NOTIFICATION_EVENT_MAP,
+    WHATSAPP_EVENT_REMINDER_24H,
+    format_event_message,
+    normalize_whatsapp_events,
+    normalize_whatsapp_message_templates,
+)
+from app.core.config import get_settings
+from app.db.session import AsyncSessionLocal
+from app.models.appointment import Appointment
+from app.models.caregiver import Caregiver
+from app.models.notification_message_log import (
+    MESSAGE_STATUS_FAILED,
+    MESSAGE_STATUS_SENT,
+    NotificationMessageLog,
+)
+from app.models.notification_settings import NotificationSettings
+from app.models.patient import Patient
+from app.models.professional import Professional
+from app.services.whatsapp_provider import get_active_whatsapp_provider
+
+logger = logging.getLogger(__name__)
+
+
+async def _primary_caregiver_contact(
+    db: AsyncSession, patient_id: UUID
+) -> tuple[str | None, bool]:
+    result = await db.execute(
+        select(Caregiver)
+        .where(Caregiver.patient_id == patient_id)
+        .order_by(Caregiver.is_primary.desc(), Caregiver.created_at.asc())
+    )
+    caregivers = result.scalars().all()
+    primary = next((c for c in caregivers if c.is_primary), caregivers[0] if caregivers else None)
+    if not primary:
+        return None, False
+    return primary.phone or None, primary.whatsapp_opt_in
+
+
+class WhatsAppNotificationService:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def _get_settings(self, professional_id: UUID) -> NotificationSettings | None:
+        result = await self.db.execute(
+            select(NotificationSettings).where(NotificationSettings.professional_id == professional_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def _event_allowed(
+        self, professional_id: UUID, event_id: str
+    ) -> tuple[bool, NotificationSettings | None]:
+        settings = await self._get_settings(professional_id)
+        if not settings or not settings.whatsapp_enabled:
+            return False, settings
+
+        events = normalize_whatsapp_events(settings.whatsapp_events)
+        if not events.get(event_id):
+            return False, settings
+
+        provider = get_active_whatsapp_provider(self.db)
+        if not await provider.can_send(professional_id):
+            return False, settings
+
+        return True, settings
+
+    async def _create_log(
+        self,
+        *,
+        professional_id: UUID,
+        notification_type: str,
+        to_phone: str | None,
+        status: str,
+        provider: str,
+        appointment_id: UUID | None = None,
+        patient_id: UUID | None = None,
+        provider_message_id: str | None = None,
+        error_code: str | None = None,
+        last_error: str | None = None,
+        payload: dict | None = None,
+        scheduled_date: date | None = None,
+        scheduled_time: time | None = None,
+    ) -> NotificationMessageLog:
+        log = NotificationMessageLog(
+            id=uuid.uuid4(),
+            professional_id=professional_id,
+            appointment_id=appointment_id,
+            patient_id=patient_id,
+            channel="whatsapp",
+            notification_type=notification_type,
+            provider=provider,
+            provider_message_id=provider_message_id,
+            to_phone=to_phone,
+            status=status,
+            error_code=error_code,
+            last_error=last_error,
+            payload=payload,
+            scheduled_date=scheduled_date,
+            scheduled_time=scheduled_time,
+            sent_at=datetime.now(UTC) if status == MESSAGE_STATUS_SENT else None,
+            failed_at=datetime.now(UTC) if status == MESSAGE_STATUS_FAILED else None,
+        )
+        self.db.add(log)
+        await self.db.commit()
+        return log
+
+    @staticmethod
+    def _first_name(full_name: str | None) -> str:
+        if not full_name or not full_name.strip():
+            return ""
+        return full_name.strip().split()[0]
+
+    @staticmethod
+    async def dispatch_appointment_event(appointment_id: UUID, notification_type: str) -> None:
+        event_id = APPOINTMENT_NOTIFICATION_EVENT_MAP.get(notification_type)
+        if not event_id:
+            return
+
+        async with AsyncSessionLocal() as db:
+            service = WhatsAppNotificationService(db)
+            await service._dispatch_appointment_event(appointment_id, event_id)
+
+    async def dispatch_appointment_reminder(self, appointment: Appointment) -> bool:
+        if not appointment.patient:
+            return False
+        return await self._dispatch_appointment_event(
+            appointment.id,
+            WHATSAPP_EVENT_REMINDER_24H,
+            appointment=appointment,
+        )
+
+    async def _dispatch_appointment_event(
+        self,
+        appointment_id: UUID,
+        event_id: str,
+        *,
+        appointment: Appointment | None = None,
+    ) -> bool:
+        if appointment is None:
+            result = await self.db.execute(
+                select(Appointment)
+                .options(
+                    joinedload(Appointment.patient),
+                )
+                .where(Appointment.id == appointment_id)
+            )
+            appointment = result.scalar_one_or_none()
+
+        if not appointment or not appointment.patient:
+            return False
+
+        allowed, settings = await self._event_allowed(appointment.professional_id, event_id)
+        if not allowed:
+            return False
+
+        patient: Patient = appointment.patient
+        phone, opt_in = await _primary_caregiver_contact(self.db, patient.id)
+
+        if not opt_in:
+            return False
+
+        prof_result = await self.db.execute(
+            select(Professional).where(Professional.id == appointment.professional_id)
+        )
+        professional = prof_result.scalar_one_or_none()
+        if not professional:
+            return False
+
+        if not phone:
+            await self._create_log(
+                professional_id=appointment.professional_id,
+                appointment_id=appointment.id,
+                patient_id=patient.id,
+                notification_type=event_id,
+                to_phone=None,
+                status=MESSAGE_STATUS_FAILED,
+                provider=get_settings().whatsapp_provider,
+                error_code="no_phone",
+                last_error="Responsável sem telefone cadastrado.",
+                scheduled_date=appointment.date,
+                scheduled_time=appointment.time,
+            )
+            return False
+
+        context = {
+            "patient_name": patient.name,
+            "patient_first_name": self._first_name(patient.name),
+            "professional_name": professional.name,
+            "professional_first_name": self._first_name(professional.name),
+            "appointment_date": appointment.date.strftime("%d/%m/%Y"),
+            "appointment_time": appointment.time.strftime("%H:%M"),
+            "appointment_type": appointment.type or "sessão",
+            "clinic_name": professional.name,
+        }
+        stored_templates = normalize_whatsapp_message_templates(
+            settings.whatsapp_message_templates if settings else None
+        )
+
+        try:
+            provider = get_active_whatsapp_provider(self.db)
+            if event_id == WHATSAPP_EVENT_REMINDER_24H:
+                variables = [
+                    context["patient_name"],
+                    context["professional_name"],
+                    context["appointment_date"],
+                    context["appointment_time"],
+                    context["clinic_name"],
+                ]
+                send_result = await provider.send_appointment_reminder(
+                    appointment.professional_id, phone, variables
+                )
+                payload = send_result.payload
+            else:
+                text = format_event_message(
+                    event_id, context, stored_templates=stored_templates
+                )
+                send_result = await provider.send_text_message(
+                    appointment.professional_id, phone, text
+                )
+                payload = {"text": text, **(send_result.payload or {})}
+
+            await self._create_log(
+                professional_id=appointment.professional_id,
+                appointment_id=appointment.id,
+                patient_id=patient.id,
+                notification_type=event_id,
+                to_phone=phone,
+                status=MESSAGE_STATUS_SENT,
+                provider=send_result.provider,
+                provider_message_id=send_result.provider_message_id,
+                payload=payload,
+                scheduled_date=appointment.date,
+                scheduled_time=appointment.time,
+            )
+            return True
+        except Exception as exc:
+            logger.exception(
+                "Failed to send WhatsApp %s for appointment %s",
+                event_id,
+                appointment_id,
+            )
+            await self._create_log(
+                professional_id=appointment.professional_id,
+                appointment_id=appointment.id,
+                patient_id=patient.id,
+                notification_type=event_id,
+                to_phone=phone,
+                status=MESSAGE_STATUS_FAILED,
+                provider=get_settings().whatsapp_provider,
+                last_error=str(getattr(exc, "detail", None) or exc),
+                payload={"error": str(exc)},
+                scheduled_date=appointment.date,
+                scheduled_time=appointment.time,
+            )
+            return False

@@ -13,6 +13,7 @@ class CaregiverCreate(CamelModel):
     notes: str = ""
     contact: str | None = None  # alias from frontend AddPatientDialog
     is_primary: bool = False
+    whatsapp_opt_in: bool = False
 
 
 class CaregiverUpdate(CamelModel):
@@ -22,6 +23,7 @@ class CaregiverUpdate(CamelModel):
     email: str | None = None
     notes: str | None = None
     is_primary: bool | None = None
+    whatsapp_opt_in: bool | None = None
 
 
 class CaregiverResponse(CamelModel):
@@ -32,6 +34,7 @@ class CaregiverResponse(CamelModel):
     email: str
     notes: str = ""
     is_primary: bool = False
+    whatsapp_opt_in: bool = False
 
 
 class PatientCreate(CamelModel):

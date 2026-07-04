@@ -12,6 +12,7 @@ from app.core.utils import utcnow
 from app.db.session import AsyncSessionLocal
 from app.models.ai import AIJob
 from app.services.ai_service import run_llm
+from app.services.whatsapp_scheduler_service import WhatsAppSchedulerService
 
 
 async def process_ai_job(ctx, job_id: str) -> None:
@@ -37,9 +38,22 @@ async def process_ai_job(ctx, job_id: str) -> None:
         await session.commit()
 
 
+async def run_whatsapp_scheduler(ctx) -> None:
+    async with AsyncSessionLocal() as session:
+        service = WhatsAppSchedulerService(session)
+        await service.run_all()
+
+
 class WorkerSettings:
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)
-    functions = [process_ai_job]
+    functions = [process_ai_job, run_whatsapp_scheduler]
+    cron_jobs = [
+        cron(
+            run_whatsapp_scheduler,
+            minute={0, 15, 30, 45},
+            run_at_startup=False,
+        )
+    ]
 
     @staticmethod
     async def on_startup(ctx):
