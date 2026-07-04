@@ -65,5 +65,5 @@ uv run pytest
 
 ## Credenciais demo
 
-- Email: `camila.rocha@fonoflow.com`
+- Email: `camila.rocha@korusone.com`
 - Senha: `demo12345`

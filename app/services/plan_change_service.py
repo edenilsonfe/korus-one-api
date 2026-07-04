@@ -225,7 +225,7 @@ class PlanChangeService:
             payment = await self.gateway.create_single_payment(
                 customer_id=customer_id,
                 value_cents=quote.charge_cents,
-                description=f"Upgrade {target_plan.name} — FonoFlow",
+                description=f"Upgrade {target_plan.name} — KorusOne",
                 external_reference=external_ref,
             )
         except (PaymentGatewayConfigError, PaymentGatewayError) as exc:

@@ -9,8 +9,8 @@ from app.models.billing import Plan
 
 COMMERCIAL_PLAN_SEEDS: list[dict[str, Any]] = [
     {
-        "slug": "fonoflow_pro_monthly",
-        "name": "FonoFlow Pro",
+        "slug": "korusone_pro_monthly",
+        "name": "KorusOne Pro",
         "description": "Pacientes ilimitados, IA clínica e relatórios automáticos.",
         "limits": {},
         "price_cents": 9700,
@@ -28,8 +28,8 @@ COMMERCIAL_PLAN_SEEDS: list[dict[str, Any]] = [
         "is_active": True,
     },
     {
-        "slug": "fonoflow_pro_yearly",
-        "name": "FonoFlow Pro",
+        "slug": "korusone_pro_yearly",
+        "name": "korusone Pro",
         "description": "Pacientes ilimitados, IA clínica e relatórios automáticos — cobrança anual.",
         "limits": {},
         "price_cents": 97000,
