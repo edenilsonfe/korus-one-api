@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "package_id": "doss-br",
+  "instrument_slug": "doss",
+  "instrument_title": "DOSS — Dysphagia Outcome and Severity Scale",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "scaled",
+  "scale": [
+    {
+      "value": 1,
+      "label": "Nível 1"
+    },
+    {
+      "value": 2,
+      "label": "Nível 2"
+    },
+    {
+      "value": 3,
+      "label": "Nível 3"
+    },
+    {
+      "value": 4,
+      "label": "Nível 4"
+    },
+    {
+      "value": 5,
+      "label": "Nível 5"
+    },
+    {
+      "value": 6,
+      "label": "Nível 6"
+    },
+    {
+      "value": 7,
+      "label": "Nível 7"
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Pontuação total"
+    }
+  ],
+  "items": [
+    {
+      "id": "doss_level",
+      "domain": "TOTAL",
+      "text": "[Sample] Selecione o nível DOSS atual:"
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "item_value",
+        "item_id": "doss_level"
+      }
+    },
+    "interpretations": [
+      {
+        "min": 1,
+        "max": 3,
+        "label": "Disfagia severa"
+      },
+      {
+        "min": 4,
+        "max": 5,
+        "label": "Disfagia moderada"
+      },
+      {
+        "min": 6,
+        "max": 7,
+        "label": "Ingestão oral funcional"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "doss-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

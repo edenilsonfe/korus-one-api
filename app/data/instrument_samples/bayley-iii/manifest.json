@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "package_id": "bayley-iii-br",
+  "instrument_slug": "bayley-iii",
+  "instrument_title": "Bayley-III — Escalas Bayley de Desenvolvimento",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "observational",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Ausente / Não observado"
+    },
+    {
+      "value": 1,
+      "label": "Parcial / Emergente"
+    },
+    {
+      "value": 2,
+      "label": "Presente / Adequado"
+    }
+  ],
+  "domains": [
+    {
+      "id": "COG",
+      "title": "Módulo COG"
+    },
+    {
+      "id": "MOT",
+      "title": "Módulo MOT"
+    },
+    {
+      "id": "SOC",
+      "title": "Módulo SOC"
+    }
+  ],
+  "modules": {
+    "COG": {
+      "id": "COG",
+      "title": "Módulo COG",
+      "items": [
+        {
+          "id": "cog_01",
+          "domain": "COG",
+          "module": "COG",
+          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+        },
+        {
+          "id": "cog_02",
+          "domain": "COG",
+          "module": "COG",
+          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+        },
+        {
+          "id": "cog_03",
+          "domain": "COG",
+          "module": "COG",
+          "text": "[Sample] Atividade 3 — observação clínica estruturada."
+        },
+        {
+          "id": "cog_04",
+          "domain": "COG",
+          "module": "COG",
+          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+        }
+      ]
+    },
+    "MOT": {
+      "id": "MOT",
+      "title": "Módulo MOT",
+      "items": [
+        {
+          "id": "mot_01",
+          "domain": "MOT",
+          "module": "MOT",
+          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+        },
+        {
+          "id": "mot_02",
+          "domain": "MOT",
+          "module": "MOT",
+          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+        },
+        {
+          "id": "mot_03",
+          "domain": "MOT",
+          "module": "MOT",
+          "text": "[Sample] Atividade 3 — observação clínica estruturada."
+        },
+        {
+          "id": "mot_04",
+          "domain": "MOT",
+          "module": "MOT",
+          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+        }
+      ]
+    },
+    "SOC": {
+      "id": "SOC",
+      "title": "Módulo SOC",
+      "items": [
+        {
+          "id": "soc_01",
+          "domain": "SOC",
+          "module": "SOC",
+          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+        },
+        {
+          "id": "soc_02",
+          "domain": "SOC",
+          "module": "SOC",
+          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+        },
+        {
+          "id": "soc_03",
+          "domain": "SOC",
+          "module": "SOC",
+          "text": "[Sample] Atividade 3 — observação clínica estruturada."
+        },
+        {
+          "id": "soc_04",
+          "domain": "SOC",
+          "module": "SOC",
+          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "cog_01",
+      "domain": "COG",
+      "module": "COG",
+      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+    },
+    {
+      "id": "cog_02",
+      "domain": "COG",
+      "module": "COG",
+      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+    },
+    {
+      "id": "cog_03",
+      "domain": "COG",
+      "module": "COG",
+      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+    },
+    {
+      "id": "cog_04",
+      "domain": "COG",
+      "module": "COG",
+      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+    },
+    {
+      "id": "mot_01",
+      "domain": "MOT",
+      "module": "MOT",
+      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+    },
+    {
+      "id": "mot_02",
+      "domain": "MOT",
+      "module": "MOT",
+      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+    },
+    {
+      "id": "mot_03",
+      "domain": "MOT",
+      "module": "MOT",
+      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+    },
+    {
+      "id": "mot_04",
+      "domain": "MOT",
+      "module": "MOT",
+      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+    },
+    {
+      "id": "soc_01",
+      "domain": "SOC",
+      "module": "SOC",
+      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+    },
+    {
+      "id": "soc_02",
+      "domain": "SOC",
+      "module": "SOC",
+      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+    },
+    {
+      "id": "soc_03",
+      "domain": "SOC",
+      "module": "SOC",
+      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+    },
+    {
+      "id": "soc_04",
+      "domain": "SOC",
+      "module": "SOC",
+      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+    }
+  ],
+  "scoring": {
+    "engine": "observational_rubric",
+    "modules": {
+      "COG": {
+        "method": "mean",
+        "item_ids": [
+          "cog_01",
+          "cog_02",
+          "cog_03",
+          "cog_04"
+        ]
+      },
+      "MOT": {
+        "method": "mean",
+        "item_ids": [
+          "mot_01",
+          "mot_02",
+          "mot_03",
+          "mot_04"
+        ]
+      },
+      "SOC": {
+        "method": "mean",
+        "item_ids": [
+          "soc_01",
+          "soc_02",
+          "soc_03",
+          "soc_04"
+        ]
+      }
+    }
+  },
+  "report": {
+    "template_id": "bayley-iii-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "requires_competency_ack": false,
+  "supports_multi_session": true,
+  "norms_file": "norms-br.json"
+}

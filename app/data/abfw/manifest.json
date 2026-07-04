@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "package_id": "abfw-br",
+  "instrument_slug": "abfw",
+  "instrument_title": "ABFW — Avaliação de Linguagem",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "battery",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não se aplica / Nunca"
+    },
+    {
+      "value": 1,
+      "label": "Raramente"
+    },
+    {
+      "value": 2,
+      "label": "Às vezes"
+    },
+    {
+      "value": 3,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 4,
+      "label": "Sempre / Muito frequente"
+    }
+  ],
+  "domains": [
+    {
+      "id": "FON",
+      "title": "Subteste FON"
+    },
+    {
+      "id": "MOR",
+      "title": "Subteste MOR"
+    },
+    {
+      "id": "SEM",
+      "title": "Subteste SEM"
+    }
+  ],
+  "modules": {
+    "FON": {
+      "id": "FON",
+      "title": "Subteste FON",
+      "items": [
+        {
+          "id": "fon_01",
+          "domain": "FON",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "fon_02",
+          "domain": "FON",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "fon_03",
+          "domain": "FON",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "fon_04",
+          "domain": "FON",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "fon_05",
+          "domain": "FON",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "fon_06",
+          "domain": "FON",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "clinician"
+    },
+    "MOR": {
+      "id": "MOR",
+      "title": "Subteste MOR",
+      "items": [
+        {
+          "id": "mor_01",
+          "domain": "MOR",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "mor_02",
+          "domain": "MOR",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "mor_03",
+          "domain": "MOR",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "mor_04",
+          "domain": "MOR",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "mor_05",
+          "domain": "MOR",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "mor_06",
+          "domain": "MOR",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "clinician"
+    },
+    "SEM": {
+      "id": "SEM",
+      "title": "Subteste SEM",
+      "items": [
+        {
+          "id": "sem_01",
+          "domain": "SEM",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "sem_02",
+          "domain": "SEM",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "sem_03",
+          "domain": "SEM",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "sem_04",
+          "domain": "SEM",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "sem_05",
+          "domain": "SEM",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "sem_06",
+          "domain": "SEM",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "external"
+    }
+  },
+  "subtests": [
+    {
+      "id": "FON",
+      "title": "Subteste FON",
+      "item_count": 6
+    },
+    {
+      "id": "MOR",
+      "title": "Subteste MOR",
+      "item_count": 6
+    },
+    {
+      "id": "SEM",
+      "title": "Subteste SEM",
+      "item_count": 6
+    }
+  ],
+  "scoring": {
+    "engine": "battery_module",
+    "subtests": {
+      "FON": {
+        "method": "sum",
+        "item_ids": [
+          "fon_01",
+          "fon_02",
+          "fon_03",
+          "fon_04",
+          "fon_05",
+          "fon_06"
+        ]
+      },
+      "MOR": {
+        "method": "sum",
+        "item_ids": [
+          "mor_01",
+          "mor_02",
+          "mor_03",
+          "mor_04",
+          "mor_05",
+          "mor_06"
+        ]
+      },
+      "SEM": {
+        "method": "sum",
+        "item_ids": [
+          "sem_01",
+          "sem_02",
+          "sem_03",
+          "sem_04",
+          "sem_05",
+          "sem_06"
+        ]
+      }
+    }
+  },
+  "report": {
+    "template_id": "abfw-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [
+    {
+      "slug": "caregiver-sem",
+      "filler": "external",
+      "title": "Semântica — cuidador"
+    }
+  ],
+  "norms_file": "norms-br.json"
+}

@@ -88,6 +88,10 @@ class AssessmentResponse(CamelModel):
     patient_id: str | None = None
     patient_name: str | None = None
     avatar_color: str | None = None
+    answers: dict = Field(default_factory=dict)
+    scores: dict | None = None
+    status: str = "completed"
+    informant: str | None = None
 
 
 class SessionResponse(CamelModel):

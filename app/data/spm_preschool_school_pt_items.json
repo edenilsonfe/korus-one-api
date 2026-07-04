@@ -1,0 +1,357 @@
+[
+  {
+    "id": 1,
+    "domain": "SOC",
+    "text": "Brinca intencionalmente (com boa vontade) com as outras crianças em uma variedade de jogos e atividades."
+  },
+  {
+    "id": 2,
+    "domain": "SOC",
+    "text": "Espera pela sua vez."
+  },
+  {
+    "id": 3,
+    "domain": "SOC",
+    "text": "Participa de forma adequada em atividade de roda no chão/manta."
+  },
+  {
+    "id": 4,
+    "domain": "SOC",
+    "text": "Transita sem problemas para novas atividades."
+  },
+  {
+    "id": 5,
+    "domain": "SOC",
+    "text": "Entra nas brincadeiras com os colegas sem desestabilizar a atividade em curso."
+  },
+  {
+    "id": 6,
+    "domain": "SOC",
+    "text": "Segue as regras e rotinas da sala."
+  },
+  {
+    "id": 7,
+    "domain": "SOC",
+    "text": "Partilha os brinquedos e materiais da sala quando lhe é pedido."
+  },
+  {
+    "id": 8,
+    "domain": "SOC",
+    "text": "Trabalha em cooperação com outras crianças para atingir um objetivo comum (ex.: durante a arrumação, construção com blocos)."
+  },
+  {
+    "id": 9,
+    "domain": "SOC",
+    "text": "Interage com as outras crianças durante atividades de faz-de-conta."
+  },
+  {
+    "id": 10,
+    "domain": "SOC",
+    "text": "Resolve os conflitos com as outras crianças sem a intervenção da educador(a)/professor(a)."
+  },
+  {
+    "id": 11,
+    "domain": "VIS",
+    "text": "Semicerra, protege os olhos com as mãos ou queixa-se da iluminação da sala ou da luz forte do sol."
+  },
+  {
+    "id": 12,
+    "domain": "VIS",
+    "text": "Distrai-se com a presença de objetos ou pessoas (imagens, objetos nas paredes, janelas, outras crianças, etc.)."
+  },
+  {
+    "id": 13,
+    "domain": "VIS",
+    "text": "Tem dificuldade em localizar objetos ou pessoas explorando visualmente a sala ou o recreio."
+  },
+  {
+    "id": 14,
+    "domain": "VIS",
+    "text": "Tem dificuldade em encontrar na secretária ou mesa os objetos que necessita quando estes se encontram no meio de outros."
+  },
+  {
+    "id": 15,
+    "domain": "VIS",
+    "text": "Olha à volta da sala ou para as outras crianças enquanto o educador(a) está a falar."
+  },
+  {
+    "id": 16,
+    "domain": "VIS",
+    "text": "Tem dificuldade em fazer a correspondência de objetos pela cor ou forma."
+  },
+  {
+    "id": 17,
+    "domain": "VIS",
+    "text": "Esbarra contra outras crianças que estão a brincar no recreio."
+  },
+  {
+    "id": 18,
+    "domain": "VIS",
+    "text": "Olha fixamente para pessoas ou objetos."
+  },
+  {
+    "id": 19,
+    "domain": "VIS",
+    "text": "Gosta de olhar para objetos que rodopiem ou se movam mais do que as outras crianças da sua idade."
+  },
+  {
+    "id": 20,
+    "domain": "VIS",
+    "text": "Gosta de olhar para objetos em movimento pelo canto do olho."
+  },
+  {
+    "id": 21,
+    "domain": "AUD",
+    "text": "Mostra-se perturbado com sons fortes (blocos que caem, choros ou gritos de outras crianças, corredores barulhentos, descargas de autoclismo, etc.)."
+  },
+  {
+    "id": 23,
+    "domain": "AUD",
+    "text": "Parece não reparar em novas vozes e novos sons na sala."
+  },
+  {
+    "id": 24,
+    "domain": "AUD",
+    "text": "É incapaz de determinar a localização de sons e vozes."
+  },
+  {
+    "id": 25,
+    "domain": "AUD",
+    "text": "Faz barulhos, trauteia, canta ou grita durante os momentos de silêncio da sala."
+  },
+  {
+    "id": 26,
+    "domain": "AUD",
+    "text": "Gosta de fazer determinados sons repetidamente (ex.: descarregar o autoclismo várias vezes seguidas)."
+  },
+  {
+    "id": 27,
+    "domain": "AUD",
+    "text": "Parece não dar conta de sons em que os outros reparam (ex.: blocos que caem, choros ou gritos de outras crianças, corredores barulhentos)."
+  },
+  {
+    "id": 28,
+    "domain": "AUD",
+    "text": "Tem dificuldade em prestar atenção quando há muito barulho na sala."
+  },
+  {
+    "id": 29,
+    "domain": "AUD",
+    "text": "Parece incapaz de seguir instruções verbais."
+  },
+  {
+    "id": 30,
+    "domain": "AUD",
+    "text": "Fica incomodado ou comenta sons de fundo constantes que os outros ignoram (ex.: ventoinhas, o tiquetaque dos relógios)."
+  },
+  {
+    "id": 31,
+    "domain": "TOQ",
+    "text": "Evita ser tocada pelos outros (ex.: recusa carinhos ou abraços, recusa dar as mãos na fila)."
+  },
+  {
+    "id": 32,
+    "domain": "TOQ",
+    "text": "Mostra-se perturbado quando as mãos ou cara estão sujas (com cola, digitintas, comida, sujidade, etc.)."
+  },
+  {
+    "id": 33,
+    "domain": "TOQ",
+    "text": "Mostra-se perturbado quando lava as mãos com água quente ou fria."
+  },
+  {
+    "id": 34,
+    "domain": "TOQ",
+    "text": "Fica incomodada com o toque acidental de outras crianças (pode bater-lhes ou afastar-se)."
+  },
+  {
+    "id": 35,
+    "domain": "TOQ",
+    "text": "Não limpa a saliva ou comida do rosto (porque não se apercebe)."
+  },
+  {
+    "id": 36,
+    "domain": "TOQ",
+    "text": "Fica perturbado pela sensação de determinadas texturas (materiais da sala de aula, utensílios, equipamento desportivo, etc.)."
+  },
+  {
+    "id": 37,
+    "domain": "TOQ",
+    "text": "Recusa-se a utilizar roupas de \"faz de conta/disfarces\"."
+  },
+  {
+    "id": 38,
+    "domain": "TOQ",
+    "text": "Tem uma tolerância à dor invulgarmente elevada (ex.: demonstra pouco ou nenhum incómodo com feridas e nódoas negras que outras crianças achariam dolorosas)."
+  },
+  {
+    "id": 39,
+    "domain": "TOQ",
+    "text": "Parece não dar conta da necessidade de utilizar a casa de banho (ou mesmo quando tem a fralda molhada ou suja)."
+  },
+  {
+    "id": 40,
+    "domain": "TOQ",
+    "text": "Evita tocar ou brincar com digitinta, massa, areia, barro, lama, cola, ou outras coisas que sujem."
+  },
+  {
+    "id": 41,
+    "domain": "TOQ",
+    "text": "Coloca na boca ou lambe objetos não comestíveis (equipamento do recreio, móveis, brinquedos, etc.)."
+  },
+  {
+    "id": 42,
+    "domain": "TOQ",
+    "text": "Parece não notar odores fortes ou não habituais (cola, tinta, marcadores, etc.)."
+  },
+  {
+    "id": 43,
+    "domain": "TOQ",
+    "text": "Mostra-se perturbada com cheiros do sabonete, perfume, laca ou loções corporais."
+  },
+  {
+    "id": 44,
+    "domain": "TOQ",
+    "text": "Mostra-se perturbada com o sabor de alimentos que não incomodam outras crianças."
+  },
+  {
+    "id": 46,
+    "domain": "CC",
+    "text": "Move a cadeira com brusquidão (empurra a cadeira para baixo da mesa ou puxa a cadeira com demasiada força)."
+  },
+  {
+    "id": 47,
+    "domain": "CC",
+    "text": "Parte acidentalmente tubos de cola, lápis de cor ou lápis de carvão, ou rasga o papel com demasiada força."
+  },
+  {
+    "id": 48,
+    "domain": "CC",
+    "text": "Salta de forma excessiva; procura oportunidades/pontos altos de onde se possa atirar para o chão."
+  },
+  {
+    "id": 49,
+    "domain": "CC",
+    "text": "Abre ou fecha as portas com demasiada força."
+  },
+  {
+    "id": 50,
+    "domain": "CC",
+    "text": "Usa demasiada força quando brinca com objetos (ex.: bate com instrumentos musicais, ou com blocos de construção uns contra os outros)."
+  },
+  {
+    "id": 51,
+    "domain": "CC",
+    "text": "Vai contra as outras crianças de forma excessiva (ex.: quando está na fila ou quando anda de um lado para o outro no recreio)."
+  },
+  {
+    "id": 52,
+    "domain": "CC",
+    "text": "Mastiga ou põe na boca roupa, lápis de carvão, lápis de cor ou recipientes da sala de aula."
+  },
+  {
+    "id": 53,
+    "domain": "CC",
+    "text": "Manuseia de forma demasiado desajeitada/brusca os recipientes de comida e de bebida (pode amolgar ou partir os recipientes, ou entornar o conteúdo dos mesmos)."
+  },
+  {
+    "id": 54,
+    "domain": "CC",
+    "text": "Destroi as construções dos outros colegas (ex.: blocos, circuitos de corridas, legos, pistas, carrinhos)."
+  },
+  {
+    "id": 55,
+    "domain": "CC",
+    "text": "Fecha as tesouras com demasiada força, dando apertões fortes em cada tesourada."
+  },
+  {
+    "id": 56,
+    "domain": "EQU",
+    "text": "Rodopia ou gira de forma excessiva (ex.: no equipamento do parque infantil; na cadeira, etc.)."
+  },
+  {
+    "id": 57,
+    "domain": "EQU",
+    "text": "Encosta-se nas paredes, mobiliário ou outras pessoas para ter suporte quando está de pé."
+  },
+  {
+    "id": 58,
+    "domain": "EQU",
+    "text": "Escorrega na cadeira, ou deita-se sobre a mesa, ou apoia a cabeça nas mãos enquanto está sentada à mesa."
+  },
+  {
+    "id": 59,
+    "domain": "EQU",
+    "text": "Parece excessivamente receosa de atividades com movimento, como andar de baloiço, balancé, andar de escorrega ou utilizar outros equipamentos do parque infantil."
+  },
+  {
+    "id": 61,
+    "domain": "EQU",
+    "text": "Fica desorientada ou revela medo quando se inclina para apanhar objectos do chão."
+  },
+  {
+    "id": 62,
+    "domain": "EQU",
+    "text": "Não se consegue segurar quando vai a cair."
+  },
+  {
+    "id": 63,
+    "domain": "EQU",
+    "text": "Fica incomodada quando está em equipamentos altos do recreio."
+  },
+  {
+    "id": 64,
+    "domain": "EQU",
+    "text": "Tem pouca coordenação."
+  },
+  {
+    "id": 65,
+    "domain": "EQU",
+    "text": "Tem dificuldade em mover o corpo de forma ritmada (ex.: bater palmas, bater com os pés)."
+  },
+  {
+    "id": 67,
+    "domain": "PLA",
+    "text": "Tem dificuldade em arranjar ideias novas durante atividades lúdicas."
+  },
+  {
+    "id": 68,
+    "domain": "PLA",
+    "text": "Brinca de forma repetitiva durante o tempo livre; não modifica a brincadeira para aumentar o desafio."
+  },
+  {
+    "id": 69,
+    "domain": "PLA",
+    "text": "Precisa de adereços realistas (ex.: telefone de brincar) para se envolver na brincadeira de faz-de-conta."
+  },
+  {
+    "id": 70,
+    "domain": "PLA",
+    "text": "Tem dificuldade em imitar corretamente as ações demonstradas (ex.: jogos de movimento, canções com movimentos)."
+  },
+  {
+    "id": 71,
+    "domain": "PLA",
+    "text": "Tem os seus próprios jogos/brincadeiras, evita imitar os outros."
+  },
+  {
+    "id": 72,
+    "domain": "PLA",
+    "text": "Tem dificuldades em copiar construções com blocos realizadas por um adulto ou outra criança."
+  },
+  {
+    "id": 73,
+    "domain": "PLA",
+    "text": "Tem dificuldade em utilizar as duas mãos (de forma coordenada) para cortar, desenhar e pintar (ex.: uma mão segura o papel enquanto a outra executa a tarefa)."
+  },
+  {
+    "id": 74,
+    "domain": "PLA",
+    "text": "Não consegue completar tarefas com vários passos."
+  },
+  {
+    "id": 75,
+    "domain": "PLA",
+    "text": "Não consegue realizar a sequência adequada de ações nas rotinas diárias (ex.: arrumar os materiais da escola, deitar o lixo fora depois do lanche, vestir o casaco quando está na hora de ir para casa)."
+  }
+]

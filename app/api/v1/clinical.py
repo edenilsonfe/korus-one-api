@@ -15,8 +15,40 @@ from app.models.professional import Professional
 from app.schemas.clinical import AssessmentCreate, GoalCreate, GoalUpdate, ProtocolResponse
 from app.schemas.common import PaginatedResponse
 from app.schemas.patient import AssessmentResponse, GoalResponse
+from app.services.assessment_scoring import (
+    build_assessment_from_scores,
+    get_protocol_scoring_mode,
+    score_manifest_protocol,
+)
 from app.services.patient import build_clinical_domains
 from app.services.timeline import create_timeline_event
+
+def _assessment_response(
+    assessment: Assessment,
+    protocol_name: str,
+    professional_name: str,
+    *,
+    patient: Patient | None = None,
+) -> AssessmentResponse:
+    return AssessmentResponse(
+        id=str(assessment.id),
+        protocol=protocol_name,
+        protocol_id=assessment.protocol_id,
+        date=assessment.date.isoformat(),
+        professional=professional_name,
+        result=assessment.result,
+        percentage=assessment.percentage,
+        interpretation=assessment.interpretation,
+        fields=assessment.fields or [],
+        patient_id=str(patient.id) if patient else None,
+        patient_name=patient.name if patient else None,
+        avatar_color=patient.avatar_color if patient else None,
+        answers=assessment.answers or {},
+        scores=assessment.scores,
+        status=assessment.status,
+        informant=assessment.informant,
+    )
+
 
 router = APIRouter(tags=["clinical"])
 
@@ -47,6 +79,7 @@ async def list_protocols(
                 applications=count or 0,
                 avg_result=float(avg_result or 0),
                 last_applied=last_applied.isoformat() if last_applied else None,
+                scoring_mode=get_protocol_scoring_mode(p.id),
             )
         )
     return responses
@@ -65,6 +98,7 @@ async def get_protocol(protocol_id: str, db: AsyncSession = Depends(get_db)):
         description=p.description,
         age_range=p.age_range,
         fields=[{"key": f.get("key", f["label"].lower().replace(" ", "_")), "label": f["label"]} for f in (p.field_templates or [])],
+        scoring_mode=get_protocol_scoring_mode(p.id),
     )
 
 
@@ -90,20 +124,7 @@ async def list_assessments_global(
     total = await db.scalar(select(func.count()).select_from(query.subquery()))
     result = await db.execute(query.order_by(Assessment.date.desc()).offset((page - 1) * limit).limit(limit))
     items = [
-        AssessmentResponse(
-            id=str(a.id),
-            protocol=proto.name,
-            protocol_id=a.protocol_id,
-            date=a.date.isoformat(),
-            professional=professional.name,
-            result=a.result,
-            percentage=a.percentage,
-            interpretation=a.interpretation,
-            fields=a.fields or [],
-            patient_id=str(patient.id),
-            patient_name=patient.name,
-            avatar_color=patient.avatar_color,
-        )
+        _assessment_response(a, proto.name, professional.name, patient=patient)
         for a, patient, proto in result.all()
     ]
     return PaginatedResponse(items=items, total=total or 0, page=page, limit=limit)
@@ -126,17 +147,7 @@ async def list_patient_assessments(
         .order_by(Assessment.date.desc())
     )
     return [
-        AssessmentResponse(
-            id=str(a.id),
-            protocol=p.name,
-            protocol_id=a.protocol_id,
-            date=a.date.isoformat(),
-            professional=professional.name,
-            result=a.result,
-            percentage=a.percentage,
-            interpretation=a.interpretation,
-            fields=a.fields or [],
-        )
+        _assessment_response(a, p.name, professional.name)
         for a, p in result.all()
     ]
 
@@ -152,15 +163,50 @@ async def create_assessment(
     proto = await db.get(ProtocolCatalog, body.protocol_id.lower())
     if not proto:
         raise HTTPException(status_code=404, detail="Protocolo não encontrado")
+
+    answers = body.answers or {}
+    scores = body.scores
+    result_text = body.result
+    percentage = body.percentage
+    interpretation = body.interpretation
+    fields = [f.model_dump() for f in body.fields]
+
+    if answers and get_protocol_scoring_mode(proto.id) == "manifest" and scores is None:
+        try:
+            scores = score_manifest_protocol(proto.id, answers)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail="Pacote do instrumento não encontrado") from exc
+
+    if scores:
+        derived = build_assessment_from_scores(scores)
+        if not result_text:
+            result_text = derived["result"]
+        if not percentage:
+            percentage = derived["percentage"]
+        if not interpretation:
+            interpretation = derived["interpretation"]
+        if not fields:
+            fields = derived["fields"]
+
+    if not result_text:
+        raise HTTPException(status_code=400, detail="Resultado da avaliação é obrigatório")
+
     assessment = Assessment(
         patient_id=patient_id,
         professional_id=professional.id,
         protocol_id=proto.id,
         date=date.fromisoformat(body.date) if body.date else date.today(),
-        result=body.result,
-        percentage=body.percentage,
-        interpretation=body.interpretation,
-        fields=[f.model_dump() for f in body.fields],
+        result=result_text,
+        percentage=percentage,
+        interpretation=interpretation,
+        fields=fields,
+        answers=answers,
+        scores=scores,
+        status=body.status,
+        informant=body.informant,
+        assessment_metadata=body.metadata,
     )
     db.add(assessment)
     await db.flush()
@@ -170,20 +216,10 @@ async def create_assessment(
         professional_id=professional.id,
         event_type="avaliacao",
         title=f"Avaliação {proto.name} aplicada",
-        description=body.result,
+        description=result_text,
         source_id=assessment.id,
     )
-    return AssessmentResponse(
-        id=str(assessment.id),
-        protocol=proto.name,
-        protocol_id=proto.id,
-        date=assessment.date.isoformat(),
-        professional=professional.name,
-        result=assessment.result,
-        percentage=assessment.percentage,
-        interpretation=assessment.interpretation,
-        fields=assessment.fields or [],
-    )
+    return _assessment_response(assessment, proto.name, professional.name)
 
 
 @patient_router.get("/goals", response_model=list[GoalResponse])

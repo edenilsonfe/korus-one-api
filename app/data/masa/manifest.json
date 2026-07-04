@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "package_id": "masa-br",
+  "instrument_slug": "masa",
+  "instrument_title": "MASA — Mann Assessment of Swallowing Ability",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "scaled",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não se aplica / Nunca"
+    },
+    {
+      "value": 1,
+      "label": "Raramente"
+    },
+    {
+      "value": 2,
+      "label": "Às vezes"
+    },
+    {
+      "value": 3,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 4,
+      "label": "Sempre / Muito frequente"
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Pontuação total"
+    }
+  ],
+  "items": [
+    {
+      "id": "masa_01",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_02",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_03",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_04",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_05",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_06",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_07",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_08",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_09",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_10",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_11",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 11 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "masa_12",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 12 — descrição resumida do comportamento/indicador clínico."
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "sum",
+        "item_ids": [
+          "masa_01",
+          "masa_02",
+          "masa_03",
+          "masa_04",
+          "masa_05",
+          "masa_06",
+          "masa_07",
+          "masa_08",
+          "masa_09",
+          "masa_10",
+          "masa_11",
+          "masa_12"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 0,
+        "max": 24,
+        "label": "Disfagia significativa"
+      },
+      {
+        "min": 25,
+        "max": 48,
+        "label": "Disfagia leve a moderada"
+      },
+      {
+        "min": 49,
+        "max": 60,
+        "label": "Função de deglutição preservada"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "masa-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

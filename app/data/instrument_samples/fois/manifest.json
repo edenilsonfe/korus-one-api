@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "package_id": "fois-br",
+  "instrument_slug": "fois",
+  "instrument_title": "FOIS — Functional Oral Intake Scale",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": null,
+  "archetype": "scaled",
+  "min_age_months": null,
+  "max_age_months": null,
+  "scale": [
+    {
+      "value": 1,
+      "label": "Nada por via oral — todas as necessidades nutricionais e hidratação por sonda ou traqueostomia."
+    },
+    {
+      "value": 2,
+      "label": "Dependente de sonda/tracostomia — ingestão oral mínima ou inconsistente (apenas degustação ou pequenas quantidades)."
+    },
+    {
+      "value": 3,
+      "label": "Dependente de sonda/tracostomia — ingestão oral consistente de alimentos e líquidos."
+    },
+    {
+      "value": 4,
+      "label": "Dieta oral total de consistência única (ex.: apenas pastosa ou apenas líquidos finos)."
+    },
+    {
+      "value": 5,
+      "label": "Dieta oral total com múltiplas consistências, exigindo preparo especial ou compensações."
+    },
+    {
+      "value": 6,
+      "label": "Dieta oral total com múltiplas consistências sem preparo especial, com limitações alimentares específicas."
+    },
+    {
+      "value": 7,
+      "label": "Dieta oral total sem restrições."
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Nível FOIS"
+    }
+  ],
+  "items": [
+    {
+      "id": "fois_level",
+      "domain": "TOTAL",
+      "text": "Selecione o nível que melhor descreve a ingestão oral funcional atual do paciente:"
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "item_value",
+        "item_id": "fois_level"
+      }
+    },
+    "interpretations": [
+      {
+        "min": 1,
+        "max": 3,
+        "label": "Ingestão oral limitada ou dependência de suporte enteral"
+      },
+      {
+        "min": 4,
+        "max": 5,
+        "label": "Dieta oral total com restrições de consistência ou preparo especial"
+      },
+      {
+        "min": 6,
+        "max": 7,
+        "label": "Dieta oral total com poucas ou nenhuma restrição"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "fois-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": []
+}

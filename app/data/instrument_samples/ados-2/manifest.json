@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "package_id": "ados-2-br",
+  "instrument_slug": "ados-2",
+  "instrument_title": "ADOS-2 — Autism Diagnostic Observation Schedule",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "observational",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Ausente / Não observado"
+    },
+    {
+      "value": 1,
+      "label": "Parcial / Emergente"
+    },
+    {
+      "value": 2,
+      "label": "Presente / Adequado"
+    }
+  ],
+  "domains": [
+    {
+      "id": "MOD1",
+      "title": "Módulo MOD1"
+    },
+    {
+      "id": "MOD2",
+      "title": "Módulo MOD2"
+    }
+  ],
+  "modules": {
+    "MOD1": {
+      "id": "MOD1",
+      "title": "Módulo MOD1",
+      "items": [
+        {
+          "id": "mod1_01",
+          "domain": "MOD1",
+          "module": "MOD1",
+          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+        },
+        {
+          "id": "mod1_02",
+          "domain": "MOD1",
+          "module": "MOD1",
+          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+        },
+        {
+          "id": "mod1_03",
+          "domain": "MOD1",
+          "module": "MOD1",
+          "text": "[Sample] Atividade 3 — observação clínica estruturada."
+        },
+        {
+          "id": "mod1_04",
+          "domain": "MOD1",
+          "module": "MOD1",
+          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+        }
+      ]
+    },
+    "MOD2": {
+      "id": "MOD2",
+      "title": "Módulo MOD2",
+      "items": [
+        {
+          "id": "mod2_01",
+          "domain": "MOD2",
+          "module": "MOD2",
+          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+        },
+        {
+          "id": "mod2_02",
+          "domain": "MOD2",
+          "module": "MOD2",
+          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+        },
+        {
+          "id": "mod2_03",
+          "domain": "MOD2",
+          "module": "MOD2",
+          "text": "[Sample] Atividade 3 — observação clínica estruturada."
+        },
+        {
+          "id": "mod2_04",
+          "domain": "MOD2",
+          "module": "MOD2",
+          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "mod1_01",
+      "domain": "MOD1",
+      "module": "MOD1",
+      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+    },
+    {
+      "id": "mod1_02",
+      "domain": "MOD1",
+      "module": "MOD1",
+      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+    },
+    {
+      "id": "mod1_03",
+      "domain": "MOD1",
+      "module": "MOD1",
+      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+    },
+    {
+      "id": "mod1_04",
+      "domain": "MOD1",
+      "module": "MOD1",
+      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+    },
+    {
+      "id": "mod2_01",
+      "domain": "MOD2",
+      "module": "MOD2",
+      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+    },
+    {
+      "id": "mod2_02",
+      "domain": "MOD2",
+      "module": "MOD2",
+      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+    },
+    {
+      "id": "mod2_03",
+      "domain": "MOD2",
+      "module": "MOD2",
+      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+    },
+    {
+      "id": "mod2_04",
+      "domain": "MOD2",
+      "module": "MOD2",
+      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+    }
+  ],
+  "scoring": {
+    "engine": "observational_rubric",
+    "modules": {
+      "MOD1": {
+        "method": "mean",
+        "item_ids": [
+          "mod1_01",
+          "mod1_02",
+          "mod1_03",
+          "mod1_04"
+        ]
+      },
+      "MOD2": {
+        "method": "mean",
+        "item_ids": [
+          "mod2_01",
+          "mod2_02",
+          "mod2_03",
+          "mod2_04"
+        ]
+      }
+    }
+  },
+  "report": {
+    "template_id": "ados-2-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "requires_competency_ack": true,
+  "supports_multi_session": true,
+  "norms_file": "norms-br.json"
+}

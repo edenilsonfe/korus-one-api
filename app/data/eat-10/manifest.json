@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "package_id": "eat-10-br",
+  "instrument_slug": "eat-10",
+  "instrument_title": "EAT-10 — Eating Assessment Tool",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": null,
+  "archetype": "scaled",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Sem problema"
+    },
+    {
+      "value": 1,
+      "label": "Problema"
+    },
+    {
+      "value": 2,
+      "label": "Problema significativo"
+    },
+    {
+      "value": 3,
+      "label": "Problema severo"
+    },
+    {
+      "value": 4,
+      "label": "Incapaz de realizar"
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Pontuação total"
+    }
+  ],
+  "items": [
+    {
+      "id": "eat10_01",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_02",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_03",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_04",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_05",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_06",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_07",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_08",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_09",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "eat10_10",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "sum",
+        "item_ids": [
+          "eat10_01",
+          "eat10_02",
+          "eat10_03",
+          "eat10_04",
+          "eat10_05",
+          "eat10_06",
+          "eat10_07",
+          "eat10_08",
+          "eat10_09",
+          "eat10_10"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 0,
+        "max": 2,
+        "label": "Baixo risco de disfagia"
+      },
+      {
+        "min": 3,
+        "max": 40,
+        "label": "Risco de disfagia — investigação clínica indicada"
+      }
+    ],
+    "cutoffs": [
+      {
+        "domain": "TOTAL",
+        "operator": ">=",
+        "value": 3,
+        "label": "Positivo para disfagia"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "eat-10-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [
+    {
+      "slug": "caregiver",
+      "filler": "external",
+      "title": "Versão cuidador"
+    }
+  ]
+}

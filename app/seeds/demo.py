@@ -26,14 +26,14 @@ async def seed_protocols(session) -> None:
 
 async def seed_demo(session) -> None:
     result = await session.execute(
-        select(Professional).where(Professional.email == "camila.rocha@KorusOne.com")
+        select(Professional).where(Professional.email == "admin@admin.com")
     )
     if result.scalar_one_or_none():
         return
 
     professional = Professional(
-        email="camila.rocha@KorusOne.com",
-        password_hash=hash_password("demo12345"),
+        email="admin@admin.com",
+        password_hash=hash_password("admin123"),
         name="Dra. Camila Rocha",
         specialty="Fonoaudiologia — Linguagem Infantil / TEA",
         council="CRFa 2-12345",

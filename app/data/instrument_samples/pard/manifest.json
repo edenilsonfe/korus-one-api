@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "package_id": "pard-br",
+  "instrument_slug": "pard",
+  "instrument_title": "PARD — Protocolo de Avaliação de Risco de Disfagia",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": null,
+  "archetype": "scaled",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não"
+    },
+    {
+      "value": 1,
+      "label": "Sim"
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Pontuação total"
+    }
+  ],
+  "items": [
+    {
+      "id": "pard_01",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_02",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_03",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_04",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_05",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_06",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_07",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "pard_08",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "sum",
+        "item_ids": [
+          "pard_01",
+          "pard_02",
+          "pard_03",
+          "pard_04",
+          "pard_05",
+          "pard_06",
+          "pard_07",
+          "pard_08"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 0,
+        "max": 2,
+        "label": "Baixo risco"
+      },
+      {
+        "min": 3,
+        "max": 8,
+        "label": "Risco elevado — avaliação fonoaudiológica indicada"
+      }
+    ],
+    "cutoffs": [
+      {
+        "domain": "TOTAL",
+        "operator": ">=",
+        "value": 3,
+        "label": "Risco de disfagia"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "pard-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": []
+}

@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "package_id": "tvip-br",
+  "instrument_slug": "tvip",
+  "instrument_title": "TVIP — Teste de Vocabulário por Imagens Peabody",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "battery",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não se aplica / Nunca"
+    },
+    {
+      "value": 1,
+      "label": "Raramente"
+    },
+    {
+      "value": 2,
+      "label": "Às vezes"
+    },
+    {
+      "value": 3,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 4,
+      "label": "Sempre / Muito frequente"
+    }
+  ],
+  "domains": [
+    {
+      "id": "VOC",
+      "title": "Subteste VOC"
+    }
+  ],
+  "modules": {
+    "VOC": {
+      "id": "VOC",
+      "title": "Subteste VOC",
+      "items": [
+        {
+          "id": "voc_01",
+          "domain": "VOC",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "voc_02",
+          "domain": "VOC",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "voc_03",
+          "domain": "VOC",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "voc_04",
+          "domain": "VOC",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "voc_05",
+          "domain": "VOC",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "voc_06",
+          "domain": "VOC",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "clinician"
+    }
+  },
+  "subtests": [
+    {
+      "id": "VOC",
+      "title": "Subteste VOC",
+      "item_count": 6
+    }
+  ],
+  "scoring": {
+    "engine": "battery_module",
+    "subtests": {
+      "VOC": {
+        "method": "sum",
+        "item_ids": [
+          "voc_01",
+          "voc_02",
+          "voc_03",
+          "voc_04",
+          "voc_05",
+          "voc_06"
+        ]
+      }
+    }
+  },
+  "report": {
+    "template_id": "tvip-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

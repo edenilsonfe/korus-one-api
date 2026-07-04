@@ -18,6 +18,7 @@ class ProtocolResponse(CamelModel):
     applications: int = 0
     avg_result: float = 0
     last_applied: str | None = None
+    scoring_mode: str = "manual"
 
 
 class AssessmentFieldInput(CamelModel):
@@ -28,10 +29,15 @@ class AssessmentFieldInput(CamelModel):
 class AssessmentCreate(CamelModel):
     protocol_id: str
     date: str | None = None
-    result: str
-    percentage: int
+    result: str = ""
+    percentage: int = 0
     interpretation: str = ""
     fields: list[AssessmentFieldInput] = Field(default_factory=list)
+    answers: dict = Field(default_factory=dict)
+    scores: dict | None = None
+    status: str = "completed"
+    informant: str | None = None
+    metadata: dict | None = None
 
 
 class GoalCreate(CamelModel):

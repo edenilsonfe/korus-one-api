@@ -33,9 +33,9 @@ class Settings(BaseSettings):
     s3_bucket: str = "korus-attachments"
     s3_region: str = "us-east-1"
 
-    openai_api_key: str = ""
-    openai_base_url: str = "https://api.openai.com/v1"
-    openai_model: str = "gpt-4o-mini"
+    opencode_api_key: str = ""
+    opencode_base_url: str = "https://opencode.ai/zen/v1"
+    opencode_model: str = "deepseek-v4-flash"
 
     whatsapp_provider: str = "evolution"
     whatsapp_credential_encryption_key: str = ""
@@ -55,6 +55,10 @@ class Settings(BaseSettings):
     asaas_webhook_token: str = ""
     frontend_url: str = "http://localhost:5173"
     trial_days: int = 7
+
+    instrument_packages_root: str = ""
+    spm_content_package_path: str = ""
+    spm_informant_link_expire_days: int = 14
 
     @property
     def effective_billing_provider(self) -> str:

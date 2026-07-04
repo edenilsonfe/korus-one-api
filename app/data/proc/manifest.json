@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "package_id": "proc-br",
+  "instrument_slug": "proc",
+  "instrument_title": "PROC — Prova de Nomeação por Confrontação",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "battery",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não se aplica / Nunca"
+    },
+    {
+      "value": 1,
+      "label": "Raramente"
+    },
+    {
+      "value": 2,
+      "label": "Às vezes"
+    },
+    {
+      "value": 3,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 4,
+      "label": "Sempre / Muito frequente"
+    }
+  ],
+  "domains": [
+    {
+      "id": "NOM",
+      "title": "Subteste NOM"
+    }
+  ],
+  "modules": {
+    "NOM": {
+      "id": "NOM",
+      "title": "Subteste NOM",
+      "items": [
+        {
+          "id": "nom_01",
+          "domain": "NOM",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "nom_02",
+          "domain": "NOM",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "nom_03",
+          "domain": "NOM",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "nom_04",
+          "domain": "NOM",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "nom_05",
+          "domain": "NOM",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "nom_06",
+          "domain": "NOM",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "clinician"
+    }
+  },
+  "subtests": [
+    {
+      "id": "NOM",
+      "title": "Subteste NOM",
+      "item_count": 6
+    }
+  ],
+  "scoring": {
+    "engine": "battery_module",
+    "subtests": {
+      "NOM": {
+        "method": "sum",
+        "item_ids": [
+          "nom_01",
+          "nom_02",
+          "nom_03",
+          "nom_04",
+          "nom_05",
+          "nom_06"
+        ]
+      }
+    }
+  },
+  "report": {
+    "template_id": "proc-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

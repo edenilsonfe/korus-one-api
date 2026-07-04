@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "package_id": "tli-br",
+  "instrument_slug": "tli",
+  "instrument_title": "TLI — Teste de Linguagem Infantil",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "battery",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não se aplica / Nunca"
+    },
+    {
+      "value": 1,
+      "label": "Raramente"
+    },
+    {
+      "value": 2,
+      "label": "Às vezes"
+    },
+    {
+      "value": 3,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 4,
+      "label": "Sempre / Muito frequente"
+    }
+  ],
+  "domains": [
+    {
+      "id": "EXP",
+      "title": "Subteste EXP"
+    },
+    {
+      "id": "REC",
+      "title": "Subteste REC"
+    }
+  ],
+  "modules": {
+    "EXP": {
+      "id": "EXP",
+      "title": "Subteste EXP",
+      "items": [
+        {
+          "id": "exp_01",
+          "domain": "EXP",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "exp_02",
+          "domain": "EXP",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "exp_03",
+          "domain": "EXP",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "exp_04",
+          "domain": "EXP",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "exp_05",
+          "domain": "EXP",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "exp_06",
+          "domain": "EXP",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "clinician"
+    },
+    "REC": {
+      "id": "REC",
+      "title": "Subteste REC",
+      "items": [
+        {
+          "id": "rec_01",
+          "domain": "REC",
+          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "rec_02",
+          "domain": "REC",
+          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "rec_03",
+          "domain": "REC",
+          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "rec_04",
+          "domain": "REC",
+          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "rec_05",
+          "domain": "REC",
+          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+        },
+        {
+          "id": "rec_06",
+          "domain": "REC",
+          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+        }
+      ],
+      "filler": "clinician"
+    }
+  },
+  "subtests": [
+    {
+      "id": "EXP",
+      "title": "Subteste EXP",
+      "item_count": 6
+    },
+    {
+      "id": "REC",
+      "title": "Subteste REC",
+      "item_count": 6
+    }
+  ],
+  "scoring": {
+    "engine": "battery_module",
+    "subtests": {
+      "EXP": {
+        "method": "sum",
+        "item_ids": [
+          "exp_01",
+          "exp_02",
+          "exp_03",
+          "exp_04",
+          "exp_05",
+          "exp_06"
+        ]
+      },
+      "REC": {
+        "method": "sum",
+        "item_ids": [
+          "rec_01",
+          "rec_02",
+          "rec_03",
+          "rec_04",
+          "rec_05",
+          "rec_06"
+        ]
+      }
+    }
+  },
+  "report": {
+    "template_id": "tli-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

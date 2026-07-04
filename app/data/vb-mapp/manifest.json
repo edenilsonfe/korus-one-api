@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "package_id": "vb-mapp-br",
+  "instrument_slug": "vb-mapp",
+  "instrument_title": "VB-MAPP — Verbal Behavior Milestones",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "multi_domain",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não adquirido"
+    },
+    {
+      "value": 1,
+      "label": "Emergente"
+    },
+    {
+      "value": 2,
+      "label": "Adquirido"
+    }
+  ],
+  "domains": [
+    {
+      "id": "LING",
+      "title": "Domínio LING"
+    },
+    {
+      "id": "SOC",
+      "title": "Domínio SOC"
+    },
+    {
+      "id": "ACAD",
+      "title": "Domínio ACAD"
+    }
+  ],
+  "items": [
+    {
+      "id": "LING_item_01",
+      "domain": "LING",
+      "text": "[Sample] Critério 1 do domínio LING."
+    },
+    {
+      "id": "LING_item_02",
+      "domain": "LING",
+      "text": "[Sample] Critério 2 do domínio LING."
+    },
+    {
+      "id": "LING_item_03",
+      "domain": "LING",
+      "text": "[Sample] Critério 3 do domínio LING."
+    },
+    {
+      "id": "LING_item_04",
+      "domain": "LING",
+      "text": "[Sample] Critério 4 do domínio LING."
+    },
+    {
+      "id": "LING_item_05",
+      "domain": "LING",
+      "text": "[Sample] Critério 5 do domínio LING."
+    },
+    {
+      "id": "SOC_item_01",
+      "domain": "SOC",
+      "text": "[Sample] Critério 1 do domínio SOC."
+    },
+    {
+      "id": "SOC_item_02",
+      "domain": "SOC",
+      "text": "[Sample] Critério 2 do domínio SOC."
+    },
+    {
+      "id": "SOC_item_03",
+      "domain": "SOC",
+      "text": "[Sample] Critério 3 do domínio SOC."
+    },
+    {
+      "id": "SOC_item_04",
+      "domain": "SOC",
+      "text": "[Sample] Critério 4 do domínio SOC."
+    },
+    {
+      "id": "SOC_item_05",
+      "domain": "SOC",
+      "text": "[Sample] Critério 5 do domínio SOC."
+    },
+    {
+      "id": "ACAD_item_01",
+      "domain": "ACAD",
+      "text": "[Sample] Critério 1 do domínio ACAD."
+    },
+    {
+      "id": "ACAD_item_02",
+      "domain": "ACAD",
+      "text": "[Sample] Critério 2 do domínio ACAD."
+    },
+    {
+      "id": "ACAD_item_03",
+      "domain": "ACAD",
+      "text": "[Sample] Critério 3 do domínio ACAD."
+    },
+    {
+      "id": "ACAD_item_04",
+      "domain": "ACAD",
+      "text": "[Sample] Critério 4 do domínio ACAD."
+    },
+    {
+      "id": "ACAD_item_05",
+      "domain": "ACAD",
+      "text": "[Sample] Critério 5 do domínio ACAD."
+    }
+  ],
+  "scoring": {
+    "engine": "domain_mastery",
+    "domains": {
+      "LING": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "LING_item_01",
+          "LING_item_02",
+          "LING_item_03",
+          "LING_item_04",
+          "LING_item_05"
+        ]
+      },
+      "SOC": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "SOC_item_01",
+          "SOC_item_02",
+          "SOC_item_03",
+          "SOC_item_04",
+          "SOC_item_05"
+        ]
+      },
+      "ACAD": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "ACAD_item_01",
+          "ACAD_item_02",
+          "ACAD_item_03",
+          "ACAD_item_04",
+          "ACAD_item_05"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 0,
+        "max": 49,
+        "label": "Habilidades iniciais — foco em ensino estruturado"
+      },
+      {
+        "min": 50,
+        "max": 79,
+        "label": "Desenvolvimento parcial — metas intermediárias"
+      },
+      {
+        "min": 80,
+        "max": 100,
+        "label": "Domínio elevado na amostra aplicada"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "vb-mapp-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes",
+      "metas"
+    ]
+  },
+  "informant_forms": [],
+  "suggested_goals_template": true,
+  "norms_file": "norms-br.json"
+}

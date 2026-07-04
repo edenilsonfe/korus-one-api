@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "package_id": "mbgr-br",
+  "instrument_slug": "mbgr",
+  "instrument_title": "MBGR — Motricidade Bucofacial",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "scaled",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Nunca / Ausente"
+    },
+    {
+      "value": 1,
+      "label": "Ocasionalmente"
+    },
+    {
+      "value": 2,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 3,
+      "label": "Muito frequentemente / Severo"
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Pontuação total"
+    }
+  ],
+  "items": [
+    {
+      "id": "mbgr_01",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_02",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_03",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_04",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_05",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_06",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_07",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_08",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_09",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_10",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_11",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 11 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "mbgr_12",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 12 — descrição resumida do comportamento/indicador clínico."
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_likert_mean",
+    "domains": {
+      "TOTAL": {
+        "method": "mean",
+        "item_ids": [
+          "mbgr_01",
+          "mbgr_02",
+          "mbgr_03",
+          "mbgr_04",
+          "mbgr_05",
+          "mbgr_06",
+          "mbgr_07",
+          "mbgr_08",
+          "mbgr_09",
+          "mbgr_10",
+          "mbgr_11",
+          "mbgr_12"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 0,
+        "max": 1.0,
+        "label": "Função orofacial adequada"
+      },
+      {
+        "min": 1.01,
+        "max": 2.0,
+        "label": "Alterações leves a moderadas"
+      },
+      {
+        "min": 2.01,
+        "max": 3.0,
+        "label": "Alterações significativas"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "mbgr-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

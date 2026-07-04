@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "package_id": "cars-br",
+  "instrument_slug": "cars",
+  "instrument_title": "CARS — Childhood Autism Rating Scale",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "scaled",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não se aplica / Nunca"
+    },
+    {
+      "value": 1,
+      "label": "Raramente"
+    },
+    {
+      "value": 2,
+      "label": "Às vezes"
+    },
+    {
+      "value": 3,
+      "label": "Frequentemente"
+    },
+    {
+      "value": 4,
+      "label": "Sempre / Muito frequente"
+    }
+  ],
+  "domains": [
+    {
+      "id": "TOTAL",
+      "title": "Pontuação total"
+    }
+  ],
+  "items": [
+    {
+      "id": "cars_01",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_02",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_03",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_04",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_05",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_06",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_07",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_08",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_09",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_10",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_11",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 11 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_12",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 12 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_13",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 13 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_14",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 14 — descrição resumida do comportamento/indicador clínico."
+    },
+    {
+      "id": "cars_15",
+      "domain": "TOTAL",
+      "text": "[Sample] Item 15 — descrição resumida do comportamento/indicador clínico."
+    }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "sum",
+        "item_ids": [
+          "cars_01",
+          "cars_02",
+          "cars_03",
+          "cars_04",
+          "cars_05",
+          "cars_06",
+          "cars_07",
+          "cars_08",
+          "cars_09",
+          "cars_10",
+          "cars_11",
+          "cars_12",
+          "cars_13",
+          "cars_14",
+          "cars_15"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 15,
+        "max": 29,
+        "label": "Sem indícios significativos de autismo"
+      },
+      {
+        "min": 30,
+        "max": 36,
+        "label": "Autismo leve a moderado"
+      },
+      {
+        "min": 37,
+        "max": 60,
+        "label": "Autismo severo"
+      }
+    ],
+    "cutoffs": [
+      {
+        "domain": "TOTAL",
+        "operator": ">=",
+        "value": 30,
+        "label": "Corte clínico TEA"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "cars-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
+  },
+  "informant_forms": [],
+  "norms_file": "norms-br.json"
+}

@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "package_id": "ablls-r-br",
+  "instrument_slug": "ablls-r",
+  "instrument_title": "ABLLS-R — Assessment of Basic Language and Learning Skills",
+  "publisher": "Development sample",
+  "license_ref": "DEV-SAMPLE",
+  "norms_region": "BR",
+  "archetype": "multi_domain",
+  "scale": [
+    {
+      "value": 0,
+      "label": "Não adquirido"
+    },
+    {
+      "value": 1,
+      "label": "Emergente"
+    },
+    {
+      "value": 2,
+      "label": "Adquirido"
+    }
+  ],
+  "domains": [
+    {
+      "id": "A",
+      "title": "Domínio A"
+    },
+    {
+      "id": "B",
+      "title": "Domínio B"
+    },
+    {
+      "id": "C",
+      "title": "Domínio C"
+    }
+  ],
+  "items": [
+    {
+      "id": "A_item_01",
+      "domain": "A",
+      "text": "[Sample] Critério 1 do domínio A."
+    },
+    {
+      "id": "A_item_02",
+      "domain": "A",
+      "text": "[Sample] Critério 2 do domínio A."
+    },
+    {
+      "id": "A_item_03",
+      "domain": "A",
+      "text": "[Sample] Critério 3 do domínio A."
+    },
+    {
+      "id": "A_item_04",
+      "domain": "A",
+      "text": "[Sample] Critério 4 do domínio A."
+    },
+    {
+      "id": "A_item_05",
+      "domain": "A",
+      "text": "[Sample] Critério 5 do domínio A."
+    },
+    {
+      "id": "B_item_01",
+      "domain": "B",
+      "text": "[Sample] Critério 1 do domínio B."
+    },
+    {
+      "id": "B_item_02",
+      "domain": "B",
+      "text": "[Sample] Critério 2 do domínio B."
+    },
+    {
+      "id": "B_item_03",
+      "domain": "B",
+      "text": "[Sample] Critério 3 do domínio B."
+    },
+    {
+      "id": "B_item_04",
+      "domain": "B",
+      "text": "[Sample] Critério 4 do domínio B."
+    },
+    {
+      "id": "B_item_05",
+      "domain": "B",
+      "text": "[Sample] Critério 5 do domínio B."
+    },
+    {
+      "id": "C_item_01",
+      "domain": "C",
+      "text": "[Sample] Critério 1 do domínio C."
+    },
+    {
+      "id": "C_item_02",
+      "domain": "C",
+      "text": "[Sample] Critério 2 do domínio C."
+    },
+    {
+      "id": "C_item_03",
+      "domain": "C",
+      "text": "[Sample] Critério 3 do domínio C."
+    },
+    {
+      "id": "C_item_04",
+      "domain": "C",
+      "text": "[Sample] Critério 4 do domínio C."
+    },
+    {
+      "id": "C_item_05",
+      "domain": "C",
+      "text": "[Sample] Critério 5 do domínio C."
+    }
+  ],
+  "scoring": {
+    "engine": "domain_mastery",
+    "domains": {
+      "A": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "A_item_01",
+          "A_item_02",
+          "A_item_03",
+          "A_item_04",
+          "A_item_05"
+        ]
+      },
+      "B": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "B_item_01",
+          "B_item_02",
+          "B_item_03",
+          "B_item_04",
+          "B_item_05"
+        ]
+      },
+      "C": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "C_item_01",
+          "C_item_02",
+          "C_item_03",
+          "C_item_04",
+          "C_item_05"
+        ]
+      }
+    },
+    "interpretations": [
+      {
+        "min": 0,
+        "max": 49,
+        "label": "Habilidades iniciais — foco em ensino estruturado"
+      },
+      {
+        "min": 50,
+        "max": 79,
+        "label": "Desenvolvimento parcial — metas intermediárias"
+      },
+      {
+        "min": 80,
+        "max": 100,
+        "label": "Domínio elevado na amostra aplicada"
+      }
+    ]
+  },
+  "report": {
+    "template_id": "ablls-r-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes",
+      "metas"
+    ]
+  },
+  "informant_forms": [],
+  "suggested_goals_template": true,
+  "norms_file": "norms-br.json"
+}

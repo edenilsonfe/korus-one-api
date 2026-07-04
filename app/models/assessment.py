@@ -35,6 +35,15 @@ class Assessment(Base, TimestampMixin):
     percentage: Mapped[int] = mapped_column(Integer, nullable=False)
     interpretation: Mapped[str] = mapped_column(Text, default="", nullable=False)
     fields: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    answers: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    scores: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    status: Mapped[str] = mapped_column(String(32), default="completed", nullable=False)
+    informant: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    assessment_metadata: Mapped[dict | None] = mapped_column("metadata", JSONB, nullable=True)
 
     patient: Mapped["Patient"] = relationship(back_populates="assessments")  # noqa: F821
     protocol: Mapped["ProtocolCatalog"] = relationship()
+    spm_subforms: Mapped[list["SpmSubformAssessment"]] = relationship(  # noqa: F821
+        back_populates="battery",
+        cascade="all, delete-orphan",
+    )

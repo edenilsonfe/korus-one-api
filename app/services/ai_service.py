@@ -80,14 +80,14 @@ async def build_patient_context(db: AsyncSession, patient_id: UUID) -> str:
 
 async def run_llm(prompt: str, system: str = "") -> str:
     settings = get_settings()
-    if not settings.openai_api_key:
-        return "[Resposta simulada — configure OPENAI_API_KEY para respostas reais]\n\n" + prompt[:500]
+    if not settings.opencode_api_key:
+        return "[Resposta simulada — configure OPENCODE_API_KEY para respostas reais]\n\n" + prompt[:500]
     from openai import AsyncOpenAI
 
-    client = AsyncOpenAI(api_key=settings.openai_api_key, base_url=settings.openai_base_url)
+    client = AsyncOpenAI(api_key=settings.opencode_api_key, base_url=settings.opencode_base_url)
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": prompt})
-    response = await client.chat.completions.create(model=settings.openai_model, messages=messages)
+    response = await client.chat.completions.create(model=settings.opencode_model, messages=messages)
     return response.choices[0].message.content or ""
