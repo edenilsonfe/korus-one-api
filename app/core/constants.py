@@ -1,11 +1,3 @@
-DIAGNOSIS_LABELS: dict[str, str] = {
-    "tea": "TEA — Transtorno do Espectro Autista",
-    "linguagem": "Atraso de Linguagem",
-    "apraxia": "Apraxia de Fala na Infância",
-    "dislexia": "Dislexia",
-    "outros": "Distúrbio Fonológico",
-}
-
 AVATAR_COLORS = [
     "oklch(0.58 0.12 205)",
     "oklch(0.62 0.15 155)",

@@ -62,9 +62,16 @@ async def build_patient_context(db: AsyncSession, patient_id: UUID) -> str:
         await db.execute(select(Assessment).where(Assessment.patient_id == patient_id).order_by(Assessment.date.desc()).limit(3))
     ).scalars().all()
 
+    from app.core.diagnosis_catalog import diagnosis_labels
+
+    professional = await db.get(Professional, patient.professional_id)
+    specialty_key = professional.specialty_key if professional else "fono"
+    keys = patient.diagnosis_keys or []
+    diag_text = ", ".join(diagnosis_labels(keys, specialty_key)) if keys else "Não informado"
+
     lines = [
         f"Paciente: {patient.name}",
-        f"Diagnóstico: {patient.diagnosis_key}",
+        f"Diagnósticos: {diag_text}",
         f"Status: {patient.status}",
         f"Sessões: {aggregates['sessions_count']}",
         f"Metas atingidas: {aggregates['goals_achieved']}/{aggregates['total_goals']}",

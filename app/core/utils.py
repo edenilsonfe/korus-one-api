@@ -3,11 +3,12 @@ from uuid import UUID
 
 from dateutil.relativedelta import relativedelta
 
-from app.core.constants import DIAGNOSIS_LABELS, GOAL_ACHIEVED_THRESHOLD
+from app.core.constants import GOAL_ACHIEVED_THRESHOLD
+from app.core.diagnosis_catalog import diagnosis_label as catalog_diagnosis_label
 
 
-def diagnosis_label(key: str) -> str:
-    return DIAGNOSIS_LABELS.get(key, key)
+def diagnosis_label(key: str, specialty_key: str = "fono") -> str:
+    return catalog_diagnosis_label(key, specialty_key)
 
 
 def calculate_age(birth_date: date, on_date: date | None = None) -> int:

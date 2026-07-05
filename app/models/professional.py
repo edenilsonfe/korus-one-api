@@ -16,6 +16,7 @@ class Professional(Base, TimestampMixin):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     specialty: Mapped[str] = mapped_column(String(255), default="", nullable=False)
+    specialty_key: Mapped[str] = mapped_column(String(32), default="fono", nullable=False)
     council: Mapped[str] = mapped_column(String(100), default="", nullable=False)
     phone: Mapped[str] = mapped_column(String(50), default="", nullable=False)
     cpf: Mapped[str] = mapped_column(String(14), default="", nullable=False)

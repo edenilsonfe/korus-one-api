@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 
-from app.api.v1 import ai, appointments, auth, billing, clinical, dashboard, instruments, me, patients, prontuario, sessions, spm, spm_informant, timeline, webhooks, whatsapp
+from app.api.v1 import ai, appointments, auth, billing, catalog, clinical, dashboard, instruments, me, patients, prontuario, sessions, spm, spm_informant, timeline, webhooks, whatsapp
 
 api_router = APIRouter()
 api_router.include_router(auth.router)
 api_router.include_router(billing.router)
 api_router.include_router(me.router)
+api_router.include_router(catalog.router)
 api_router.include_router(patients.router)
 api_router.include_router(appointments.router)
 api_router.include_router(sessions.router)

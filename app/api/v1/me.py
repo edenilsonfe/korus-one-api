@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_professional
+from app.core.specialty_catalog import specialty_label
 from app.db.session import get_db
 from app.models.professional import Professional
 from app.schemas.professional import ProfessionalResponse, ProfessionalUpdate
@@ -13,7 +14,8 @@ def _to_response(p: Professional) -> ProfessionalResponse:
     return ProfessionalResponse(
         id=str(p.id),
         name=p.name,
-        specialty=p.specialty,
+        specialty=p.specialty or specialty_label(p.specialty_key),
+        specialty_key=p.specialty_key,
         council=p.council,
         email=p.email,
         phone=p.phone,
@@ -33,7 +35,11 @@ async def update_me(
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
-    for field, value in body.model_dump(exclude_unset=True).items():
+    data = body.model_dump(exclude_unset=True)
+    if "specialty_key" in data and data["specialty_key"] is not None:
+        professional.specialty_key = data.pop("specialty_key")
+        professional.specialty = specialty_label(professional.specialty_key)
+    for field, value in data.items():
         setattr(professional, field, value)
     await db.flush()
     return _to_response(professional)

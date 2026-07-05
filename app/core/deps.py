@@ -34,6 +34,24 @@ async def get_current_professional(
     return professional
 
 
+async def get_optional_professional(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+    db: AsyncSession = Depends(get_db),
+) -> Professional | None:
+    if credentials is None:
+        return None
+    try:
+        payload = decode_token(credentials.credentials)
+        if payload.get("type") != "access":
+            return None
+        professional_id = UUID(payload["sub"])
+    except Exception:
+        return None
+
+    result = await db.execute(select(Professional).where(Professional.id == professional_id))
+    return result.scalar_one_or_none()
+
+
 async def get_patient_for_professional(
     patient_id: UUID,
     professional: Professional = Depends(get_current_professional),

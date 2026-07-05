@@ -27,8 +27,9 @@ async def test_register_and_login(client):
             "email": email,
             "password": "securepass123",
             "name": "Test User",
-            "specialty": "Fono",
+            "specialtyKey": "fono",
             "council": "CRFa",
+            "cpf": "52998224725",
         },
     )
     if reg.status_code == 201:

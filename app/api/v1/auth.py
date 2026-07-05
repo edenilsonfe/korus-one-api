@@ -15,6 +15,7 @@ from app.core.security import (
     verify_password,
 )
 from app.db.session import get_db
+from app.core.specialty_catalog import specialty_label
 from app.models.professional import Professional
 from app.schemas.auth import LoginRequest, RefreshRequest, RegisterRequest, TokenResponse
 
@@ -33,7 +34,8 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
         email=body.email,
         password_hash=hash_password(body.password),
         name=body.name,
-        specialty=body.specialty,
+        specialty_key=body.specialty_key,
+        specialty=specialty_label(body.specialty_key),
         council=body.council,
         phone=body.phone,
         cpf=body.cpf,

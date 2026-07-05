@@ -6,7 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.constants import CLINICAL_DOMAIN_CATALOG, GOAL_ACHIEVED_THRESHOLD
-from app.core.utils import calculate_age, diagnosis_label, guardian_label
+from app.core.diagnosis_catalog import diagnosis_labels
+from app.core.utils import calculate_age, guardian_label
 from app.models.assessment import Assessment
 from app.models.caregiver import Caregiver
 from app.models.goal import ClinicalDomainSnapshot, Goal
@@ -80,8 +81,9 @@ async def load_patient_with_relations(db: AsyncSession, patient: Patient) -> Pat
     return result.scalar_one()
 
 
-def patient_to_summary(patient: Patient, aggregates: dict) -> dict:
+def patient_to_summary(patient: Patient, aggregates: dict, specialty_key: str = "fono") -> dict:
     caregivers = patient.caregivers if hasattr(patient, "caregivers") and patient.caregivers else []
+    keys = patient.diagnosis_keys or []
     return {
         "id": str(patient.id),
         "name": patient.name,
@@ -89,8 +91,8 @@ def patient_to_summary(patient: Patient, aggregates: dict) -> dict:
         "birthDate": patient.birth_date.isoformat(),
         "guardian": guardian_label(caregivers),
         "guardianLabel": guardian_label(caregivers),
-        "diagnosis": diagnosis_label(patient.diagnosis_key),
-        "diagnosisKey": patient.diagnosis_key,
+        "diagnoses": diagnosis_labels(keys, specialty_key),
+        "diagnosisKeys": keys,
         "therapist": patient.professional.name if patient.professional else "",
         "status": patient.status,
         "startDate": patient.start_date.isoformat(),
@@ -100,4 +102,8 @@ def patient_to_summary(patient: Patient, aggregates: dict) -> dict:
         "goalsAchieved": aggregates["goals_achieved"],
         "totalGoals": aggregates["total_goals"],
         "avatarColor": patient.avatar_color,
+        "therapyPlanContent": patient.therapy_plan_content,
+        "therapyPlanUpdatedAt": patient.therapy_plan_updated_at.isoformat()
+        if patient.therapy_plan_updated_at
+        else None,
     }

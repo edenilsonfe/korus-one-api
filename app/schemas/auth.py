@@ -1,5 +1,6 @@
 from pydantic import EmailStr, Field, field_validator
 
+from app.core.specialty_catalog import is_valid_specialty_key
 from app.schemas.common import CamelModel
 
 
@@ -11,10 +12,17 @@ class RegisterRequest(CamelModel):
     email: EmailStr
     password: str = Field(min_length=8)
     name: str
-    specialty: str = ""
+    specialty_key: str
     council: str = ""
     phone: str = ""
     cpf: str = Field(min_length=11, max_length=14)
+
+    @field_validator("specialty_key")
+    @classmethod
+    def validate_specialty_key(cls, value: str) -> str:
+        if not is_valid_specialty_key(value):
+            raise ValueError("Especialidade inválida")
+        return value
 
     @field_validator("cpf")
     @classmethod

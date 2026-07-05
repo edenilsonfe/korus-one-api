@@ -2,18 +2,33 @@ from datetime import date, datetime, time, timedelta
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import and_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_professional, get_patient_for_professional
-from app.core.utils import utcnow
 from app.db.session import get_db
 from app.models.appointment import Appointment
 from app.models.patient import Patient
 from app.models.professional import Professional
-from app.schemas.appointment import AppointmentCreate, AppointmentResponse, AppointmentUpdate
+from app.schemas.appointment import (
+    AppointmentCreate,
+    AppointmentCreateResponse,
+    AppointmentResponse,
+    AppointmentUpdate,
+)
+from app.services.appointment_series_slots import (
+    iter_recurring_child_slots,
+    validate_recurrent_range,
+)
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
+
+VALID_FREQUENCIES = {"semanal", "quinzenal", "mensal"}
+
+
+def _end_time_from_duration(start: time, duration: int) -> time:
+    start_dt = datetime.combine(date.today(), start)
+    return (start_dt + timedelta(minutes=duration)).time()
 
 
 def _to_response(appt: Appointment, patient_name: str, therapist: str) -> AppointmentResponse:
@@ -27,6 +42,10 @@ def _to_response(appt: Appointment, patient_name: str, therapist: str) -> Appoin
         therapist=therapist,
         duration=appt.duration,
         status=appt.status,
+        appointment_type=appt.appointment_type,
+        series_id=str(appt.series_id) if appt.series_id else None,
+        frequency=appt.frequency,
+        end_date=appt.end_date.isoformat() if appt.end_date else None,
     )
 
 
@@ -76,15 +95,35 @@ async def list_appointments(
     return [_to_response(a, p.name, professional.name) for a, p in result.all()]
 
 
-@router.post("", response_model=AppointmentResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=AppointmentCreateResponse, status_code=status.HTTP_201_CREATED)
 async def create_appointment(
     body: AppointmentCreate,
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
     patient = await get_patient_for_professional(UUID(body.patient_id), professional, db)
+    appointment_type = body.appointment_type or "avulso"
+
+    if appointment_type == "recorrente":
+        if not body.frequency or body.frequency not in VALID_FREQUENCIES:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Frequência inválida para compromisso recorrente",
+            )
+        if not body.end_date:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Data fim é obrigatória para compromisso recorrente",
+            )
+        try:
+            validate_recurrent_range(body.date, body.end_date)
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
     await _check_conflict(db, professional.id, body.date, body.time, body.duration)
-    appt = Appointment(
+
+    end_time = _end_time_from_duration(body.time, body.duration)
+    anchor = Appointment(
         professional_id=professional.id,
         patient_id=patient.id,
         date=body.date,
@@ -92,16 +131,48 @@ async def create_appointment(
         type=body.type,
         duration=body.duration,
         status=body.status,
+        appointment_type=appointment_type,
+        frequency=body.frequency if appointment_type == "recorrente" else None,
+        end_date=body.end_date if appointment_type == "recorrente" else None,
     )
-    db.add(appt)
+    db.add(anchor)
+    await db.flush()
+
+    children_created = 0
+    if appointment_type == "recorrente" and body.end_date:
+        for slot in iter_recurring_child_slots(
+            body.frequency,
+            body.date,
+            body.end_date,
+            body.time,
+            end_time,
+        ):
+            await _check_conflict(db, professional.id, slot.start_date, slot.start_time, body.duration)
+            child = Appointment(
+                professional_id=professional.id,
+                patient_id=patient.id,
+                date=slot.start_date,
+                time=slot.start_time,
+                type=body.type,
+                duration=body.duration,
+                status=body.status,
+                appointment_type="recorrente",
+                series_id=anchor.id,
+                frequency=body.frequency,
+                end_date=body.end_date,
+            )
+            db.add(child)
+            children_created += 1
+
     await db.commit()
-    await db.refresh(appt)
+    await db.refresh(anchor)
 
     from app.services.whatsapp_notification_service import WhatsAppNotificationService
 
-    await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "confirmation")
+    await WhatsAppNotificationService.dispatch_appointment_event(anchor.id, "confirmation")
 
-    return _to_response(appt, patient.name, professional.name)
+    response = _to_response(anchor, patient.name, professional.name)
+    return AppointmentCreateResponse(**response.model_dump(by_alias=False), children_created=children_created)
 
 
 @router.patch("/{appointment_id}", response_model=AppointmentResponse)

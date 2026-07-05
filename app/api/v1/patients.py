@@ -9,7 +9,8 @@ from sqlalchemy.orm import selectinload
 from app.api.mappers import format_size_bytes
 from app.core.constants import AVATAR_COLORS
 from app.core.deps import get_current_professional, get_patient_for_professional
-from app.core.utils import calculate_age, diagnosis_label, goal_status_from_progress, guardian_label, utcnow
+from app.core.diagnosis_catalog import diagnosis_labels, validate_diagnosis_keys
+from app.core.utils import calculate_age, goal_status_from_progress, guardian_label, utcnow
 from app.db.session import get_db
 from app.models.assessment import Assessment
 from app.models.caregiver import Caregiver
@@ -25,6 +26,7 @@ from app.schemas.patient import (
     PatientDetail,
     PatientSummary,
     PatientUpdate,
+    TherapyPlanUpdate,
 )
 from app.services.patient import build_clinical_domains, get_patient_aggregates
 from app.services.timeline import create_timeline_event
@@ -75,6 +77,8 @@ async def _build_summary(db: AsyncSession, patient: Patient, professional: Profe
     caregivers = caregivers_result.scalars().all()
     gl = guardian_label(caregivers)
     last = aggregates["last_session"]
+    keys = patient.diagnosis_keys or []
+    labels = diagnosis_labels(keys, professional.specialty_key)
     return PatientSummary(
         id=str(patient.id),
         name=patient.name,
@@ -82,8 +86,8 @@ async def _build_summary(db: AsyncSession, patient: Patient, professional: Profe
         birth_date=patient.birth_date.isoformat(),
         guardian=gl,
         guardian_label=gl,
-        diagnosis=diagnosis_label(patient.diagnosis_key),
-        diagnosis_key=patient.diagnosis_key,
+        diagnoses=labels,
+        diagnosis_keys=keys,
         therapist=professional.name,
         status=patient.status,
         start_date=patient.start_date.isoformat(),
@@ -93,6 +97,10 @@ async def _build_summary(db: AsyncSession, patient: Patient, professional: Profe
         goals_achieved=aggregates["goals_achieved"],
         total_goals=aggregates["total_goals"],
         avatar_color=patient.avatar_color,
+        therapy_plan_content=patient.therapy_plan_content,
+        therapy_plan_updated_at=patient.therapy_plan_updated_at.isoformat()
+        if patient.therapy_plan_updated_at
+        else None,
     )
 
 
@@ -234,7 +242,7 @@ async def list_patients(
     if status_filter:
         query = query.where(Patient.status == status_filter)
     if diagnosis_key:
-        query = query.where(Patient.diagnosis_key == diagnosis_key)
+        query = query.where(Patient.diagnosis_keys.contains([diagnosis_key]))
     if q:
         query = query.where(Patient.name.ilike(f"%{q}%"))
 
@@ -251,12 +259,17 @@ async def create_patient(
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
+    try:
+        validate_diagnosis_keys(body.diagnosis_keys, professional.specialty_key)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
     count = await db.scalar(select(func.count()).select_from(Patient).where(Patient.professional_id == professional.id))
     patient = Patient(
         professional_id=professional.id,
         name=body.name,
         birth_date=body.birth_date,
-        diagnosis_key=body.diagnosis_key,
+        diagnosis_keys=body.diagnosis_keys,
         status=body.status,
         start_date=date.today(),
         avatar_color=AVATAR_COLORS[(count or 0) % len(AVATAR_COLORS)],
@@ -404,7 +417,35 @@ async def update_patient(
     db: AsyncSession = Depends(get_db),
 ):
     patient = await get_patient_for_professional(patient_id, professional, db)
-    for field, value in body.model_dump(exclude_unset=True).items():
+    data = body.model_dump(exclude_unset=True)
+    if "diagnosis_keys" in data and data["diagnosis_keys"] is not None:
+        try:
+            validate_diagnosis_keys(data["diagnosis_keys"], professional.specialty_key)
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    for field, value in data.items():
         setattr(patient, field, value)
+    await db.flush()
+    return await _build_summary(db, patient, professional)
+
+
+@router.put("/{patient_id}/therapy-plan", response_model=PatientSummary)
+async def update_therapy_plan(
+    patient_id: UUID,
+    body: TherapyPlanUpdate,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    patient = await get_patient_for_professional(patient_id, professional, db)
+    patient.therapy_plan_content = body.content
+    patient.therapy_plan_updated_at = utcnow()
+    await create_timeline_event(
+        db,
+        patient_id=patient.id,
+        professional_id=professional.id,
+        event_type="meta",
+        title="Plano terapêutico atualizado",
+        description="Documento do plano terapêutico foi atualizado no prontuário",
+    )
     await db.flush()
     return await _build_summary(db, patient, professional)

@@ -20,6 +20,11 @@ class AIReportResponse(CamelModel):
     status: str
 
 
+class AIReportUpdate(CamelModel):
+    content: str
+    status: str | None = None
+
+
 class AIJobResponse(CamelModel):
     id: str
     job_type: str

@@ -1,6 +1,6 @@
 from datetime import date as DateType
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from app.schemas.common import CamelModel
 
@@ -40,7 +40,7 @@ class CaregiverResponse(CamelModel):
 class PatientCreate(CamelModel):
     name: str
     birth_date: DateType
-    diagnosis_key: str
+    diagnosis_keys: list[str] = Field(min_length=1)
     status: str = "avaliacao"
     guardians: list[CaregiverCreate] = Field(default_factory=list)
 
@@ -48,8 +48,19 @@ class PatientCreate(CamelModel):
 class PatientUpdate(CamelModel):
     name: str | None = None
     birth_date: DateType | None = None
-    diagnosis_key: str | None = None
+    diagnosis_keys: list[str] | None = None
     status: str | None = None
+
+    @field_validator("diagnosis_keys")
+    @classmethod
+    def validate_diagnosis_keys(cls, value: list[str] | None) -> list[str] | None:
+        if value is not None and len(value) < 1:
+            raise ValueError("Pelo menos um diagnóstico é obrigatório")
+        return value
+
+
+class TherapyPlanUpdate(CamelModel):
+    content: str
 
 
 class GoalResponse(CamelModel):
@@ -131,8 +142,8 @@ class PatientSummary(CamelModel):
     birth_date: str
     guardian: str
     guardian_label: str
-    diagnosis: str
-    diagnosis_key: str
+    diagnoses: list[str]
+    diagnosis_keys: list[str]
     therapist: str
     status: str
     start_date: str
@@ -142,6 +153,8 @@ class PatientSummary(CamelModel):
     goals_achieved: int
     total_goals: int
     avatar_color: str
+    therapy_plan_content: str | None = None
+    therapy_plan_updated_at: str | None = None
 
 
 class PatientDetail(PatientSummary):

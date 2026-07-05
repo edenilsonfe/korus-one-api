@@ -1,0 +1,99 @@
+"""Pure helpers for recurring appointment series slot generation."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import date, datetime, time
+from typing import Iterable
+
+from dateutil import rrule
+
+MAX_RECURRENT_DAYS = 90
+
+
+@dataclass(frozen=True)
+class AppointmentSlot:
+    start_date: date
+    start_time: time
+    end_time: time
+
+
+def _frequency_dates(
+    frequency: str,
+    start_date: date,
+    end_date: date,
+) -> list[date]:
+    if frequency == "semanal":
+        dates = list(
+            rrule.rrule(
+                rrule.WEEKLY,
+                dtstart=start_date,
+                until=end_date,
+            )
+        )
+    elif frequency == "quinzenal":
+        dates = list(
+            rrule.rrule(
+                rrule.WEEKLY,
+                dtstart=start_date,
+                until=end_date,
+                interval=2,
+            )
+        )
+    elif frequency == "mensal":
+        dates = list(
+            rrule.rrule(
+                rrule.MONTHLY,
+                dtstart=start_date,
+                until=end_date,
+            )
+        )
+    else:
+        dates = [datetime.combine(start_date, datetime.min.time())]
+
+    result: list[date] = []
+    for session_date in dates:
+        appointment_date = session_date.date() if hasattr(session_date, "date") else session_date
+        if start_date <= appointment_date <= end_date:
+            result.append(appointment_date)
+    return result
+
+
+def iter_recurring_child_slots(
+    frequency: str | None,
+    start_date: date,
+    end_date: date,
+    start_time: time,
+    end_time: time,
+) -> Iterable[AppointmentSlot]:
+    """Yield expected child slots (excludes the anchor's first day)."""
+    if not end_date:
+        return
+
+    dates = _frequency_dates(frequency or "semanal", start_date, end_date)
+    for appointment_date in dates[1:]:
+        yield AppointmentSlot(
+            start_date=appointment_date,
+            start_time=start_time,
+            end_time=end_time,
+        )
+
+
+def slot_matches(
+    slot: AppointmentSlot,
+    start_date: date,
+    start_time: time,
+    end_time: time,
+) -> bool:
+    return (
+        slot.start_date == start_date
+        and slot.start_time == start_time
+        and slot.end_time == end_time
+    )
+
+
+def validate_recurrent_range(start_date: date, end_date: date) -> None:
+    if end_date < start_date:
+        raise ValueError("Data fim deve ser posterior ou igual à data início")
+    if (end_date - start_date).days > MAX_RECURRENT_DAYS:
+        raise ValueError(f"Intervalo máximo de recorrência é {MAX_RECURRENT_DAYS} dias")

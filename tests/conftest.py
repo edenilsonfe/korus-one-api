@@ -53,7 +53,8 @@ async def professional(db_session: AsyncSession):
         email="spm-test@example.com",
         password_hash=hash_password("testpass123"),
         name="Dra. Teste",
-        specialty="Terapia Ocupacional",
+        specialty_key="fono",
+        specialty="Fonoaudiologia",
         council="CREFITO",
         phone="11999990000",
     )
@@ -69,7 +70,7 @@ async def patient(db_session: AsyncSession, professional: Professional):
         professional_id=professional.id,
         name="João Silva",
         birth_date=date.today().replace(year=date.today().year - 4),
-        diagnosis_key="tea",
+        diagnosis_keys=["tea"],
         status="ativo",
         start_date=date.today() - timedelta(days=30),
         avatar_color="oklch(0.58 0.12 205)",

@@ -2,8 +2,8 @@ import json
 from datetime import date
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import Response, StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -17,12 +17,14 @@ from app.schemas.ai import (
     AIJobResponse,
     AIReportCreate,
     AIReportResponse,
+    AIReportUpdate,
     AIToolRequest,
     ConversationCreate,
     ConversationResponse,
     MessageCreate,
 )
 from app.services.ai_service import build_patient_context, create_ai_job, get_job, run_llm
+from app.services.report_export import export_report
 from app.services.timeline import create_timeline_event
 
 router = APIRouter(prefix="/ai", tags=["ai"])
@@ -55,17 +57,24 @@ async def poll_job(
 
 @router.get("/reports", response_model=list[AIReportResponse])
 async def list_reports(
+    patient_id: UUID | None = Query(None, alias="patientId"),
+    report_type: str | None = Query(None, alias="type"),
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
     from app.models.patient import Patient
 
-    result = await db.execute(
+    query = (
         select(AIReport, Patient.name)
         .join(Patient, AIReport.patient_id == Patient.id)
         .where(AIReport.professional_id == professional.id)
-        .order_by(AIReport.date.desc())
     )
+    if patient_id:
+        query = query.where(AIReport.patient_id == patient_id)
+    if report_type:
+        query = query.where(AIReport.type == report_type)
+    query = query.order_by(AIReport.date.desc())
+    result = await db.execute(query)
     return [
         AIReportResponse(
             id=str(r.id),
@@ -79,6 +88,75 @@ async def list_reports(
         )
         for r, name in result.all()
     ]
+
+
+@router.patch("/reports/{report_id}", response_model=AIReportResponse)
+async def update_report(
+    report_id: UUID,
+    body: AIReportUpdate,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    from app.models.patient import Patient
+
+    result = await db.execute(
+        select(AIReport, Patient.name)
+        .join(Patient, AIReport.patient_id == Patient.id)
+        .where(AIReport.id == report_id, AIReport.professional_id == professional.id)
+    )
+    row = result.one_or_none()
+    if not row:
+        raise HTTPException(status_code=404, detail="Relatório não encontrado")
+    report, patient_name = row
+    report.content = body.content
+    report.preview = body.content[:200] + "..." if len(body.content) > 200 else body.content
+    if body.status:
+        report.status = body.status
+    elif report.status == "draft":
+        report.status = "finalized"
+    await db.flush()
+    return AIReportResponse(
+        id=str(report.id),
+        type=report.type,
+        patient_id=str(report.patient_id),
+        patient=patient_name,
+        date=report.date.isoformat(),
+        preview=report.preview,
+        content=report.content,
+        status=report.status,
+    )
+
+
+@router.get("/reports/{report_id}/export")
+async def export_report_file(
+    report_id: UUID,
+    format: str = Query(..., pattern="^(pdf|docx|txt|md)$"),
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    from app.models.patient import Patient
+
+    result = await db.execute(
+        select(AIReport, Patient.name)
+        .join(Patient, AIReport.patient_id == Patient.id)
+        .where(AIReport.id == report_id, AIReport.professional_id == professional.id)
+    )
+    row = result.one_or_none()
+    if not row:
+        raise HTTPException(status_code=404, detail="Relatório não encontrado")
+    report, patient_name = row
+    try:
+        data, media_type, suffix = export_report(
+            format, report.type, patient_name, report.date, report.content
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    filename = f"relatorio-{report.type}-{report.date.isoformat()}.{suffix}"
+    return Response(
+        content=data,
+        media_type=media_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.post("/reports", status_code=status.HTTP_202_ACCEPTED)

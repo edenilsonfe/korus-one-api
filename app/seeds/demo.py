@@ -35,7 +35,8 @@ async def seed_demo(session) -> None:
         email="admin@admin.com",
         password_hash=hash_password("admin123"),
         name="Dra. Camila Rocha",
-        specialty="Fonoaudiologia — Linguagem Infantil / TEA",
+        specialty_key="fono",
+        specialty="Fonoaudiologia",
         council="CRFa 2-12345",
         phone="(11) 98888-1010",
         avatar_color="oklch(0.58 0.12 205)",
@@ -45,19 +46,19 @@ async def seed_demo(session) -> None:
     await session.flush()
 
     names = [
-        ("João Silva", "tea", "ativo"),
-        ("Maria Oliveira", "linguagem", "ativo"),
-        ("Pedro Santos", "apraxia", "avaliacao"),
-        ("Ana Souza", "dislexia", "ativo"),
-        ("Lucas Costa", "outros", "pausado"),
+        ("João Silva", ["tea"], "ativo"),
+        ("Maria Oliveira", ["linguagem"], "ativo"),
+        ("Pedro Santos", ["apraxia"], "avaliacao"),
+        ("Ana Souza", ["dislexia"], "ativo"),
+        ("Lucas Costa", ["outros"], "pausado"),
     ]
-    for i, (name, diag, status) in enumerate(names):
+    for i, (name, diags, status) in enumerate(names):
         birth = date.today().replace(year=date.today().year - (5 + i))
         patient = Patient(
             professional_id=professional.id,
             name=name,
             birth_date=birth,
-            diagnosis_key=diag,
+            diagnosis_keys=diags,
             status=status,
             start_date=date.today() - timedelta(days=90 + i * 10),
             avatar_color=AVATAR_COLORS[i % len(AVATAR_COLORS)],

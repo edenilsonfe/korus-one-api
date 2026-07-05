@@ -1,8 +1,8 @@
 import uuid
-from datetime import date
+from datetime import date, datetime
 
-from sqlalchemy import Date, ForeignKey, String
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Date, DateTime, ForeignKey, String, Text
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, new_uuid
@@ -17,10 +17,12 @@ class Patient(Base, TimestampMixin):
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     birth_date: Mapped[date] = mapped_column(Date, nullable=False)
-    diagnosis_key: Mapped[str] = mapped_column(String(32), nullable=False)
+    diagnosis_keys: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="avaliacao")
     start_date: Mapped[date] = mapped_column(Date, nullable=False)
     avatar_color: Mapped[str] = mapped_column(String(64), nullable=False)
+    therapy_plan_content: Mapped[str | None] = mapped_column(Text, nullable=True)
+    therapy_plan_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     professional: Mapped["Professional"] = relationship(back_populates="patients")  # noqa: F821
     caregivers: Mapped[list["Caregiver"]] = relationship(back_populates="patient", cascade="all, delete-orphan")  # noqa: F821
