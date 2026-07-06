@@ -47,13 +47,18 @@ class EvolutionApiClient:
         api_key: str | None = None,
     ) -> dict[str, Any]:
         url = f"{self.base_url}/{path.lstrip('/')}"
-        async with httpx.AsyncClient(timeout=self._timeout) as client:
-            response = await client.request(
-                method,
-                url,
-                json=json_body,
-                headers=self._headers(api_key),
-            )
+        try:
+            async with httpx.AsyncClient(timeout=self._timeout) as client:
+                response = await client.request(
+                    method,
+                    url,
+                    json=json_body,
+                    headers=self._headers(api_key),
+                )
+        except httpx.RequestError as exc:
+            raise EvolutionApiError(
+                f"Falha ao contactar Evolution API ({url}): {exc}"
+            ) from exc
         return self._parse(response)
 
     @staticmethod

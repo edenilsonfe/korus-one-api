@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -59,6 +60,18 @@ class Settings(BaseSettings):
     instrument_packages_root: str = ""
     spm_content_package_path: str = ""
     spm_informant_link_expire_days: int = 14
+
+    @field_validator("evolution_api_base_url", mode="before")
+    @classmethod
+    def normalize_evolution_api_base_url(cls, value: object) -> str:
+        url = str(value or "").strip().rstrip("/")
+        if not url:
+            return url
+        if url.startswith(("http://", "https://")):
+            return url
+        if url.startswith(("localhost", "127.0.0.1")):
+            return f"http://{url}"
+        return f"https://{url}"
 
     @property
     def effective_billing_provider(self) -> str:

@@ -12,10 +12,39 @@ Backend FastAPI para o Korus One — sistema operacional para terapias infantis.
 
 ```bash
 cp .env.example .env
-docker compose up -d                              # infra + migrations automáticas
-docker compose --profile tools run --rm seed      # seed demo (opcional, primeira vez)
-docker compose --profile app up api               # API em http://localhost:8000
+
+# Subir infra + migrations + API (profile "app" é obrigatório para a API)
+docker compose --profile app up -d
+
+# Seed demo (opcional, primeira vez)
+docker compose --profile tools run --rm seed
 ```
+
+A API fica em **http://localhost:8000** — confira com `curl http://localhost:8000/health`.
+
+> **Importante:** o serviço `api` usa o profile `app`. O flag `--profile` vem **antes** do subcomando:
+> `docker compose --profile app up -d` (correto) — **não** `docker compose up -d --profile app`.
+
+### Comandos Docker do dia a dia
+
+```bash
+docker compose --profile app up -d          # subir tudo (postgres, redis, minio, migrate, api)
+docker compose --profile app down           # parar e remover containers
+docker compose --profile app down --remove-orphans   # se der erro de rede órfã
+docker compose --profile app ps             # status dos containers
+docker compose --profile app logs -f api    # logs da API em tempo real
+docker compose --profile tools run --rm seed   # recarregar dados demo
+```
+
+Se aparecer `network ... not found`, recrie a stack:
+
+```bash
+docker rm -f korus-one-api-api-1 2>/dev/null
+docker compose --profile app down --remove-orphans
+docker compose --profile app up -d
+```
+
+Portas expostas: **API** `8000`, **Postgres** `5433`, **Redis** `6380`, **MinIO** `9000`/`9001`.
 
 Para rodar a API direto no host (requer Postgres acessível em localhost:5433):
 
@@ -24,7 +53,7 @@ uv sync
 uv run uvicorn app.main:app --reload --port 8000
 ```
 
-> **Nota Windows:** conexões do host ao Postgres Docker podem exigir `scram-sha-256`. Use o serviço `api` via Docker Compose ou `docker compose up migrate` para bootstrap.
+> **Nota Windows:** conexões do host ao Postgres Docker podem exigir `scram-sha-256`. Use o serviço `api` via `docker compose --profile app up -d` ou `docker compose run --rm migrate` para bootstrap.
 
 ## Endpoints
 
@@ -35,7 +64,7 @@ uv run uvicorn app.main:app --reload --port 8000
 ## Migrations (Alembic)
 
 ```bash
-# Aplicar migrations (também roda automaticamente em docker compose up)
+# Aplicar migrations (também roda automaticamente no docker compose --profile app up)
 docker compose run --rm migrate
 
 # Seed demo (primeira vez ou reset manual)
