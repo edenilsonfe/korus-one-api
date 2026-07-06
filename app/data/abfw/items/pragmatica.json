@@ -1,0 +1,77 @@
+[
+  {
+    "id": "prag_01",
+    "category": "Atos comunicativos",
+    "text": "Contato visual adequado"
+  },
+  {
+    "id": "prag_02",
+    "category": "Atos comunicativos",
+    "text": "Iniciativa comunicativa"
+  },
+  {
+    "id": "prag_03",
+    "category": "Atos comunicativos",
+    "text": "Manutenção de turnos conversacionais"
+  },
+  {
+    "id": "prag_04",
+    "category": "Atos comunicativos",
+    "text": "Uso de gestos comunicativos"
+  },
+  {
+    "id": "prag_05",
+    "category": "Funções",
+    "text": "Função instrumental (pedir, solicitar)"
+  },
+  {
+    "id": "prag_06",
+    "category": "Funções",
+    "text": "Função reguladora (proibir, orientar)"
+  },
+  {
+    "id": "prag_07",
+    "category": "Funções",
+    "text": "Função interacional (cumprimentar, despedir)"
+  },
+  {
+    "id": "prag_08",
+    "category": "Funções",
+    "text": "Função heurística (perguntar, investigar)"
+  },
+  {
+    "id": "prag_09",
+    "category": "Funções",
+    "text": "Função imaginativa (brincadeira simbólica)"
+  },
+  {
+    "id": "prag_10",
+    "category": "Meios",
+    "text": "Uso adequado do meio verbal"
+  },
+  {
+    "id": "prag_11",
+    "category": "Meios",
+    "text": "Uso adequado do meio vocal"
+  },
+  {
+    "id": "prag_12",
+    "category": "Meios",
+    "text": "Uso adequado do meio gestual"
+  },
+  {
+    "id": "prag_13",
+    "category": "Narrativa",
+    "text": "Sequenciamento de eventos em narrativa"
+  },
+  {
+    "id": "prag_14",
+    "category": "Narrativa",
+    "text": "Coerência temática"
+  },
+  {
+    "id": "prag_15",
+    "category": "Narrativa",
+    "text": "Referência a personagens e ações"
+  }
+]

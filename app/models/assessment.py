@@ -49,3 +49,7 @@ class Assessment(Base, TimestampMixin):
         back_populates="battery",
         cascade="all, delete-orphan",
     )
+    battery_subforms: Mapped[list["BatterySubformAssessment"]] = relationship(  # noqa: F821
+        back_populates="battery",
+        cascade="all, delete-orphan",
+    )

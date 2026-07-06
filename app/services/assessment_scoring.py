@@ -14,7 +14,17 @@ def get_protocol_scoring_mode(protocol_id: str) -> str:
     pid = protocol_id.lower()
     if pid == SPM_PROTOCOL:
         return "spm"
+    if pid == "abfw":
+        return "battery"
     if has_manifest_package(pid):
+        slug = resolve_instrument_slug(pid)
+        if slug:
+            try:
+                package = get_instrument_content_package(slug)
+                if package.archetype == "battery" and package.data.get("supports_multi_session"):
+                    return "battery"
+            except FileNotFoundError:
+                pass
         return "manifest"
     if pid in CLIENT_SCORED_PROTOCOLS:
         return "client"

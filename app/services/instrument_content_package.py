@@ -9,6 +9,7 @@ from app.core.config import get_settings
 logger = logging.getLogger(__name__)
 
 DEFAULT_SAMPLES_ROOT = Path(__file__).resolve().parent.parent / "data" / "instrument_samples"
+DATA_PACKAGES_ROOT = Path(__file__).resolve().parent.parent / "data"
 
 
 class InstrumentContentPackage:
@@ -91,6 +92,69 @@ class InstrumentContentPackage:
             logger.warning("items_file %s not found for instrument %s", items_file, self.slug)
         return []
 
+    def get_module_config(self, module_slug: str) -> dict[str, Any]:
+        if module_slug not in self.modules:
+            raise KeyError(f"Module '{module_slug}' not found in package '{self.slug}'")
+        return self.modules[module_slug]
+
+    def get_module_items(self, module_slug: str) -> list[dict[str, Any]]:
+        mod = self.get_module_config(module_slug)
+        inline = mod.get("items")
+        if inline is not None:
+            return inline
+        items_file = mod.get("items_file")
+        if items_file:
+            items_path = self._package_dir / items_file
+            if items_path.is_file():
+                with items_path.open(encoding="utf-8") as handle:
+                    return json.load(handle)
+            logger.warning("items_file %s not found for module %s", items_file, module_slug)
+        return []
+
+    def list_battery_modules(self) -> list[dict[str, Any]]:
+        entries: list[dict[str, Any]] = []
+        for slug, mod in self.modules.items():
+            entries.append(
+                {
+                    "slug": slug,
+                    "title": mod.get("title", slug),
+                    "module_kind": mod.get("module_kind", "generic"),
+                    "domain": mod.get("domain", slug),
+                    "filler": mod.get("filler", "clinician"),
+                    "item_count": mod.get("item_count") or len(self.get_module_items(slug)),
+                    "categories": mod.get("categories", []),
+                }
+            )
+        return entries
+
+    def public_module_form(self, module_slug: str) -> dict[str, Any]:
+        mod = self.get_module_config(module_slug)
+        items = self.get_module_items(module_slug)
+        return {
+            "subform_slug": module_slug,
+            "title": mod.get("title", module_slug),
+            "module_kind": mod.get("module_kind", "generic"),
+            "domain": mod.get("domain"),
+            "categories": mod.get("categories", []),
+            "classifications": self.data.get("classifications", {}).get(
+                mod.get("module_kind", "generic"), []
+            ),
+            "phonological_processes": self.data.get("phonological_processes", []),
+            "target_syllables": mod.get("target_syllables"),
+            "items": [
+                {
+                    "id": item["id"],
+                    "text": item.get("text", ""),
+                    "target": item.get("target"),
+                    "category": item.get("category"),
+                    "category_title": item.get("category_title"),
+                    "stimulus_type": item.get("stimulus_type", "word"),
+                }
+                for item in items
+            ],
+            "filler": mod.get("filler", "clinician"),
+        }
+
     def get_items_page(
         self,
         *,
@@ -101,7 +165,7 @@ class InstrumentContentPackage:
     ) -> dict[str, Any]:
         if module and module in self.modules:
             mod = self.modules[module]
-            items = mod.get("items", [])
+            items = mod.get("items") or self.get_module_items(module)
         else:
             items = self.get_items()
         if section:
@@ -146,9 +210,19 @@ class InstrumentContentPackage:
             manifest["subtests"] = self.subtests
         if self.modules:
             manifest["modules"] = [
-                {"id": k, "title": v.get("title", k), "item_count": len(v.get("items", []))}
+                {
+                    "id": k,
+                    "title": v.get("title", k),
+                    "item_count": v.get("item_count") or len(self.get_module_items(k)),
+                    "module_kind": v.get("module_kind"),
+                    "domain": v.get("domain"),
+                }
                 for k, v in self.modules.items()
             ]
+        if self.data.get("phonological_processes"):
+            manifest["phonological_processes"] = self.data["phonological_processes"]
+        if self.data.get("classifications"):
+            manifest["classifications"] = self.data["classifications"]
         if self.informant_forms:
             manifest["informant_forms"] = self.informant_forms
         manifest["requires_competency_ack"] = self.data.get("requires_competency_ack", False)
@@ -178,6 +252,9 @@ class InstrumentContentPackage:
             override = Path(configured_root) / self.slug / "manifest.json"
             if override.is_file():
                 return override.parent
+        data_path = DATA_PACKAGES_ROOT / self.slug / "manifest.json"
+        if data_path.is_file():
+            return data_path.parent
         return DEFAULT_SAMPLES_ROOT / self.slug
 
 
@@ -188,6 +265,10 @@ def _resolve_manifest_path(slug: str) -> Path:
         override = Path(configured_root) / slug / "manifest.json"
         if override.is_file():
             return override
+
+    data_path = DATA_PACKAGES_ROOT / slug / "manifest.json"
+    if data_path.is_file():
+        return data_path
 
     sample_path = DEFAULT_SAMPLES_ROOT / slug / "manifest.json"
     if sample_path.is_file():
@@ -208,6 +289,14 @@ def _load_package(slug: str) -> InstrumentContentPackage:
         if items_path.is_file():
             with items_path.open(encoding="utf-8") as handle:
                 data["items"] = json.load(handle)
+
+    for mod_slug, mod in list(data.get("modules", {}).items()):
+        mod_items_file = mod.get("items_file")
+        if mod_items_file and "items" not in mod:
+            mod_items_path = data_dir / mod_items_file
+            if mod_items_path.is_file():
+                with mod_items_path.open(encoding="utf-8") as handle:
+                    mod["items"] = json.load(handle)
 
     norms_file = data.get("norms_file")
     if norms_file and "norms" not in data:

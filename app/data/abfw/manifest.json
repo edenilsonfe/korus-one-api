@@ -1,231 +1,296 @@
 {
-  "version": 1,
-  "package_id": "abfw-br",
+  "version": 2,
+  "package_id": "abfw-br-v2",
   "instrument_slug": "abfw",
-  "instrument_title": "ABFW — Avaliação de Linguagem",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "instrument_title": "ABFW — Teste de Linguagem Infantil",
+  "publisher": "Estrutura fiel — conteúdo público",
+  "license_ref": "PUBLIC-STRUCTURE",
   "norms_region": "BR",
   "archetype": "battery",
-  "scale": [
+  "supports_multi_session": true,
+  "phonological_processes": [
     {
-      "value": 0,
-      "label": "Não se aplica / Nunca"
+      "id": "fronting",
+      "label": "Frontalização",
+      "expected_age_months": 48
     },
     {
-      "value": 1,
-      "label": "Raramente"
+      "id": "backing",
+      "label": "Reversão velar",
+      "expected_age_months": 48
     },
     {
-      "value": 2,
-      "label": "Às vezes"
+      "id": "stopping",
+      "label": "Oclusivação",
+      "expected_age_months": 60
     },
     {
-      "value": 3,
-      "label": "Frequentemente"
+      "id": "cluster_reduction",
+      "label": "Simplificação de encontro consonantal",
+      "expected_age_months": 60
     },
     {
-      "value": 4,
-      "label": "Sempre / Muito frequente"
+      "id": "final_consonant_deletion",
+      "label": "Supressão de coda",
+      "expected_age_months": 36
+    },
+    {
+      "id": "weak_syllable_deletion",
+      "label": "Supressão de sílaba átona",
+      "expected_age_months": 48
+    },
+    {
+      "id": "gliding",
+      "label": "Liquidação",
+      "expected_age_months": 60
+    },
+    {
+      "id": "deaffrication",
+      "label": "Desafricamento",
+      "expected_age_months": 48
+    },
+    {
+      "id": "vocalization",
+      "label": "Vocalização",
+      "expected_age_months": 36
+    },
+    {
+      "id": "assimilation",
+      "label": "Assimilação",
+      "expected_age_months": 36
+    },
+    {
+      "id": "metathesis",
+      "label": "Metátese",
+      "expected_age_months": 48
+    },
+    {
+      "id": "epenthesis",
+      "label": "Epêntese",
+      "expected_age_months": 48
+    },
+    {
+      "id": "coalescence",
+      "label": "Coalescência",
+      "expected_age_months": 60
+    },
+    {
+      "id": "depalatalization",
+      "label": "Despalatalização",
+      "expected_age_months": 48
+    },
+    {
+      "id": "other",
+      "label": "Outro",
+      "expected_age_months": 999
     }
   ],
+  "classifications": {
+    "phonology": [
+      {
+        "id": "correct",
+        "label": "Correta"
+      },
+      {
+        "id": "substitution",
+        "label": "Substituição"
+      },
+      {
+        "id": "omission",
+        "label": "Omissão"
+      },
+      {
+        "id": "distortion",
+        "label": "Distorsão"
+      },
+      {
+        "id": "no_response",
+        "label": "Não respondeu"
+      }
+    ],
+    "vocabulary": [
+      {
+        "id": "dvu",
+        "label": "DVU — Denominação Vocabulário Usual"
+      },
+      {
+        "id": "nd",
+        "label": "ND — Não Denominado"
+      },
+      {
+        "id": "ps",
+        "label": "PS — Processo de Substituição"
+      },
+      {
+        "id": "omission",
+        "label": "Omissão"
+      },
+      {
+        "id": "no_response",
+        "label": "Não respondeu"
+      }
+    ],
+    "pragmatics": [
+      {
+        "id": "adequate",
+        "label": "Adequado"
+      },
+      {
+        "id": "attention",
+        "label": "Atenção"
+      },
+      {
+        "id": "altered",
+        "label": "Alterado"
+      }
+    ]
+  },
   "domains": [
     {
-      "id": "FON",
-      "title": "Subteste FON"
+      "id": "fonologia",
+      "title": "Fonologia"
     },
     {
-      "id": "MOR",
-      "title": "Subteste MOR"
+      "id": "vocabulario",
+      "title": "Vocabulário"
     },
     {
-      "id": "SEM",
-      "title": "Subteste SEM"
+      "id": "fluencia",
+      "title": "Fluência"
+    },
+    {
+      "id": "pragmatica",
+      "title": "Pragmática"
     }
   ],
   "modules": {
-    "FON": {
-      "id": "FON",
-      "title": "Subteste FON",
-      "items": [
-        {
-          "id": "fon_01",
-          "domain": "FON",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "fon_02",
-          "domain": "FON",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "fon_03",
-          "domain": "FON",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "fon_04",
-          "domain": "FON",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "fon_05",
-          "domain": "FON",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "fon_06",
-          "domain": "FON",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
-        }
-      ],
+    "fonologia-imitacao": {
+      "id": "fonologia-imitacao",
+      "title": "Fonologia — Imitação",
+      "domain": "fonologia",
+      "module_kind": "phonology",
+      "module_subtype": "imitation",
+      "items_file": "items/fonologia-imitacao.json",
+      "item_count": 39,
       "filler": "clinician"
     },
-    "MOR": {
-      "id": "MOR",
-      "title": "Subteste MOR",
-      "items": [
-        {
-          "id": "mor_01",
-          "domain": "MOR",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "mor_02",
-          "domain": "MOR",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "mor_03",
-          "domain": "MOR",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "mor_04",
-          "domain": "MOR",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "mor_05",
-          "domain": "MOR",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "mor_06",
-          "domain": "MOR",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
-        }
-      ],
+    "fonologia-nomeacao": {
+      "id": "fonologia-nomeacao",
+      "title": "Fonologia — Nomeação",
+      "domain": "fonologia",
+      "module_kind": "phonology",
+      "module_subtype": "naming",
+      "items_file": "items/fonologia-nomeacao.json",
+      "item_count": 34,
       "filler": "clinician"
     },
-    "SEM": {
-      "id": "SEM",
-      "title": "Subteste SEM",
-      "items": [
+    "vocabulario": {
+      "id": "vocabulario",
+      "title": "Vocabulário Expressivo",
+      "domain": "vocabulario",
+      "module_kind": "vocabulary",
+      "categories": [
         {
-          "id": "sem_01",
-          "domain": "SEM",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+          "id": "animais",
+          "title": "Animais"
         },
         {
-          "id": "sem_02",
-          "domain": "SEM",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+          "id": "alimentos",
+          "title": "Alimentos"
         },
         {
-          "id": "sem_03",
-          "domain": "SEM",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+          "id": "vestuario",
+          "title": "Vestuário"
         },
         {
-          "id": "sem_04",
-          "domain": "SEM",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+          "id": "transportes",
+          "title": "Transportes"
         },
         {
-          "id": "sem_05",
-          "domain": "SEM",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+          "id": "moveis",
+          "title": "Móveis e utensílios"
         },
         {
-          "id": "sem_06",
-          "domain": "SEM",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+          "id": "profissoes",
+          "title": "Profissões"
+        },
+        {
+          "id": "locais",
+          "title": "Locais"
+        },
+        {
+          "id": "formas",
+          "title": "Formas e cores"
+        },
+        {
+          "id": "brinquedos",
+          "title": "Brinquedos e instrumentos"
         }
       ],
-      "filler": "external"
+      "items_file": "items/vocabulario.json",
+      "item_count": 118,
+      "filler": "clinician"
+    },
+    "fluencia": {
+      "id": "fluencia",
+      "title": "Fluência",
+      "domain": "fluencia",
+      "module_kind": "fluency",
+      "target_syllables": 200,
+      "items_file": "items/fluencia.json",
+      "item_count": 11,
+      "filler": "clinician"
+    },
+    "pragmatica": {
+      "id": "pragmatica",
+      "title": "Pragmática",
+      "domain": "pragmatica",
+      "module_kind": "pragmatics",
+      "items_file": "items/pragmatica.json",
+      "item_count": 15,
+      "filler": "clinician"
     }
   },
-  "subtests": [
-    {
-      "id": "FON",
-      "title": "Subteste FON",
-      "item_count": 6
-    },
-    {
-      "id": "MOR",
-      "title": "Subteste MOR",
-      "item_count": 6
-    },
-    {
-      "id": "SEM",
-      "title": "Subteste SEM",
-      "item_count": 6
-    }
-  ],
   "scoring": {
-    "engine": "battery_module",
-    "subtests": {
-      "FON": {
-        "method": "sum",
-        "item_ids": [
-          "fon_01",
-          "fon_02",
-          "fon_03",
-          "fon_04",
-          "fon_05",
-          "fon_06"
-        ]
-      },
-      "MOR": {
-        "method": "sum",
-        "item_ids": [
-          "mor_01",
-          "mor_02",
-          "mor_03",
-          "mor_04",
-          "mor_05",
-          "mor_06"
-        ]
-      },
-      "SEM": {
-        "method": "sum",
-        "item_ids": [
-          "sem_01",
-          "sem_02",
-          "sem_03",
-          "sem_04",
-          "sem_05",
-          "sem_06"
-        ]
-      }
-    }
+    "engine": "battery_module_kind"
   },
   "report": {
     "template_id": "abfw-br-v1",
     "sections": [
       "identificacao",
       "resultados",
-      "interpretacao",
-      "recomendacoes"
+      "graficos",
+      "observacoes",
+      "resumo",
+      "assinatura"
     ]
   },
-  "informant_forms": [
+  "norms_file": "norms-br.json",
+  "subtests": [
     {
-      "slug": "caregiver-sem",
-      "filler": "external",
-      "title": "Semântica — cuidador"
+      "id": "fonologia-imitacao",
+      "title": "Fonologia — Imitação",
+      "item_count": 39
+    },
+    {
+      "id": "fonologia-nomeacao",
+      "title": "Fonologia — Nomeação",
+      "item_count": 34
+    },
+    {
+      "id": "vocabulario",
+      "title": "Vocabulário Expressivo",
+      "item_count": 118
+    },
+    {
+      "id": "fluencia",
+      "title": "Fluência",
+      "item_count": 11
+    },
+    {
+      "id": "pragmatica",
+      "title": "Pragmática",
+      "item_count": 15
     }
-  ],
-  "norms_file": "norms-br.json"
+  ]
 }

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "flu_session",
+    "text": "Amostra de fala — leitura até 200 sílabas",
+    "stimulus_type": "session"
+  },
+  {
+    "id": "flu_segment_repetition",
+    "text": "Repetição de segmento",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_syllable_repetition",
+    "text": "Repetição de sílaba",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_word_repetition",
+    "text": "Repetição de palavra",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_phrase_repetition",
+    "text": "Repetição de frase",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_prolongation",
+    "text": "Prolongamento",
+    "stimulus_type": "counter",
+    "category": "stuttering"
+  },
+  {
+    "id": "flu_block",
+    "text": "Bloqueio",
+    "stimulus_type": "counter",
+    "category": "stuttering"
+  },
+  {
+    "id": "flu_pause",
+    "text": "Pausa",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_interjection",
+    "text": "Interjeição",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_revision",
+    "text": "Revisão",
+    "stimulus_type": "counter",
+    "category": "common"
+  },
+  {
+    "id": "flu_incomplete_phrase",
+    "text": "Frase incompleta",
+    "stimulus_type": "counter",
+    "category": "common"
+  }
+]

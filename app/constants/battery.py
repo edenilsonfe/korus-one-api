@@ -1,0 +1,16 @@
+"""Generic battery instrument constants."""
+
+BATTERY_METADATA_KEY = "battery"
+BATTERY_STATUS_DRAFT = "draft"
+BATTERY_STATUS_COMPLETED = "completed"
+BATTERY_STATUS_CANCELLED = "cancelled"
+
+BATTERY_SUBFORM_STATUS_PENDING = "pending"
+BATTERY_SUBFORM_STATUS_IN_PROGRESS = "in_progress"
+BATTERY_SUBFORM_STATUS_COMPLETED = "completed"
+
+BATTERY_FILLER_CLINICIAN = "clinician"
+BATTERY_FILLER_EXTERNAL = "external"
+
+ABFW_INSTRUMENT_SLUG = "abfw"
+ABFW_INSTRUMENT_TITLE = "ABFW — Teste de Linguagem Infantil"

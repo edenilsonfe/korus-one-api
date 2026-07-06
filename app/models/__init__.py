@@ -3,6 +3,7 @@ from app.models.ai import AIJob, AIReport, ChatMessage, Conversation
 from app.models.anamnese import AnamneseEntry
 from app.models.appointment import Appointment
 from app.models.assessment import Assessment, ProtocolCatalog
+from app.models.battery import BatterySubformAssessment
 from app.models.spm import SpmInformantLink, SpmSubformAssessment
 from app.models.attachment import Attachment
 from app.models.caregiver import Caregiver
@@ -32,6 +33,7 @@ __all__ = [
     "TimelineEvent",
     "ProtocolCatalog",
     "Assessment",
+    "BatterySubformAssessment",
     "SpmSubformAssessment",
     "SpmInformantLink",
     "Goal",

@@ -1,8 +1,53 @@
 {
-  "version": 1,
+  "status": "public_reference",
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
-  "domains": {},
-  "age_bands": []
+  "note": "Referências etárias aproximadas para heatmap; substituir por normas licenciadas.",
+  "vocabulary_reference_by_age_months": {
+    "24": {
+      "animais": 40,
+      "alimentos": 35,
+      "vestuario": 30,
+      "transportes": 25
+    },
+    "36": {
+      "animais": 60,
+      "alimentos": 55,
+      "vestuario": 50,
+      "transportes": 45,
+      "moveis": 40
+    },
+    "48": {
+      "animais": 75,
+      "alimentos": 70,
+      "vestuario": 65,
+      "transportes": 60,
+      "moveis": 55,
+      "profissoes": 40
+    },
+    "60": {
+      "animais": 85,
+      "alimentos": 80,
+      "vestuario": 75,
+      "transportes": 70,
+      "moveis": 65,
+      "profissoes": 55,
+      "locais": 50
+    },
+    "72": {
+      "animais": 90,
+      "alimentos": 85,
+      "vestuario": 80,
+      "transportes": 75,
+      "moveis": 70,
+      "profissoes": 65,
+      "locais": 60,
+      "formas": 55,
+      "brinquedos": 50
+    }
+  },
+  "fluency_reference": {
+    "syllables_per_minute_min": 120,
+    "syllables_per_minute_max": 200,
+    "disfluency_percent_max": 3
+  }
 }
