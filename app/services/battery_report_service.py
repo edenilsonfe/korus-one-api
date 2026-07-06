@@ -27,6 +27,17 @@ def export_battery_pdf(battery: BatteryResponse, package: InstrumentContentPacka
     if battery.duration_minutes:
         story.append(Paragraph(f"Duração: {battery.duration_minutes} minutos", styles["Normal"]))
     story.append(Spacer(1, 16))
+
+    if package.scoring.get("engine") == "observational_domains":
+        story.append(Paragraph("Objetivo", styles["Heading2"]))
+        story.append(
+            Paragraph(
+                "Avaliação observacional de comunicação, linguagem e aspectos cognitivos.",
+                styles["Normal"],
+            )
+        )
+        story.append(Spacer(1, 12))
+
     story.append(Paragraph("Resultados por módulo", styles["Heading2"]))
 
     scores = battery.scores or {}
@@ -50,7 +61,21 @@ def export_battery_pdf(battery: BatteryResponse, package: InstrumentContentPacka
                             styles["Normal"],
                         )
                     )
+            if domain_score.get("module_kind") == "observational":
+                level = domain_score.get("level", "unknown")
+                story.append(
+                    Paragraph(
+                        f"• Classificação: {level} — {domain_score.get('percentage', 0)}%",
+                        styles["Normal"],
+                    )
+                )
             story.append(Spacer(1, 8))
+
+    clinical_conclusion = scores.get("clinical_conclusion") or scores.get("clinicalConclusion")
+    if clinical_conclusion:
+        story.append(Spacer(1, 12))
+        story.append(Paragraph("Conclusão clínica", styles["Heading2"]))
+        story.append(Paragraph(str(clinical_conclusion), styles["Normal"]))
 
     story.append(Spacer(1, 12))
     story.append(Paragraph("Resumo", styles["Heading2"]))

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "cl_situacional",
+    "domain": "comunicacao",
+    "text": "Utiliza linguagem situacional (comentários sobre o aqui e agora)."
+  },
+  {
+    "id": "cl_personal",
+    "domain": "comunicacao",
+    "text": "Utiliza linguagem personal (fala sobre si, preferências, experiências)."
+  },
+  {
+    "id": "cl_generalizacao",
+    "domain": "comunicacao",
+    "text": "Generaliza experiências (relata eventos passados ou futuros)."
+  },
+  {
+    "id": "cl_narrativa",
+    "domain": "comunicacao",
+    "text": "Organiza relato em sequência narrativa simples."
+  },
+  {
+    "id": "cl_abstracao",
+    "domain": "comunicacao",
+    "text": "Utiliza linguagem mais abstrata (conceitos, categorias, relações)."
+  }
+]

@@ -22,10 +22,11 @@ PROTOCOLS = [
         "description": "Observação de comunicação, linguagem e cognição.",
         "age_range": "0 a 6 anos",
         "field_templates": [
-            {"key": "atencao_compartilhada", "label": "Atenção compartilhada"},
-            {"key": "intencao_comunicativa", "label": "Intenção comunicativa"},
+            {"key": "formas_comunicacao", "label": "Formas de comunicação"},
+            {"key": "funcoes_comunicativas", "label": "Funções comunicativas"},
             {"key": "compreensao_verbal", "label": "Compreensão verbal"},
-            {"key": "jogo_simbolico", "label": "Jogo simbólico"},
+            {"key": "brincadeira_simbolica", "label": "Brincadeira simbólica"},
+            {"key": "imitacao", "label": "Imitação"},
         ],
     },
     {

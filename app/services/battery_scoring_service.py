@@ -224,6 +224,170 @@ def score_fluency_module(
     }
 
 
+def _observational_level(percentage: float, interpretations: list[dict[str, Any]]) -> str:
+    for band in interpretations:
+        min_pct = float(band.get("min_percentage", 0))
+        max_pct = float(band.get("max_percentage", 100))
+        if min_pct <= percentage <= max_pct:
+            return str(band.get("level", "unknown"))
+    return "unknown"
+
+
+def score_observational_module(
+    package: InstrumentContentPackage,
+    module_slug: str,
+    answers: dict[str, Any],
+) -> dict[str, Any]:
+    mod = package.get_module_config(module_slug)
+    items = package.get_module_items(module_slug)
+    module_kind = mod.get("module_kind", "observational")
+    if module_kind == "qualitative":
+        notes: list[dict[str, Any]] = []
+        for item in items:
+            ans = _item_answer(answers, item["id"])
+            text = ans.get("text") or ans.get("notes") or ""
+            if text:
+                notes.append({"id": item["id"], "text": item.get("text"), "notes": text})
+        return {
+            "module_kind": "qualitative",
+            "module_slug": module_slug,
+            "domain": mod.get("domain", module_slug),
+            "notes": notes,
+            "summary": f"{mod.get('title', module_slug)}: {len(notes)} observação(ões) registrada(s)",
+        }
+
+    scale = mod.get("scale") or package.scale
+    max_value = max((int(s["value"]) for s in scale), default=2)
+    interpretations = package.scoring.get("interpretations", [])
+
+    item_details: list[dict[str, Any]] = []
+    not_observed = 0
+    unanswered = 0
+    points = 0
+    possible_points = 0
+    strengths: list[str] = []
+    attention_items: list[str] = []
+
+    for item in items:
+        input_type = item.get("input_type") or mod.get("input_type", "scale")
+        ans = _item_answer(answers, item["id"])
+
+        if input_type == "checklist":
+            selected = ans.get("selected") or []
+            if not selected and not ans.get("notes"):
+                unanswered += 1
+                item_details.append(
+                    {
+                        "id": item["id"],
+                        "text": item.get("text"),
+                        "input_type": "checklist",
+                        "selected": [],
+                        "status": "unanswered",
+                        "notes": ans.get("notes", ""),
+                    }
+                )
+                continue
+            total_options = len(item.get("options") or [])
+            if total_options:
+                present_count = len(selected)
+                possible_points += max_value
+                item_points = round((present_count / total_options) * max_value)
+                points += item_points
+                if present_count >= total_options * 0.7:
+                    strengths.append(item.get("text", item["id"]))
+                elif present_count <= total_options * 0.3:
+                    attention_items.append(item.get("text", item["id"]))
+            item_details.append(
+                {
+                    "id": item["id"],
+                    "text": item.get("text"),
+                    "input_type": "checklist",
+                    "selected": selected,
+                    "status": "scored",
+                    "notes": ans.get("notes", ""),
+                }
+            )
+            continue
+
+        if input_type == "text":
+            text = ans.get("text") or ans.get("notes") or ""
+            if text:
+                item_details.append(
+                    {
+                        "id": item["id"],
+                        "text": item.get("text"),
+                        "input_type": "text",
+                        "notes": text,
+                        "status": "answered",
+                    }
+                )
+            continue
+
+        value = ans.get("value")
+        if value is None:
+            unanswered += 1
+            item_details.append(
+                {
+                    "id": item["id"],
+                    "text": item.get("text"),
+                    "value": None,
+                    "status": "unanswered",
+                    "notes": ans.get("notes", ""),
+                }
+            )
+            continue
+
+        value = int(value)
+        if value == 0:
+            not_observed += 1
+            item_details.append(
+                {
+                    "id": item["id"],
+                    "text": item.get("text"),
+                    "value": 0,
+                    "status": "not_observed",
+                    "notes": ans.get("notes", ""),
+                }
+            )
+            continue
+
+        possible_points += max_value
+        points += value
+        item_details.append(
+            {
+                "id": item["id"],
+                "text": item.get("text"),
+                "value": value,
+                "status": "scored",
+                "notes": ans.get("notes", ""),
+            }
+        )
+        if value == max_value:
+            strengths.append(item.get("text", item["id"]))
+        elif value == 1:
+            attention_items.append(item.get("text", item["id"]))
+
+    percentage = round((points / possible_points) * 100, 1) if possible_points else 0.0
+    level = _observational_level(percentage, interpretations)
+
+    return {
+        "module_kind": "observational",
+        "module_slug": module_slug,
+        "domain": mod.get("domain", module_slug),
+        "title": mod.get("title", module_slug),
+        "percentage": percentage,
+        "level": level,
+        "points": points,
+        "possible_points": possible_points,
+        "not_observed": not_observed,
+        "unanswered": unanswered,
+        "strengths": strengths,
+        "attention_items": attention_items,
+        "items": item_details,
+        "summary": f"{mod.get('title', module_slug)}: {percentage}% ({level})",
+    }
+
+
 def score_pragmatics_module(
     package: InstrumentContentPackage,
     module_slug: str,
@@ -275,6 +439,8 @@ def score_battery_subform(
         "vocabulary": score_vocabulary_module,
         "fluency": score_fluency_module,
         "pragmatics": score_pragmatics_module,
+        "observational": score_observational_module,
+        "qualitative": score_observational_module,
     }
     handler = dispatch.get(kind)
     if not handler:
@@ -301,17 +467,35 @@ def synthesize_battery_scores(
 
     for domain_id, group in domain_groups.items():
         if len(group) == 1:
-            domains[domain_id] = group[0]
+            entry = group[0].copy()
+            if package.scoring.get("engine") == "observational_domains" and "level" not in entry:
+                entry["level"] = _observational_level(
+                    float(entry.get("percentage") or 0),
+                    package.scoring.get("interpretations", []),
+                )
+            domain_meta = next((d for d in package.domains if d.get("id") == domain_id), None)
+            if domain_meta:
+                entry["title"] = domain_meta.get("title", domain_id)
+            domains[domain_id] = entry
         else:
             pcts = [float(s["percentage"]) for s in group if "percentage" in s]
             merged_pct = round(sum(pcts) / len(pcts), 1) if pcts else 0.0
-            domains[domain_id] = {
+            merged: dict[str, Any] = {
                 "module_kind": group[0].get("module_kind"),
                 "module_slug": domain_id,
+                "title": next(
+                    (d.get("title", domain_id) for d in package.domains if d.get("id") == domain_id),
+                    domain_id,
+                ),
                 "submodules": group,
                 "percentage": merged_pct,
                 "summary": " · ".join(s.get("summary", "") for s in group),
             }
+            if package.scoring.get("engine") == "observational_domains":
+                merged["level"] = _observational_level(
+                    merged_pct, package.scoring.get("interpretations", [])
+                )
+            domains[domain_id] = merged
 
     for score in subform_scores:
         mod = package.get_module_config(score["module_slug"])
@@ -344,14 +528,37 @@ def synthesize_battery_scores(
                     )
 
     overall = round(sum(percentages) / len(percentages), 1) if percentages else 0.0
+    engine = package.scoring.get("engine", "battery_module_kind")
+    title = package.instrument_title
+
+    observational_meta: dict[str, Any] = {}
+    if engine == "observational_domains":
+        all_strengths: list[str] = []
+        all_attention: list[str] = []
+        not_observed_total = 0
+        unanswered_total = 0
+        for score in subform_scores:
+            if score.get("module_kind") == "observational":
+                all_strengths.extend(score.get("strengths") or [])
+                all_attention.extend(score.get("attention_items") or [])
+                not_observed_total += int(score.get("not_observed") or 0)
+                unanswered_total += int(score.get("unanswered") or 0)
+        observational_meta = {
+            "strengths": all_strengths[:10],
+            "attention_items": all_attention[:10],
+            "not_observed_count": not_observed_total,
+            "unanswered_count": unanswered_total,
+        }
+
     return {
-        "engine": "battery_module_kind",
+        "engine": engine,
         "domains": domains,
         "subforms": subform_scores,
         "total": overall,
         "percentage": overall,
         "critical_items": critical_items,
-        "summary": f"ABFW — desempenho geral {overall}%",
+        **observational_meta,
+        "summary": f"{title} — desempenho geral {overall}%",
         "interpretation": (
             f"Desempenho agregado de {overall}% nos módulos aplicados. "
             "Correlacionar achados com avaliação clínica completa."

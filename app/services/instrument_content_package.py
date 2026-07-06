@@ -141,6 +141,8 @@ class InstrumentContentPackage:
             ),
             "phonological_processes": self.data.get("phonological_processes", []),
             "target_syllables": mod.get("target_syllables"),
+            "scale": mod.get("scale") or self.scale,
+            "input_type": mod.get("input_type", "scale"),
             "items": [
                 {
                     "id": item["id"],
@@ -149,6 +151,8 @@ class InstrumentContentPackage:
                     "category": item.get("category"),
                     "category_title": item.get("category_title"),
                     "stimulus_type": item.get("stimulus_type", "word"),
+                    "input_type": item.get("input_type") or mod.get("input_type", "scale"),
+                    "options": item.get("options", []),
                 }
                 for item in items
             ],

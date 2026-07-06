@@ -1,0 +1,42 @@
+[
+  {
+    "id": "fc_gestos_convencionais",
+    "domain": "comunicacao",
+    "text": "Utiliza gestos convencionais (acenar, apontar, dar tchau, pedir com gesto)."
+  },
+  {
+    "id": "fc_vocalizacoes",
+    "domain": "comunicacao",
+    "text": "Emite vocalizações com intenção comunicativa (sons direcionados ao interlocutor)."
+  },
+  {
+    "id": "fc_palavras_isoladas",
+    "domain": "comunicacao",
+    "text": "Utiliza palavras isoladas de forma funcional."
+  },
+  {
+    "id": "fc_combinacoes_palavras",
+    "domain": "comunicacao",
+    "text": "Combina duas ou mais palavras (ex.: \"mamãe água\", \"quero bola\")."
+  },
+  {
+    "id": "fc_frases_simples",
+    "domain": "comunicacao",
+    "text": "Utiliza frases simples com sujeito e predicado."
+  },
+  {
+    "id": "fc_prosodia",
+    "domain": "comunicacao",
+    "text": "Apresenta variação de entonação e prosódia adequada ao contexto."
+  },
+  {
+    "id": "fc_imitacao_vocal",
+    "domain": "comunicacao",
+    "text": "Imita sons, sílabas ou palavras quando solicitado."
+  },
+  {
+    "id": "fc_iniciativa_comunicativa",
+    "domain": "comunicacao",
+    "text": "Inicia comunicação espontânea (busca o adulto, mostra objeto, vocaliza para chamar atenção)."
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "bs_exploratoria",
+    "domain": "cognicao",
+    "text": "Brincadeira exploratória/sensorial (manipula, examina objetos)."
+  },
+  {
+    "id": "bs_funcional",
+    "domain": "cognicao",
+    "text": "Brincadeira funcional (usa objeto conforme função: telefone no ouvido, pente no cabelo)."
+  },
+  {
+    "id": "bs_substituicao",
+    "domain": "cognicao",
+    "text": "Brincadeira de substituição (usa um objeto como se fosse outro)."
+  },
+  {
+    "id": "bs_simbolica",
+    "domain": "cognicao",
+    "text": "Brincadeira simbólica (faz de conta: alimenta boneca, dirige carrinho imaginário)."
+  },
+  {
+    "id": "bs_sequencias",
+    "domain": "cognicao",
+    "text": "Organiza sequências simbólicas (preparar e servir comida, cuidar de bebê)."
+  },
+  {
+    "id": "bs_compartilhada",
+    "domain": "cognicao",
+    "text": "Engaja em brincadeira simbólica compartilhada com o adulto ou pares."
+  }
+]

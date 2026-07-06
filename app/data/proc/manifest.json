@@ -1,111 +1,139 @@
 {
-  "version": 1,
-  "package_id": "proc-br",
+  "version": 2,
+  "package_id": "proc-br-v1",
   "instrument_slug": "proc",
-  "instrument_title": "PROC — Prova de Nomeação por Confrontação",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "instrument_title": "PROC — Protocolo de Observação Comportamental",
+  "publisher": "Zorzi & Hage (2004) — estrutura pública",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
   "norms_region": "BR",
-  "archetype": "battery",
+  "archetype": "observational",
+  "supports_multi_session": true,
   "scale": [
-    {
-      "value": 0,
-      "label": "Não se aplica / Nunca"
-    },
-    {
-      "value": 1,
-      "label": "Raramente"
-    },
-    {
-      "value": 2,
-      "label": "Às vezes"
-    },
-    {
-      "value": 3,
-      "label": "Frequentemente"
-    },
-    {
-      "value": 4,
-      "label": "Sempre / Muito frequente"
-    }
+    { "value": 0, "label": "Não observado" },
+    { "value": 1, "label": "Emergente / parcial" },
+    { "value": 2, "label": "Presente / consistente" }
   ],
   "domains": [
-    {
-      "id": "NOM",
-      "title": "Subteste NOM"
-    }
+    { "id": "comunicacao", "title": "Aspectos da comunicação" },
+    { "id": "cognicao", "title": "Aspectos do desenvolvimento cognitivo" },
+    { "id": "geral", "title": "Observações gerais" }
   ],
   "modules": {
-    "NOM": {
-      "id": "NOM",
-      "title": "Subteste NOM",
-      "items": [
-        {
-          "id": "nom_01",
-          "domain": "NOM",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "nom_02",
-          "domain": "NOM",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "nom_03",
-          "domain": "NOM",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "nom_04",
-          "domain": "NOM",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "nom_05",
-          "domain": "NOM",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "nom_06",
-          "domain": "NOM",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
-        }
-      ],
+    "formas-comunicacao": {
+      "id": "formas-comunicacao",
+      "title": "Formas de comunicação",
+      "domain": "comunicacao",
+      "module_kind": "observational",
+      "items_file": "items/formas-comunicacao.json",
+      "item_count": 8,
+      "filler": "clinician"
+    },
+    "funcoes-comunicativas": {
+      "id": "funcoes-comunicativas",
+      "title": "Funções comunicativas",
+      "domain": "comunicacao",
+      "module_kind": "observational",
+      "input_type": "checklist",
+      "items_file": "items/funcoes-comunicativas.json",
+      "item_count": 1,
+      "filler": "clinician"
+    },
+    "contextualizacao-linguagem": {
+      "id": "contextualizacao-linguagem",
+      "title": "Contextualização da linguagem",
+      "domain": "comunicacao",
+      "module_kind": "observational",
+      "items_file": "items/contextualizacao-linguagem.json",
+      "item_count": 5,
+      "filler": "clinician"
+    },
+    "compreensao-verbal": {
+      "id": "compreensao-verbal",
+      "title": "Compreensão verbal",
+      "domain": "comunicacao",
+      "module_kind": "observational",
+      "items_file": "items/compreensao-verbal.json",
+      "item_count": 6,
+      "filler": "clinician"
+    },
+    "habilidades-dialogicas": {
+      "id": "habilidades-dialogicas",
+      "title": "Habilidades dialógicas",
+      "domain": "comunicacao",
+      "module_kind": "observational",
+      "items_file": "items/habilidades-dialogicas.json",
+      "item_count": 5,
+      "filler": "clinician"
+    },
+    "imitacao": {
+      "id": "imitacao",
+      "title": "Imitação",
+      "domain": "cognicao",
+      "module_kind": "observational",
+      "items_file": "items/imitacao.json",
+      "item_count": 5,
+      "filler": "clinician"
+    },
+    "brincadeira-simbolica": {
+      "id": "brincadeira-simbolica",
+      "title": "Brincadeira e esquemas simbólicos",
+      "domain": "cognicao",
+      "module_kind": "observational",
+      "items_file": "items/brincadeira-simbolica.json",
+      "item_count": 6,
+      "filler": "clinician"
+    },
+    "intencionalidade": {
+      "id": "intencionalidade",
+      "title": "Intencionalidade e uso de instrumentos",
+      "domain": "cognicao",
+      "module_kind": "observational",
+      "items_file": "items/intencionalidade.json",
+      "item_count": 5,
+      "filler": "clinician"
+    },
+    "observacoes-gerais": {
+      "id": "observacoes-gerais",
+      "title": "Observações gerais",
+      "domain": "geral",
+      "module_kind": "qualitative",
+      "required": false,
+      "items_file": "items/observacoes-gerais.json",
+      "item_count": 3,
       "filler": "clinician"
     }
   },
   "subtests": [
-    {
-      "id": "NOM",
-      "title": "Subteste NOM",
-      "item_count": 6
-    }
+    { "id": "formas-comunicacao", "title": "Formas de comunicação", "item_count": 8 },
+    { "id": "funcoes-comunicativas", "title": "Funções comunicativas", "item_count": 1 },
+    { "id": "contextualizacao-linguagem", "title": "Contextualização da linguagem", "item_count": 5 },
+    { "id": "compreensao-verbal", "title": "Compreensão verbal", "item_count": 6 },
+    { "id": "habilidades-dialogicas", "title": "Habilidades dialógicas", "item_count": 5 },
+    { "id": "imitacao", "title": "Imitação", "item_count": 5 },
+    { "id": "brincadeira-simbolica", "title": "Brincadeira simbólica", "item_count": 6 },
+    { "id": "intencionalidade", "title": "Intencionalidade", "item_count": 5 },
+    { "id": "observacoes-gerais", "title": "Observações gerais", "item_count": 3 }
   ],
   "scoring": {
-    "engine": "battery_module",
-    "subtests": {
-      "NOM": {
-        "method": "sum",
-        "item_ids": [
-          "nom_01",
-          "nom_02",
-          "nom_03",
-          "nom_04",
-          "nom_05",
-          "nom_06"
-        ]
-      }
-    }
+    "engine": "observational_domains",
+    "interpretations": [
+      { "level": "expected", "min_percentage": 70, "max_percentage": 100, "label": "Esperado" },
+      { "level": "attention", "min_percentage": 40, "max_percentage": 69.9, "label": "Atenção" },
+      { "level": "altered", "min_percentage": 0, "max_percentage": 39.9, "label": "Alteração" }
+    ]
   },
   "report": {
     "template_id": "proc-br-v1",
     "sections": [
       "identificacao",
-      "resultados",
-      "interpretacao",
-      "recomendacoes"
+      "objetivo",
+      "descricao_sessao",
+      "resultados_dominio",
+      "observacoes",
+      "resumo",
+      "conclusao",
+      "assinatura"
     ]
-  },
-  "informant_forms": [],
-  "norms_file": "norms-br.json"
+  }
 }

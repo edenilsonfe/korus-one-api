@@ -1,0 +1,27 @@
+[
+  {
+    "id": "im_gestual",
+    "domain": "cognicao",
+    "text": "Imita gestos motores (bater palmas, bater palmas acima da cabeça, apontar)."
+  },
+  {
+    "id": "im_gestual_sequencia",
+    "domain": "cognicao",
+    "text": "Imita sequência de gestos motores."
+  },
+  {
+    "id": "im_vocal",
+    "domain": "cognicao",
+    "text": "Imita vocalizações e sons não verbais."
+  },
+  {
+    "id": "im_palavras",
+    "domain": "cognicao",
+    "text": "Imita palavras isoladas."
+  },
+  {
+    "id": "im_acoes_objetos",
+    "domain": "cognicao",
+    "text": "Imita ações com objetos (ex.: bater martelo, rolar carrinho)."
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "hd_turnos",
+    "domain": "comunicacao",
+    "text": "Respeita turnos de fala (alterna fala e escuta)."
+  },
+  {
+    "id": "hd_reparo",
+    "domain": "comunicacao",
+    "text": "Tenta reparar falha comunicativa (repete, gesticula, busca outra forma)."
+  },
+  {
+    "id": "hd_perguntas",
+    "domain": "comunicacao",
+    "text": "Formula perguntas ou solicitações de forma funcional."
+  },
+  {
+    "id": "hd_comentarios",
+    "domain": "comunicacao",
+    "text": "Faz comentários sobre ações ou objetos do interlocutor."
+  },
+  {
+    "id": "hd_topico",
+    "domain": "comunicacao",
+    "text": "Mantém o tópico conversacional por pelo menos dois turnos."
+  }
+]

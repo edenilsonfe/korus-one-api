@@ -1,0 +1,20 @@
+[
+  {
+    "id": "og_ambiente",
+    "domain": "geral",
+    "input_type": "text",
+    "text": "Descrição do ambiente e contexto da observação."
+  },
+  {
+    "id": "og_comportamento_geral",
+    "domain": "geral",
+    "input_type": "text",
+    "text": "Comportamento geral da criança durante a sessão."
+  },
+  {
+    "id": "og_impressoes",
+    "domain": "geral",
+    "input_type": "text",
+    "text": "Impressões clínicas e observações complementares."
+  }
+]

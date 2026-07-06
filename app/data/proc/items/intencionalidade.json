@@ -1,0 +1,27 @@
+[
+  {
+    "id": "in_proposito",
+    "domain": "cognicao",
+    "text": "Demonstra comportamento intencional (age para alcançar objetivo)."
+  },
+  {
+    "id": "in_instrumentos",
+    "domain": "cognicao",
+    "text": "Utiliza instrumentos ou objetos como meio para alcançar fim."
+  },
+  {
+    "id": "in_resolucao",
+    "domain": "cognicao",
+    "text": "Tenta resolver problemas simples (alcançar objeto distante, abrir recipiente)."
+  },
+  {
+    "id": "in_planejamento",
+    "domain": "cognicao",
+    "text": "Demonstra planejamento simples (prepara ação antes de executar)."
+  },
+  {
+    "id": "in_causalidade",
+    "domain": "cognicao",
+    "text": "Compreende relação causa-efeito em ações (apertar botão → som)."
+  }
+]

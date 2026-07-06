@@ -1,0 +1,32 @@
+[
+  {
+    "id": "cv_nome_proprio",
+    "domain": "comunicacao",
+    "text": "Responde ao próprio nome quando chamado(a)."
+  },
+  {
+    "id": "cv_comandos_simples",
+    "domain": "comunicacao",
+    "text": "Compreende comandos simples com gesto e palavra (ex.: \"vem cá\", \"senta\")."
+  },
+  {
+    "id": "cv_comandos_sem_gesto",
+    "domain": "comunicacao",
+    "text": "Compreende comandos verbais sem apoio gestual."
+  },
+  {
+    "id": "cv_vocabulario_receptivo",
+    "domain": "comunicacao",
+    "text": "Demonstra compreensão de vocabulário receptivo (objetos, ações, partes do corpo)."
+  },
+  {
+    "id": "cv_perguntas_simples",
+    "domain": "comunicacao",
+    "text": "Responde adequadamente a perguntas simples (\"Onde está…?\", \"O que é…?\")."
+  },
+  {
+    "id": "cv_instrucoes_duplas",
+    "domain": "comunicacao",
+    "text": "Compreende instruções com dois elementos (ex.: \"Pega a bola e traz pra mim\")."
+  }
+]

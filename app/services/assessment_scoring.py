@@ -21,7 +21,10 @@ def get_protocol_scoring_mode(protocol_id: str) -> str:
         if slug:
             try:
                 package = get_instrument_content_package(slug)
-                if package.archetype == "battery" and package.data.get("supports_multi_session"):
+                if package.data.get("supports_multi_session") and package.archetype in (
+                    "battery",
+                    "observational",
+                ):
                     return "battery"
             except FileNotFoundError:
                 pass

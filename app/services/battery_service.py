@@ -63,6 +63,12 @@ def _count_answered(answers: dict[str, Any], item_ids: list[str]) -> int:
                 count += 1
             elif raw.get("duration_seconds") or raw.get("syllable_count"):
                 count += 1
+            elif raw.get("value") is not None:
+                count += 1
+            elif raw.get("selected"):
+                count += 1
+            elif raw.get("notes") or raw.get("text"):
+                count += 1
         else:
             count += 1
     return count
@@ -195,12 +201,13 @@ class BatteryService:
         await self.db.flush()
 
         for slug in package.modules:
+            mod = package.get_module_config(slug)
             items = package.get_module_items(slug)
             subform = BatterySubformAssessment(
                 battery_id=record.id,
                 instrument_slug=data.instrument_slug,
                 subform_slug=slug,
-                required=True,
+                required=mod.get("required", True),
                 status=BATTERY_SUBFORM_STATUS_PENDING,
                 items_total=len(items),
             )
@@ -316,7 +323,13 @@ class BatteryService:
         await self.db.refresh(record, ["battery_subforms", "patient"])
         return self._to_battery_response(record, package)
 
-    async def finalize_battery(self, battery_id: UUID, *, professional_id: UUID) -> BatteryResponse:
+    async def finalize_battery(
+        self,
+        battery_id: UUID,
+        *,
+        professional_id: UUID,
+        clinical_conclusion: str = "",
+    ) -> BatteryResponse:
         record = await self._load_battery(battery_id, professional_id=professional_id)
         if record.status != BATTERY_STATUS_DRAFT:
             raise HTTPException(status_code=400, detail="Bateria já finalizada ou cancelada")
@@ -349,7 +362,12 @@ class BatteryService:
                 pass
         battery_meta["completed_at"] = _utcnow().isoformat()
         battery_meta["duration_minutes"] = duration_minutes
+        if clinical_conclusion:
+            battery_meta["clinical_conclusion"] = clinical_conclusion
         meta[BATTERY_METADATA_KEY] = battery_meta
+
+        if clinical_conclusion:
+            synthesized["clinical_conclusion"] = clinical_conclusion
 
         record.status = BATTERY_STATUS_COMPLETED
         record.scores = synthesized

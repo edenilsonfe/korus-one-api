@@ -1,0 +1,18 @@
+[
+  {
+    "id": "fcom_checklist",
+    "domain": "comunicacao",
+    "input_type": "checklist",
+    "text": "Marque as funções comunicativas observadas durante a sessão:",
+    "options": [
+      { "id": "instrumental", "label": "Instrumental (obter objeto/ação)" },
+      { "id": "protesto", "label": "Protesto / recusa" },
+      { "id": "interativa", "label": "Interativa (manter contato social)" },
+      { "id": "nomeacao", "label": "Nomeação / identificação" },
+      { "id": "informativa", "label": "Informativa (compartilhar informação)" },
+      { "id": "heuristica", "label": "Heurística (explorar ambiente)" },
+      { "id": "jogo", "label": "Jogo / ludicidade" },
+      { "id": "regulacao", "label": "Regulação do comportamento do outro" }
+    ]
+  }
+]

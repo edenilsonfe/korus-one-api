@@ -16,6 +16,33 @@ class BatterySubformAnswersUpdate(CamelModel):
     answers: dict[str, Any] = Field(default_factory=dict)
 
 
+class BatteryFinalizeRequest(CamelModel):
+    clinical_conclusion: str = ""
+
+
+class BatteryEvidenceCreate(CamelModel):
+    kind: Literal["note"] = "note"
+    note_text: str = Field(..., min_length=1)
+    subform_slug: Optional[str] = None
+    item_id: Optional[str] = None
+    recorded_at: Optional[datetime] = None
+
+
+class BatteryEventCreate(CamelModel):
+    text: str = Field(..., min_length=1)
+    occurred_at: Optional[datetime] = None
+    subform_slug: Optional[str] = None
+    item_id: Optional[str] = None
+    evidence_id: Optional[UUID] = None
+
+
+class BatteryEventUpdate(CamelModel):
+    text: Optional[str] = None
+    occurred_at: Optional[datetime] = None
+    subform_slug: Optional[str] = None
+    item_id: Optional[str] = None
+
+
 class BatterySubformItem(CamelModel):
     id: str
     text: str
@@ -23,6 +50,8 @@ class BatterySubformItem(CamelModel):
     category: Optional[str] = None
     category_title: Optional[str] = None
     stimulus_type: Optional[str] = None
+    input_type: Optional[str] = None
+    options: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class BatterySubformFormResponse(CamelModel):
@@ -34,6 +63,8 @@ class BatterySubformFormResponse(CamelModel):
     classifications: list[dict[str, Any]] = Field(default_factory=list)
     phonological_processes: list[dict[str, Any]] = Field(default_factory=list)
     target_syllables: Optional[int] = None
+    scale: list[dict[str, Any]] = Field(default_factory=list)
+    input_type: str = "scale"
     items: list[BatterySubformItem]
     filler: str = "clinician"
 
