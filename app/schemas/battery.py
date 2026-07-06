@@ -7,9 +7,16 @@ from pydantic import Field
 from app.schemas.common import CamelModel
 
 
+class BatterySetupMetadata(CamelModel):
+    assessment_date: Optional[str] = None
+    examiner_name: Optional[str] = None
+    initial_notes: Optional[str] = None
+
+
 class BatteryCreate(CamelModel):
     instrument_slug: str = Field(..., min_length=1, max_length=64)
     patient_id: UUID
+    setup: Optional[BatterySetupMetadata] = None
 
 
 class BatterySubformAnswersUpdate(CamelModel):
@@ -54,6 +61,10 @@ class BatterySubformItem(CamelModel):
     options: list[dict[str, Any]] = Field(default_factory=list)
     age_start_months: Optional[int] = None
     age_end_months: Optional[int] = None
+    material: Optional[str] = None
+    examiner_instructions: Optional[str] = None
+    section: Optional[str] = None
+    response_type: Optional[str] = None
 
 
 class BatterySubformFormResponse(CamelModel):
@@ -102,6 +113,7 @@ class BatteryResponse(CamelModel):
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
     duration_minutes: Optional[float] = None
+    setup: Optional[BatterySetupMetadata] = None
     created_at: datetime
     updated_at: datetime
 

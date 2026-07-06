@@ -1,0 +1,46 @@
+[
+  {
+    "id": "express_01",
+    "domain": "EXP",
+    "section": "Expressão verbal",
+    "text": "Usa palavras isoladas para expressar necessidades (ex.: 'água', 'mamã')",
+    "age_start_months": 12,
+    "age_end_months": 18,
+    "material": "Objetos motivadores (copo, brinquedo preferido)",
+    "examiner_instructions": "Observar espontaneamente ou criar situação de necessidade. Registrar se usa palavra reconhecível, não apenas gesto.",
+    "response_type": "developmental"
+  },
+  {
+    "id": "express_02",
+    "domain": "EXP",
+    "section": "Expressão verbal",
+    "text": "Combina duas palavras para formar enunciados (ex.: 'quero água', 'mamã veio')",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "material": "Brinquedos e objetos familiares",
+    "examiner_instructions": "Estimular situações de brincadeira ou rotina. Aceitar combinações telegráficas.",
+    "response_type": "developmental"
+  },
+  {
+    "id": "express_03",
+    "domain": "EXP",
+    "section": "Expressão de frases",
+    "text": "Produz frases simples com três ou mais palavras",
+    "age_start_months": 24,
+    "age_end_months": 36,
+    "material": "Livro de figuras ou brinquedos para narrar ações",
+    "examiner_instructions": "Perguntar 'O que está acontecendo?' sobre uma cena. Registrar frase completa espontânea ou elicitada.",
+    "response_type": "developmental"
+  },
+  {
+    "id": "express_04",
+    "domain": "EXP",
+    "section": "Expressão de frases",
+    "text": "Relata eventos simples do passado usando tempo verbal adequado",
+    "age_start_months": 36,
+    "age_end_months": 48,
+    "material": "Nenhum material específico",
+    "examiner_instructions": "Perguntar sobre atividade recente (ex.: 'O que você fez hoje na escola?'). Aceitar relato com sequência básica.",
+    "response_type": "developmental"
+  }
+]

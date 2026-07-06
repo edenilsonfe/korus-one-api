@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "region": "BR",
+  "domains": {
+    "COMP": {
+      "raw_to_standard": [
+        { "raw": 0, "standard": 40 },
+        { "raw": 1, "standard": 55 },
+        { "raw": 2, "standard": 70 },
+        { "raw": 3, "standard": 85 },
+        { "raw": 4, "standard": 100 }
+      ],
+      "standard_to_percentile": [
+        { "standard": 40, "percentile": 5 },
+        { "standard": 55, "percentile": 25 },
+        { "standard": 70, "percentile": 50 },
+        { "standard": 85, "percentile": 75 },
+        { "standard": 100, "percentile": 95 }
+      ]
+    },
+    "EXP": {
+      "raw_to_standard": [
+        { "raw": 0, "standard": 40 },
+        { "raw": 1, "standard": 55 },
+        { "raw": 2, "standard": 70 },
+        { "raw": 3, "standard": 85 },
+        { "raw": 4, "standard": 100 }
+      ],
+      "standard_to_percentile": [
+        { "standard": 40, "percentile": 5 },
+        { "standard": 55, "percentile": 25 },
+        { "standard": 70, "percentile": 50 },
+        { "standard": 85, "percentile": 75 },
+        { "standard": 100, "percentile": 95 }
+      ]
+    },
+    "VOC": {
+      "raw_to_standard": [
+        { "raw": 0, "standard": 40 },
+        { "raw": 1, "standard": 55 },
+        { "raw": 2, "standard": 70 },
+        { "raw": 3, "standard": 85 },
+        { "raw": 4, "standard": 100 }
+      ],
+      "standard_to_percentile": [
+        { "standard": 40, "percentile": 5 },
+        { "standard": 55, "percentile": 25 },
+        { "standard": 70, "percentile": 50 },
+        { "standard": 85, "percentile": 75 },
+        { "standard": 100, "percentile": 95 }
+      ]
+    },
+    "FON": {
+      "raw_to_standard": [
+        { "raw": 0, "standard": 40 },
+        { "raw": 1, "standard": 55 },
+        { "raw": 2, "standard": 70 },
+        { "raw": 3, "standard": 85 },
+        { "raw": 4, "standard": 100 }
+      ],
+      "standard_to_percentile": [
+        { "standard": 40, "percentile": 5 },
+        { "standard": 55, "percentile": 25 },
+        { "standard": 70, "percentile": 50 },
+        { "standard": 85, "percentile": 75 },
+        { "standard": 100, "percentile": 95 }
+      ]
+    },
+    "PRA": {
+      "raw_to_standard": [
+        { "raw": 0, "standard": 40 },
+        { "raw": 1, "standard": 55 },
+        { "raw": 2, "standard": 70 },
+        { "raw": 3, "standard": 85 },
+        { "raw": 4, "standard": 100 }
+      ],
+      "standard_to_percentile": [
+        { "standard": 40, "percentile": 5 },
+        { "standard": 55, "percentile": 25 },
+        { "standard": 70, "percentile": 50 },
+        { "standard": 85, "percentile": 75 },
+        { "standard": 100, "percentile": 95 }
+      ]
+    }
+  }
+}

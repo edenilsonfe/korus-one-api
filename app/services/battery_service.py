@@ -23,6 +23,7 @@ from app.models.patient import Patient
 from app.schemas.battery import (
     BatteryCreate,
     BatteryResponse,
+    BatterySetupMetadata,
     BatterySubformAnswersUpdate,
     BatterySubformFormResponse,
     BatterySubformResponse,
@@ -136,6 +137,16 @@ class BatteryService:
             completed_at=subform.completed_at,
         )
 
+    def _battery_setup(self, meta: dict[str, Any]) -> BatterySetupMetadata | None:
+        setup_fields = {
+            "assessment_date": meta.get("assessment_date"),
+            "examiner_name": meta.get("examiner_name"),
+            "initial_notes": meta.get("initial_notes"),
+        }
+        if not any(setup_fields.values()):
+            return None
+        return BatterySetupMetadata(**setup_fields)
+
     def _to_battery_response(self, record: Assessment, package: InstrumentContentPackage) -> BatteryResponse:
         meta = self._battery_metadata(record)
         subforms = sorted(record.battery_subforms, key=lambda s: s.subform_slug)
@@ -154,6 +165,7 @@ class BatteryService:
             started_at=meta.get("started_at"),
             completed_at=meta.get("completed_at"),
             duration_minutes=meta.get("duration_minutes"),
+            setup=self._battery_setup(meta),
             created_at=record.created_at,
             updated_at=record.updated_at,
         )
@@ -180,14 +192,22 @@ class BatteryService:
             raise HTTPException(status_code=404, detail="Paciente não encontrado")
 
         today = utcnow().date()
+        battery_meta: dict[str, Any] = {
+            "started_at": _utcnow().isoformat(),
+            "completed_at": None,
+            "duration_minutes": None,
+        }
+        if data.setup:
+            if data.setup.assessment_date is not None:
+                battery_meta["assessment_date"] = data.setup.assessment_date
+            if data.setup.examiner_name is not None:
+                battery_meta["examiner_name"] = data.setup.examiner_name
+            if data.setup.initial_notes is not None:
+                battery_meta["initial_notes"] = data.setup.initial_notes
         metadata = {
             "engine": "battery",
             "package_id": package.package_id,
-            BATTERY_METADATA_KEY: {
-                "started_at": _utcnow().isoformat(),
-                "completed_at": None,
-                "duration_minutes": None,
-            },
+            BATTERY_METADATA_KEY: battery_meta,
         }
         record = Assessment(
             patient_id=data.patient_id,
@@ -373,6 +393,16 @@ class BatteryService:
 
         if clinical_conclusion:
             synthesized["clinical_conclusion"] = clinical_conclusion
+
+        setup: dict[str, Any] = {}
+        if battery_meta.get("assessment_date") is not None:
+            setup["assessment_date"] = battery_meta["assessment_date"]
+        if battery_meta.get("examiner_name") is not None:
+            setup["examiner_name"] = battery_meta["examiner_name"]
+        if battery_meta.get("initial_notes") is not None:
+            setup["initial_notes"] = battery_meta["initial_notes"]
+        if setup:
+            synthesized["setup"] = setup
 
         record.status = BATTERY_STATUS_COMPLETED
         record.scores = synthesized

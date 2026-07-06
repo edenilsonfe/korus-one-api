@@ -38,9 +38,35 @@ def export_battery_pdf(battery: BatteryResponse, package: InstrumentContentPacka
         )
         story.append(Spacer(1, 12))
 
+    scores = battery.scores or {}
+
+    if package.scoring.get("engine") == "developmental_screening":
+        story.append(Paragraph("Condições da aplicação", styles["Heading2"]))
+        setup = scores.get("setup") or {}
+        if setup.get("assessment_date"):
+            story.append(Paragraph(f"Data da avaliação: {setup['assessment_date']}", styles["Normal"]))
+        if setup.get("examiner_name"):
+            story.append(Paragraph(f"Examinador: {setup['examiner_name']}", styles["Normal"]))
+        if setup.get("initial_notes"):
+            story.append(Paragraph(f"Observações iniciais: {setup['initial_notes']}", styles["Normal"]))
+        story.append(Spacer(1, 12))
+        story.append(Paragraph("Resultados por domínio", styles["Heading2"]))
+        for slug, domain_score in (scores.get("domains") or {}).items():
+            if not isinstance(domain_score, dict):
+                continue
+            title = domain_score.get("title", slug)
+            level = domain_score.get("level", "—")
+            delays = domain_score.get("delay_count") or domain_score.get("delays") or 0
+            line = f"• {title}: {level} — {delays} atraso(s)"
+            if domain_score.get("standard_score") is not None:
+                line += f" — EP {domain_score['standard_score']}"
+            if domain_score.get("percentile") is not None:
+                line += f" (P{domain_score['percentile']})"
+            story.append(Paragraph(line, styles["Normal"]))
+        story.append(Spacer(1, 12))
+
     story.append(Paragraph("Resultados por módulo", styles["Heading2"]))
 
-    scores = battery.scores or {}
     for slug, domain_score in (scores.get("domains") or {}).items():
         if isinstance(domain_score, dict):
             story.append(Paragraph(domain_score.get("summary", slug), styles["Normal"]))

@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "package_id": "adl-linguagem-br-v1",
+  "instrument_slug": "adl-linguagem",
+  "instrument_title": "ADL — Avaliação do Desenvolvimento da Linguagem",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
+  "norms_region": "BR",
+  "norms_file": "norms-br.json",
+  "archetype": "observational",
+  "supports_multi_session": true,
+  "domains": [
+    { "id": "COMP", "title": "Compreensão" },
+    { "id": "EXP", "title": "Expressão" },
+    { "id": "VOC", "title": "Vocabulário" },
+    { "id": "FON", "title": "Fonologia" },
+    { "id": "PRA", "title": "Pragmática" }
+  ],
+  "modules": {
+    "compreensao": {
+      "id": "compreensao",
+      "title": "Compreensão",
+      "domain": "COMP",
+      "module_kind": "developmental",
+      "items_file": "items/compreensao.json",
+      "item_count": 4,
+      "filler": "clinician"
+    },
+    "expressao": {
+      "id": "expressao",
+      "title": "Expressão",
+      "domain": "EXP",
+      "module_kind": "developmental",
+      "items_file": "items/expressao.json",
+      "item_count": 4,
+      "filler": "clinician"
+    },
+    "vocabulario": {
+      "id": "vocabulario",
+      "title": "Vocabulário",
+      "domain": "VOC",
+      "module_kind": "developmental",
+      "items_file": "items/vocabulario.json",
+      "item_count": 4,
+      "filler": "clinician"
+    },
+    "fonologia": {
+      "id": "fonologia",
+      "title": "Fonologia",
+      "domain": "FON",
+      "module_kind": "developmental",
+      "items_file": "items/fonologia.json",
+      "item_count": 4,
+      "filler": "clinician"
+    },
+    "pragmatica": {
+      "id": "pragmatica",
+      "title": "Pragmática",
+      "domain": "PRA",
+      "module_kind": "developmental",
+      "items_file": "items/pragmatica.json",
+      "item_count": 4,
+      "filler": "clinician"
+    }
+  },
+  "subtests": [
+    { "id": "compreensao", "title": "Compreensão", "item_count": 4 },
+    { "id": "expressao", "title": "Expressão", "item_count": 4 },
+    { "id": "vocabulario", "title": "Vocabulário", "item_count": 4 },
+    { "id": "fonologia", "title": "Fonologia", "item_count": 4 },
+    { "id": "pragmatica", "title": "Pragmática", "item_count": 4 }
+  ],
+  "scoring": {
+    "engine": "developmental_screening",
+    "interpretations": [
+      { "level": "expected", "max_delays": 0, "label": "Desenvolvimento esperado" },
+      { "level": "caution", "max_delays": 2, "label": "Atenção — possível atraso" },
+      { "level": "delay", "max_delays": 999, "label": "Atraso significativo" }
+    ]
+  },
+  "report": {
+    "template_id": "adl-linguagem-br-v1",
+    "sections": ["identificacao", "condicoes", "resultados", "observacoes", "interpretacao", "conclusao", "assinatura"]
+  },
+  "informant_forms": []
+}

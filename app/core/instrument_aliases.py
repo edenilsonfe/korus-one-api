@@ -16,6 +16,7 @@ PROTOCOL_TO_INSTRUMENT_SLUG: dict[str, str] = {
     "pard": "pard",
     "fois": "fois",
     "adl": "adl",
+    "adl-linguagem": "adl-linguagem",
     "eat10": "eat-10",
     "doss": "doss",
     "masa": "masa",

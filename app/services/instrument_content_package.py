@@ -156,6 +156,10 @@ class InstrumentContentPackage:
                     "options": item.get("options", []),
                     "age_start_months": item.get("age_start_months"),
                     "age_end_months": item.get("age_end_months"),
+                    "material": item.get("material"),
+                    "examiner_instructions": item.get("examiner_instructions"),
+                    "section": item.get("section"),
+                    "response_type": item.get("response_type", "developmental"),
                 }
                 for item in items
             ],

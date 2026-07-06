@@ -222,6 +222,21 @@ PROTOCOLS = [
         ],
     },
     {
+        "id": "adl-linguagem",
+        "name": "ADL Linguagem",
+        "full_name": "ADL — Avaliação do Desenvolvimento da Linguagem",
+        "description": "Triagem do desenvolvimento da linguagem por domínios, com linha de idade.",
+        "age_range": "12 a 48 meses",
+        "field_templates": [
+            {"key": "compreensao", "label": "Compreensão"},
+            {"key": "expressao", "label": "Expressão"},
+            {"key": "vocabulario", "label": "Vocabulário"},
+            {"key": "fonologia", "label": "Fonologia"},
+            {"key": "pragmatica", "label": "Pragmática"},
+            {"key": "classificacao", "label": "Classificação"},
+        ],
+    },
+    {
         "id": "eat10",
         "name": "EAT-10",
         "full_name": "Eating Assessment Tool — 10 itens",

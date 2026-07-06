@@ -239,6 +239,35 @@ def _observational_level(percentage: float, interpretations: list[dict[str, Any]
     return "unknown"
 
 
+def _lookup_norm_table(table: list[dict], value: float, key: str, val_key: str) -> int | None:
+    if not table:
+        return None
+    sorted_rows = sorted(table, key=lambda r: r[key])
+    result = None
+    for row in sorted_rows:
+        if value >= row[key]:
+            result = row[val_key]
+        else:
+            break
+    return result
+
+
+def _apply_domain_norms(
+    package: InstrumentContentPackage, domain_id: str, raw_score: int
+) -> dict[str, Any]:
+    norms = package.get_norms().get("domains", {}).get(domain_id, {})
+    standard = _lookup_norm_table(norms.get("raw_to_standard", []), raw_score, "raw", "standard")
+    percentile = _lookup_norm_table(
+        norms.get("standard_to_percentile", []), standard or 0, "standard", "percentile"
+    )
+    out: dict[str, Any] = {}
+    if standard is not None:
+        out["standard_score"] = standard
+    if percentile is not None:
+        out["percentile"] = percentile
+    return out
+
+
 def _developmental_level(delay_count: int, interpretations: list[dict[str, Any]]) -> str:
     sorted_bands = sorted(interpretations, key=lambda b: int(b.get("max_delays", 999)))
     for band in sorted_bands:
@@ -812,6 +841,25 @@ def synthesize_battery_scores(
 
     developmental_meta: dict[str, Any] = {}
     if engine == "developmental_screening":
+        standard_scores: list[int] = []
+        percentiles: list[int] = []
+        norms_applied = False
+        for domain_id, entry in domains.items():
+            if not isinstance(entry, dict):
+                continue
+            raw = entry.get("raw_score")
+            if raw is None:
+                raw = entry.get("passes")
+            if raw is not None:
+                norm_fields = _apply_domain_norms(package, domain_id, int(raw))
+                if norm_fields:
+                    entry.update(norm_fields)
+                    norms_applied = True
+                    if "standard_score" in norm_fields:
+                        standard_scores.append(norm_fields["standard_score"])
+                    if "percentile" in norm_fields:
+                        percentiles.append(norm_fields["percentile"])
+
         total_delays = 0
         delay_domains: list[dict[str, Any]] = []
         domain_levels: dict[str, str] = {}
@@ -836,6 +884,16 @@ def synthesize_battery_scores(
             "delay_domains": delay_domains,
             "domain_levels": domain_levels,
         }
+        if norms_applied:
+            developmental_meta["norms_applied"] = True
+        if standard_scores:
+            developmental_meta["composite_standard_score"] = round(
+                sum(standard_scores) / len(standard_scores)
+            )
+        if percentiles:
+            developmental_meta["composite_percentile"] = round(
+                sum(percentiles) / len(percentiles)
+            )
         if domain_levels:
             altered_domains = sum(
                 1 for lvl in domain_levels.values() if lvl in ("delay", "caution", "altered")

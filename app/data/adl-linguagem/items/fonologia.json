@@ -1,0 +1,46 @@
+[
+  {
+    "id": "fon_01",
+    "domain": "FON",
+    "section": "Produção fonética",
+    "text": "Produz balbucio com variedade de consoantes (b, d, m, n, p)",
+    "age_start_months": 12,
+    "age_end_months": 18,
+    "material": "Nenhum material específico",
+    "examiner_instructions": "Observar produção vocal espontânea durante interação. Registrar presença de pelo menos 3 consoantes distintas em sílabas.",
+    "response_type": "developmental"
+  },
+  {
+    "id": "fon_02",
+    "domain": "FON",
+    "section": "Produção fonética",
+    "text": "Articula claramente consoantes labiais e nasais (p, b, m, n) em palavras",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "material": "Figuras de objetos com esses fonemas (bola, mamã, pato)",
+    "examiner_instructions": "Solicitar repetição ou nomeação. Avaliar inteligibilidade das consoantes-alvo nas posições silábicas iniciais.",
+    "response_type": "developmental"
+  },
+  {
+    "id": "fon_03",
+    "domain": "FON",
+    "section": "Inteligibilidade",
+    "text": "Fala inteligível para ouvintes familiares em frases curtas (≥50% inteligível)",
+    "age_start_months": 24,
+    "age_end_months": 36,
+    "material": "Nenhum material específico",
+    "examiner_instructions": "Transcrever amostra de fala espontânea de 5 frases. Estimar percentual de palavras compreendidas por ouvinte familiar.",
+    "response_type": "developmental"
+  },
+  {
+    "id": "fon_04",
+    "domain": "FON",
+    "section": "Inteligibilidade",
+    "text": "Articula a maioria dos fonemas do português com clareza adequada à idade",
+    "age_start_months": 36,
+    "age_end_months": 48,
+    "material": "Lista de palavras-alvo ou figuras para nomeação",
+    "examiner_instructions": "Aplicar amostra de 10–15 palavras com fonemas variados. Registrar substituições, omissões ou distorções atípicas.",
+    "response_type": "developmental"
+  }
+]
