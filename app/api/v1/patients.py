@@ -163,6 +163,7 @@ async def _build_detail(
                 "percentage": a.percentage,
                 "interpretation": a.interpretation,
                 "fields": a.fields or [],
+                "status": a.status,
             }
             for a in assessments
         ]

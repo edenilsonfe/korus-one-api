@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 from app.core.constants import CLINICAL_DOMAIN_CATALOG, GOAL_ACHIEVED_THRESHOLD
 from app.core.diagnosis_catalog import diagnosis_labels
 from app.core.utils import calculate_age, guardian_label
-from app.models.assessment import Assessment
+from app.models.assessment import Assessment, ASSESSMENT_STATUS_COMPLETED
 from app.models.caregiver import Caregiver
 from app.models.goal import ClinicalDomainSnapshot, Goal
 from app.models.patient import Patient
@@ -20,7 +20,12 @@ async def get_patient_aggregates(db: AsyncSession, patient_id: UUID) -> dict:
         select(func.count()).select_from(Session).where(Session.patient_id == patient_id)
     )
     protocols_done = await db.scalar(
-        select(func.count()).select_from(Assessment).where(Assessment.patient_id == patient_id)
+        select(func.count())
+        .select_from(Assessment)
+        .where(
+            Assessment.patient_id == patient_id,
+            Assessment.status == ASSESSMENT_STATUS_COMPLETED,
+        )
     )
     goals_result = await db.execute(select(Goal).where(Goal.patient_id == patient_id))
     goals = goals_result.scalars().all()

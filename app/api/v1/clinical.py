@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.deps import get_current_professional, get_patient_for_professional
 from app.core.utils import goal_status_from_progress, utcnow
 from app.db.session import get_db
-from app.models.assessment import Assessment, ProtocolCatalog
+from app.models.assessment import Assessment, ASSESSMENT_STATUS_COMPLETED, ProtocolCatalog
 from app.models.goal import ClinicalDomainSnapshot, Goal
 from app.models.patient import Patient
 from app.models.professional import Professional
@@ -65,7 +65,11 @@ async def list_protocols(
         stats = await db.execute(
             select(func.count(), func.avg(Assessment.percentage), func.max(Assessment.date))
             .join(Patient, Assessment.patient_id == Patient.id)
-            .where(Assessment.protocol_id == p.id, Patient.professional_id == professional.id)
+            .where(
+                Assessment.protocol_id == p.id,
+                Patient.professional_id == professional.id,
+                Assessment.status == ASSESSMENT_STATUS_COMPLETED,
+            )
         )
         count, avg_result, last_applied = stats.one()
         responses.append(

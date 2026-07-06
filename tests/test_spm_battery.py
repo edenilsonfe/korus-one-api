@@ -63,6 +63,13 @@ async def test_create_battery_and_informant_flow(
     battery = create_resp.json()
     battery_id = battery["id"]
 
+    global_resp = await api_client.get("/api/v1/assessments", headers=auth_headers)
+    assert global_resp.status_code == 200
+    global_ids = {item["id"] for item in global_resp.json()["items"]}
+    assert battery_id in global_ids
+    draft_item = next(item for item in global_resp.json()["items"] if item["id"] == battery_id)
+    assert draft_item["status"] == "draft"
+
     list_resp = await api_client.get("/api/v1/spm/batteries", headers=auth_headers)
     assert list_resp.status_code == 200
     assert list_resp.json()["total"] >= 1

@@ -7,6 +7,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, new_uuid
 
+ASSESSMENT_STATUS_COMPLETED = "completed"
+
 
 class ProtocolCatalog(Base, TimestampMixin):
     __tablename__ = "protocol_catalog"
