@@ -1,0 +1,22 @@
+[
+  {
+    "id": "pard_pd_preparo",
+    "domain": "consistencias",
+    "text": "Preparo e posicionamento para pudim/puré"
+  },
+  {
+    "id": "pard_pd_colher",
+    "domain": "consistencias",
+    "text": "Colherada de consistência pudim"
+  },
+  {
+    "id": "pard_pd_sequencia",
+    "domain": "consistencias",
+    "text": "Sequência de 3 colheradas consecutivas"
+  },
+  {
+    "id": "pard_pd_pos",
+    "domain": "consistencias",
+    "text": "Comportamento pós-deglutição"
+  }
+]

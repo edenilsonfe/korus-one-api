@@ -1,0 +1,66 @@
+[
+  {
+    "id": "lang_01",
+    "domain": "LANG",
+    "text": "Vocaliza em turnos",
+    "age_start_months": 6,
+    "age_end_months": 9,
+    "difficulty": 1
+  },
+  {
+    "id": "lang_02",
+    "domain": "LANG",
+    "text": "Diz mamã/papá",
+    "age_start_months": 9,
+    "age_end_months": 12,
+    "difficulty": 2
+  },
+  {
+    "id": "lang_03",
+    "domain": "LANG",
+    "text": "Usa 3 palras funcionais",
+    "age_start_months": 12,
+    "age_end_months": 15,
+    "difficulty": 3
+  },
+  {
+    "id": "lang_04",
+    "domain": "LANG",
+    "text": "Combina 2 palavras",
+    "age_start_months": 15,
+    "age_end_months": 18,
+    "difficulty": 4
+  },
+  {
+    "id": "lang_05",
+    "domain": "LANG",
+    "text": "Usa frases de 2–3 palavras",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "difficulty": 5
+  },
+  {
+    "id": "lang_06",
+    "domain": "LANG",
+    "text": "Faz perguntas simples",
+    "age_start_months": 24,
+    "age_end_months": 30,
+    "difficulty": 6
+  },
+  {
+    "id": "lang_07",
+    "domain": "LANG",
+    "text": "Conta eventos simples",
+    "age_start_months": 30,
+    "age_end_months": 36,
+    "difficulty": 7
+  },
+  {
+    "id": "lang_08",
+    "domain": "LANG",
+    "text": "Usa plural e artigos",
+    "age_start_months": 36,
+    "age_end_months": 42,
+    "difficulty": 8
+  }
+]

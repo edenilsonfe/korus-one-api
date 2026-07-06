@@ -59,7 +59,12 @@ def _count_answered(answers: dict[str, Any], item_ids: list[str]) -> int:
         if raw is None:
             continue
         if isinstance(raw, dict):
-            if raw.get("classification") or raw.get("response") or raw.get("count") is not None:
+            response = raw.get("response")
+            if response is not None and str(response).strip() != "":
+                count += 1
+            elif raw.get("classification"):
+                count += 1
+            elif raw.get("count") is not None:
                 count += 1
             elif raw.get("duration_seconds") or raw.get("syllable_count"):
                 count += 1

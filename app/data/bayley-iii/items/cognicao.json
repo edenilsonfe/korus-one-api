@@ -1,0 +1,66 @@
+[
+  {
+    "id": "cog_01",
+    "domain": "COG",
+    "text": "Segue objeto com o olhar",
+    "age_start_months": 6,
+    "age_end_months": 9,
+    "difficulty": 1
+  },
+  {
+    "id": "cog_02",
+    "domain": "COG",
+    "text": "Transfere objeto entre mãos",
+    "age_start_months": 9,
+    "age_end_months": 12,
+    "difficulty": 2
+  },
+  {
+    "id": "cog_03",
+    "domain": "COG",
+    "text": "Bate palmas",
+    "age_start_months": 12,
+    "age_end_months": 15,
+    "difficulty": 3
+  },
+  {
+    "id": "cog_04",
+    "domain": "COG",
+    "text": "Imita ações simples",
+    "age_start_months": 15,
+    "age_end_months": 18,
+    "difficulty": 4
+  },
+  {
+    "id": "cog_05",
+    "domain": "COG",
+    "text": "Empilha 2 blocos",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "difficulty": 5
+  },
+  {
+    "id": "cog_06",
+    "domain": "COG",
+    "text": "Empilha 4 blocos",
+    "age_start_months": 24,
+    "age_end_months": 30,
+    "difficulty": 6
+  },
+  {
+    "id": "cog_07",
+    "domain": "COG",
+    "text": "Combina formas em encaixe simples",
+    "age_start_months": 30,
+    "age_end_months": 36,
+    "difficulty": 7
+  },
+  {
+    "id": "cog_08",
+    "domain": "COG",
+    "text": "Nomeia cores básicas",
+    "age_start_months": 36,
+    "age_end_months": 42,
+    "difficulty": 8
+  }
+]

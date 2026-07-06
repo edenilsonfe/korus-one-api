@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ps_01",
+    "domain": "PS",
+    "text": "Observa rosto do examinador",
+    "age_start_months": 2,
+    "age_end_months": 4
+  },
+  {
+    "id": "ps_02",
+    "domain": "PS",
+    "text": "Sorri espontaneamente",
+    "age_start_months": 4,
+    "age_end_months": 6
+  },
+  {
+    "id": "ps_03",
+    "domain": "PS",
+    "text": "Brinca de esconde-esconde (achou!)",
+    "age_start_months": 6,
+    "age_end_months": 9
+  },
+  {
+    "id": "ps_04",
+    "domain": "PS",
+    "text": "Acena tchau",
+    "age_start_months": 9,
+    "age_end_months": 12
+  },
+  {
+    "id": "ps_05",
+    "domain": "PS",
+    "text": "Imita tarefas domésticas",
+    "age_start_months": 12,
+    "age_end_months": 15
+  },
+  {
+    "id": "ps_06",
+    "domain": "PS",
+    "text": "Usa colher com derramamento mínimo",
+    "age_start_months": 15,
+    "age_end_months": 18
+  }
+]

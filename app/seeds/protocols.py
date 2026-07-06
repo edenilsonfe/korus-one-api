@@ -208,6 +208,20 @@ PROTOCOLS = [
         ],
     },
     {
+        "id": "adl",
+        "name": "ADL",
+        "full_name": "Activities of Daily Living — Avaliação Funcional",
+        "description": "Avaliação das atividades de vida diária por domínios funcionais.",
+        "age_range": "Todas as idades",
+        "field_templates": [
+            {"key": "autocuidado", "label": "Autocuidado"},
+            {"key": "mobilidade", "label": "Mobilidade"},
+            {"key": "alimentacao", "label": "Alimentação"},
+            {"key": "comunicacao", "label": "Comunicação"},
+            {"key": "classificacao_funcional", "label": "Classificação funcional"},
+        ],
+    },
+    {
         "id": "eat10",
         "name": "EAT-10",
         "full_name": "Eating Assessment Tool — 10 itens",

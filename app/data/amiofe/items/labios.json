@@ -1,0 +1,22 @@
+[
+  {
+    "id": "lab_selagem",
+    "domain": "labios",
+    "text": "Selagem labial em repouso."
+  },
+  {
+    "id": "lab_protrusao",
+    "domain": "labios",
+    "text": "Protrusão e retrusão labial."
+  },
+  {
+    "id": "lab_vibracao",
+    "domain": "labios",
+    "text": "Vibração labial (/brrr/)."
+  },
+  {
+    "id": "lab_resistencia",
+    "domain": "labios",
+    "text": "Resistência à movimentação labial."
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "pard_sinais_checklist",
+    "domain": "sinais",
+    "input_type": "checklist",
+    "text": "Marque os sinais clínicos observados:",
+    "options": [
+      {
+        "id": "tosse_frequente",
+        "label": "Tosse frequente durante ou após refeições"
+      },
+      {
+        "id": "rouquidao",
+        "label": "Rouquidão pós-deglutição"
+      },
+      {
+        "id": "escape_nasal",
+        "label": "Escape nasal de alimentos/líquidos"
+      },
+      {
+        "id": "residuo_oral",
+        "label": "Resíduo oral após deglutição"
+      },
+      {
+        "id": "tempo_prolongado",
+        "label": "Tempo prolongado de mastigação/deglutição"
+      },
+      {
+        "id": "perda_peso",
+        "label": "Perda de peso ou desnutrição"
+      },
+      {
+        "id": "febre_pneumonia",
+        "label": "Histórico de pneumonia ou febre recorrente"
+      },
+      {
+        "id": "sialorreia",
+        "label": "Sialorreia / salivação excessiva"
+      }
+    ]
+  }
+]

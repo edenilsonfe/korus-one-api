@@ -143,6 +143,7 @@ class InstrumentContentPackage:
             "target_syllables": mod.get("target_syllables"),
             "scale": mod.get("scale") or self.scale,
             "input_type": mod.get("input_type", "scale"),
+            "administration_rules": self.scoring.get("administration_rules") or None,
             "items": [
                 {
                     "id": item["id"],
@@ -153,6 +154,8 @@ class InstrumentContentPackage:
                     "stimulus_type": item.get("stimulus_type", "word"),
                     "input_type": item.get("input_type") or mod.get("input_type", "scale"),
                     "options": item.get("options", []),
+                    "age_start_months": item.get("age_start_months"),
+                    "age_end_months": item.get("age_end_months"),
                 }
                 for item in items
             ],

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "package_id": "adl-br",
+  "instrument_slug": "adl",
+  "instrument_title": "ADL — Atividades de Vida Diária",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
+  "norms_region": null,
+  "archetype": "scaled",
+  "scale": [
+    { "value": 0, "label": "Dependente — necessita de ajuda total" },
+    { "value": 1, "label": "Assistência — necessita de ajuda parcial ou supervisão" },
+    { "value": 2, "label": "Independente — realiza sem ajuda" }
+  ],
+  "domains": [
+    { "id": "TOTAL", "title": "Classificação funcional global" }
+  ],
+  "items": [
+    { "id": "adl_alimentacao", "domain": "TOTAL", "text": "Alimentação (comer e beber)" },
+    { "id": "adl_higiene_bucal", "domain": "TOTAL", "text": "Higiene bucal" },
+    { "id": "adl_banho", "domain": "TOTAL", "text": "Banho / higiene corporal" },
+    { "id": "adl_vestir", "domain": "TOTAL", "text": "Vestir-se e despir-se" },
+    { "id": "adl_higiene_intima", "domain": "TOTAL", "text": "Higiene íntima / uso do banheiro" },
+    { "id": "adl_mobilidade", "domain": "TOTAL", "text": "Mobilidade (transferências, deambulação)" },
+    { "id": "adl_escadas", "domain": "TOTAL", "text": "Subir e descer escadas" },
+    { "id": "adl_comunicacao", "domain": "TOTAL", "text": "Comunicação funcional (expressar necessidades)" },
+    { "id": "adl_medicacao", "domain": "TOTAL", "text": "Administração de medicação" },
+    { "id": "adl_despensa", "domain": "TOTAL", "text": "Preparo de refeições simples / despensa" }
+  ],
+  "scoring": {
+    "engine": "scaled_sum",
+    "domains": {
+      "TOTAL": {
+        "method": "sum",
+        "item_ids": [
+          "adl_alimentacao",
+          "adl_higiene_bucal",
+          "adl_banho",
+          "adl_vestir",
+          "adl_higiene_intima",
+          "adl_mobilidade",
+          "adl_escadas",
+          "adl_comunicacao",
+          "adl_medicacao",
+          "adl_despensa"
+        ]
+      }
+    },
+    "interpretations": [
+      { "min": 0, "max": 8, "label": "Dependência severa — necessita suporte substancial" },
+      { "min": 9, "max": 15, "label": "Dependência parcial — necessita assistência moderada" },
+      { "min": 16, "max": 20, "label": "Independência funcional — desempenho adequado nas AVDs" }
+    ]
+  },
+  "report": {
+    "template_id": "adl-br-v1",
+    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
+  },
+  "informant_forms": []
+}

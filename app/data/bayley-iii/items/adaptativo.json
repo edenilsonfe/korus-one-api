@@ -1,0 +1,50 @@
+[
+  {
+    "id": "adp_01",
+    "domain": "ADP",
+    "text": "Leva alimento à boca",
+    "age_start_months": 6,
+    "age_end_months": 9,
+    "difficulty": 1
+  },
+  {
+    "id": "adp_02",
+    "domain": "ADP",
+    "text": "Segura mamadeira/copo",
+    "age_start_months": 9,
+    "age_end_months": 12,
+    "difficulty": 2
+  },
+  {
+    "id": "adp_03",
+    "domain": "ADP",
+    "text": "Usa colher com derramamento",
+    "age_start_months": 12,
+    "age_end_months": 18,
+    "difficulty": 3
+  },
+  {
+    "id": "adp_04",
+    "domain": "ADP",
+    "text": "Tira meias",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "difficulty": 4
+  },
+  {
+    "id": "adp_05",
+    "domain": "ADP",
+    "text": "Usa colher com derramamento mínimo",
+    "age_start_months": 24,
+    "age_end_months": 30,
+    "difficulty": 5
+  },
+  {
+    "id": "adp_06",
+    "domain": "ADP",
+    "text": "Veste peças simples com ajuda",
+    "age_start_months": 30,
+    "age_end_months": 36,
+    "difficulty": 6
+  }
+]

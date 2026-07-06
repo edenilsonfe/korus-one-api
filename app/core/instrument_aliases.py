@@ -15,6 +15,7 @@ PROTOCOL_TO_INSTRUMENT_SLUG: dict[str, str] = {
     "bayley3": "bayley-iii",
     "pard": "pard",
     "fois": "fois",
+    "adl": "adl",
     "eat10": "eat-10",
     "doss": "doss",
     "masa": "masa",

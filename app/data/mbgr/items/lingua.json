@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ling_protrusao",
+    "domain": "lingua",
+    "text": "Protrusão e lateralização da língua."
+  },
+  {
+    "id": "ling_elevacao",
+    "domain": "lingua",
+    "text": "Elevação da ponta e dorso lingual."
+  },
+  {
+    "id": "ling_grampo",
+    "domain": "lingua",
+    "text": "Movimento de grampo lingual."
+  },
+  {
+    "id": "ling_tremor",
+    "domain": "lingua",
+    "text": "Tremor ou fasciculação lingual."
+  }
+]

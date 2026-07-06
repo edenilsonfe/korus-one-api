@@ -1,0 +1,44 @@
+[
+  {
+    "id": "mg_01",
+    "domain": "MG",
+    "text": "Levanta cabeça em prono",
+    "age_start_months": 2,
+    "age_end_months": 4
+  },
+  {
+    "id": "mg_02",
+    "domain": "MG",
+    "text": "Rola de prono para supino",
+    "age_start_months": 4,
+    "age_end_months": 6
+  },
+  {
+    "id": "mg_03",
+    "domain": "MG",
+    "text": "Senta sem apoio",
+    "age_start_months": 6,
+    "age_end_months": 9
+  },
+  {
+    "id": "mg_04",
+    "domain": "MG",
+    "text": "Engatinha ou se arrasta",
+    "age_start_months": 9,
+    "age_end_months": 12
+  },
+  {
+    "id": "mg_05",
+    "domain": "MG",
+    "text": "Fica em pé com apoio",
+    "age_start_months": 12,
+    "age_end_months": 15
+  },
+  {
+    "id": "mg_06",
+    "domain": "MG",
+    "text": "Anda sem apoio",
+    "age_start_months": 15,
+    "age_end_months": 18
+  }
+]

@@ -1,116 +1,118 @@
 {
-  "version": 1,
-  "package_id": "pard-br",
+  "version": 2,
+  "package_id": "pard-br-v1",
   "instrument_slug": "pard",
   "instrument_title": "PARD — Protocolo de Avaliação de Risco de Disfagia",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
   "norms_region": null,
-  "archetype": "scaled",
+  "archetype": "observational",
+  "supports_multi_session": true,
   "scale": [
-    {
-      "value": 0,
-      "label": "Não"
-    },
-    {
-      "value": 1,
-      "label": "Sim"
-    }
+    { "value": 0, "label": "Normal" },
+    { "value": 1, "label": "Tosse" },
+    { "value": 2, "label": "Escape" },
+    { "value": 3, "label": "Engasgo" }
   ],
   "domains": [
-    {
-      "id": "TOTAL",
-      "title": "Pontuação total"
-    }
+    { "id": "consistencias", "title": "Testes de consistência" },
+    { "id": "sinais", "title": "Sinais clínicos" },
+    { "id": "geral", "title": "Observações gerais" }
   ],
-  "items": [
-    {
-      "id": "pard_01",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+  "modules": {
+    "liquido-fino": {
+      "id": "liquido-fino",
+      "title": "Líquido fino",
+      "domain": "consistencias",
+      "module_kind": "observational",
+      "scale_direction": "lower_is_better",
+      "items_file": "items/liquido-fino.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "pard_02",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    "nectar": {
+      "id": "nectar",
+      "title": "Néctar",
+      "domain": "consistencias",
+      "module_kind": "observational",
+      "scale_direction": "lower_is_better",
+      "items_file": "items/nectar.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "pard_03",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    "mel": {
+      "id": "mel",
+      "title": "Mel / honey",
+      "domain": "consistencias",
+      "module_kind": "observational",
+      "scale_direction": "lower_is_better",
+      "items_file": "items/mel.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "pard_04",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    "pudim": {
+      "id": "pudim",
+      "title": "Pudim / pureed",
+      "domain": "consistencias",
+      "module_kind": "observational",
+      "scale_direction": "lower_is_better",
+      "items_file": "items/pudim.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "pard_05",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    "solido": {
+      "id": "solido",
+      "title": "Sólido",
+      "domain": "consistencias",
+      "module_kind": "observational",
+      "scale_direction": "lower_is_better",
+      "items_file": "items/solido.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "pard_06",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    "sinais-clinicos": {
+      "id": "sinais-clinicos",
+      "title": "Sinais clínicos de disfagia",
+      "domain": "sinais",
+      "module_kind": "observational",
+      "input_type": "checklist",
+      "scale_direction": "lower_is_better",
+      "items_file": "items/sinais-clinicos.json",
+      "item_count": 1,
+      "filler": "clinician"
     },
-    {
-      "id": "pard_07",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
-    },
-    {
-      "id": "pard_08",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    "observacoes-gerais": {
+      "id": "observacoes-gerais",
+      "title": "Observações gerais",
+      "domain": "geral",
+      "module_kind": "qualitative",
+      "required": false,
+      "items_file": "items/observacoes-gerais.json",
+      "item_count": 3,
+      "filler": "clinician"
     }
+  },
+  "subtests": [
+    { "id": "liquido-fino", "title": "Líquido fino", "item_count": 4 },
+    { "id": "nectar", "title": "Néctar", "item_count": 4 },
+    { "id": "mel", "title": "Mel / honey", "item_count": 4 },
+    { "id": "pudim", "title": "Pudim / pureed", "item_count": 4 },
+    { "id": "solido", "title": "Sólido", "item_count": 4 },
+    { "id": "sinais-clinicos", "title": "Sinais clínicos", "item_count": 1 },
+    { "id": "observacoes-gerais", "title": "Observações gerais", "item_count": 3 }
   ],
   "scoring": {
-    "engine": "scaled_sum",
-    "domains": {
-      "TOTAL": {
-        "method": "sum",
-        "item_ids": [
-          "pard_01",
-          "pard_02",
-          "pard_03",
-          "pard_04",
-          "pard_05",
-          "pard_06",
-          "pard_07",
-          "pard_08"
-        ]
-      }
-    },
+    "engine": "observational_domains",
+    "scale_direction": "lower_is_better",
     "interpretations": [
-      {
-        "min": 0,
-        "max": 2,
-        "label": "Baixo risco"
-      },
-      {
-        "min": 3,
-        "max": 8,
-        "label": "Risco elevado — avaliação fonoaudiológica indicada"
-      }
-    ],
-    "cutoffs": [
-      {
-        "domain": "TOTAL",
-        "operator": ">=",
-        "value": 3,
-        "label": "Risco de disfagia"
-      }
+      { "level": "expected", "min_percentage": 70, "max_percentage": 100, "label": "Baixo risco" },
+      { "level": "attention", "min_percentage": 40, "max_percentage": 69.9, "label": "Risco moderado" },
+      { "level": "altered", "min_percentage": 0, "max_percentage": 39.9, "label": "Risco elevado" }
     ]
   },
   "report": {
     "template_id": "pard-br-v1",
-    "sections": [
-      "identificacao",
-      "resultados",
-      "interpretacao",
-      "recomendacoes"
-    ]
+    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
   },
   "informant_forms": []
 }

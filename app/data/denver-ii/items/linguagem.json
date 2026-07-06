@@ -1,0 +1,44 @@
+[
+  {
+    "id": "la_01",
+    "domain": "LA",
+    "text": "Vocaliza (arrulha, balbucia)",
+    "age_start_months": 2,
+    "age_end_months": 4
+  },
+  {
+    "id": "la_02",
+    "domain": "LA",
+    "text": "Ri alto",
+    "age_start_months": 4,
+    "age_end_months": 6
+  },
+  {
+    "id": "la_03",
+    "domain": "LA",
+    "text": "Duplica sílabas (mamá, papá)",
+    "age_start_months": 6,
+    "age_end_months": 9
+  },
+  {
+    "id": "la_04",
+    "domain": "LA",
+    "text": "Diz mamã ou equivalente",
+    "age_start_months": 9,
+    "age_end_months": 12
+  },
+  {
+    "id": "la_05",
+    "domain": "LA",
+    "text": "Diz mais de 3 palavras além de mamã/papá",
+    "age_start_months": 12,
+    "age_end_months": 15
+  },
+  {
+    "id": "la_06",
+    "domain": "LA",
+    "text": "Combina 2 palavras",
+    "age_start_months": 15,
+    "age_end_months": 18
+  }
+]

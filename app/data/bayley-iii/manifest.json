@@ -1,249 +1,95 @@
 {
-  "version": 1,
-  "package_id": "bayley-iii-br",
+  "version": 2,
+  "package_id": "bayley-iii-br-v1",
   "instrument_slug": "bayley-iii",
   "instrument_title": "Bayley-III — Escalas Bayley de Desenvolvimento",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
   "norms_region": "BR",
   "archetype": "observational",
+  "supports_multi_session": true,
   "scale": [
-    {
-      "value": 0,
-      "label": "Ausente / Não observado"
-    },
-    {
-      "value": 1,
-      "label": "Parcial / Emergente"
-    },
-    {
-      "value": 2,
-      "label": "Presente / Adequado"
-    }
+    { "value": 0, "label": "Não observado / Falha" },
+    { "value": 1, "label": "Emergente / Parcial" },
+    { "value": 2, "label": "Passa / Completo" }
   ],
   "domains": [
-    {
-      "id": "COG",
-      "title": "Módulo COG"
-    },
-    {
-      "id": "MOT",
-      "title": "Módulo MOT"
-    },
-    {
-      "id": "SOC",
-      "title": "Módulo SOC"
-    }
+    { "id": "COG", "title": "Cognição" },
+    { "id": "LANG", "title": "Linguagem" },
+    { "id": "MOT", "title": "Motor" },
+    { "id": "SOC", "title": "Socioemocional" },
+    { "id": "ADP", "title": "Adaptativo" }
   ],
   "modules": {
-    "COG": {
-      "id": "COG",
-      "title": "Módulo COG",
-      "items": [
-        {
-          "id": "cog_01",
-          "domain": "COG",
-          "module": "COG",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "cog_02",
-          "domain": "COG",
-          "module": "COG",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "cog_03",
-          "domain": "COG",
-          "module": "COG",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "cog_04",
-          "domain": "COG",
-          "module": "COG",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "cognicao": {
+      "id": "cognicao",
+      "title": "Cognição",
+      "domain": "COG",
+      "module_kind": "developmental",
+      "items_file": "items/cognicao.json",
+      "item_count": 8,
+      "filler": "clinician"
     },
-    "MOT": {
-      "id": "MOT",
-      "title": "Módulo MOT",
-      "items": [
-        {
-          "id": "mot_01",
-          "domain": "MOT",
-          "module": "MOT",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "mot_02",
-          "domain": "MOT",
-          "module": "MOT",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "mot_03",
-          "domain": "MOT",
-          "module": "MOT",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "mot_04",
-          "domain": "MOT",
-          "module": "MOT",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "linguagem": {
+      "id": "linguagem",
+      "title": "Linguagem",
+      "domain": "LANG",
+      "module_kind": "developmental",
+      "items_file": "items/linguagem.json",
+      "item_count": 8,
+      "filler": "clinician"
     },
-    "SOC": {
-      "id": "SOC",
-      "title": "Módulo SOC",
-      "items": [
-        {
-          "id": "soc_01",
-          "domain": "SOC",
-          "module": "SOC",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "soc_02",
-          "domain": "SOC",
-          "module": "SOC",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "soc_03",
-          "domain": "SOC",
-          "module": "SOC",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "soc_04",
-          "domain": "SOC",
-          "module": "SOC",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "motor": {
+      "id": "motor",
+      "title": "Motor",
+      "domain": "MOT",
+      "module_kind": "developmental",
+      "items_file": "items/motor.json",
+      "item_count": 8,
+      "filler": "clinician"
+    },
+    "socioemocional": {
+      "id": "socioemocional",
+      "title": "Socioemocional",
+      "domain": "SOC",
+      "module_kind": "developmental",
+      "items_file": "items/socioemocional.json",
+      "item_count": 6,
+      "filler": "clinician"
+    },
+    "adaptativo": {
+      "id": "adaptativo",
+      "title": "Adaptativo",
+      "domain": "ADP",
+      "module_kind": "developmental",
+      "items_file": "items/adaptativo.json",
+      "item_count": 6,
+      "filler": "clinician"
     }
   },
-  "items": [
-    {
-      "id": "cog_01",
-      "domain": "COG",
-      "module": "COG",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "cog_02",
-      "domain": "COG",
-      "module": "COG",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "cog_03",
-      "domain": "COG",
-      "module": "COG",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "cog_04",
-      "domain": "COG",
-      "module": "COG",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    },
-    {
-      "id": "mot_01",
-      "domain": "MOT",
-      "module": "MOT",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "mot_02",
-      "domain": "MOT",
-      "module": "MOT",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "mot_03",
-      "domain": "MOT",
-      "module": "MOT",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "mot_04",
-      "domain": "MOT",
-      "module": "MOT",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    },
-    {
-      "id": "soc_01",
-      "domain": "SOC",
-      "module": "SOC",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "soc_02",
-      "domain": "SOC",
-      "module": "SOC",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "soc_03",
-      "domain": "SOC",
-      "module": "SOC",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "soc_04",
-      "domain": "SOC",
-      "module": "SOC",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    }
+  "subtests": [
+    { "id": "cognicao", "title": "Cognição", "item_count": 8 },
+    { "id": "linguagem", "title": "Linguagem", "item_count": 8 },
+    { "id": "motor", "title": "Motor", "item_count": 8 },
+    { "id": "socioemocional", "title": "Socioemocional", "item_count": 6 },
+    { "id": "adaptativo", "title": "Adaptativo", "item_count": 6 }
   ],
   "scoring": {
-    "engine": "observational_rubric",
-    "modules": {
-      "COG": {
-        "method": "mean",
-        "item_ids": [
-          "cog_01",
-          "cog_02",
-          "cog_03",
-          "cog_04"
-        ]
-      },
-      "MOT": {
-        "method": "mean",
-        "item_ids": [
-          "mot_01",
-          "mot_02",
-          "mot_03",
-          "mot_04"
-        ]
-      },
-      "SOC": {
-        "method": "mean",
-        "item_ids": [
-          "soc_01",
-          "soc_02",
-          "soc_03",
-          "soc_04"
-        ]
-      }
-    }
+    "engine": "developmental_screening",
+    "administration_rules": {
+      "basal_rule": 3,
+      "ceiling_rule": 5
+    },
+    "interpretations": [
+      { "level": "expected", "max_delays": 0, "label": "Desenvolvimento esperado" },
+      { "level": "caution", "max_delays": 2, "label": "Atenção — possível atraso" },
+      { "level": "delay", "max_delays": 999, "label": "Atraso significativo" }
+    ]
   },
   "report": {
     "template_id": "bayley-iii-br-v1",
-    "sections": [
-      "identificacao",
-      "resultados",
-      "interpretacao",
-      "recomendacoes"
-    ]
+    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
   },
   "informant_forms": [],
-  "requires_competency_ack": false,
-  "supports_multi_session": true,
-  "norms_file": "norms-br.json"
+  "requires_competency_ack": false
 }

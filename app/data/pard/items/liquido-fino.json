@@ -1,0 +1,22 @@
+[
+  {
+    "id": "pard_lf_preparo",
+    "domain": "consistencias",
+    "text": "Preparo e posicionamento para líquido fino"
+  },
+  {
+    "id": "pard_lf_sorvo",
+    "domain": "consistencias",
+    "text": "Sorvo de água (5–10 ml)"
+  },
+  {
+    "id": "pard_lf_sequencia",
+    "domain": "consistencias",
+    "text": "Sequência de 3 deglutições consecutivas"
+  },
+  {
+    "id": "pard_lf_pos",
+    "domain": "consistencias",
+    "text": "Comportamento pós-deglutição (tosse, rouquidão)"
+  }
+]

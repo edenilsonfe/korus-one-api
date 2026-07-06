@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fm_01",
+    "domain": "FM",
+    "text": "Segue objeto até linha média",
+    "age_start_months": 2,
+    "age_end_months": 4
+  },
+  {
+    "id": "fm_02",
+    "domain": "FM",
+    "text": "Transfere objeto de uma mão para outra",
+    "age_start_months": 4,
+    "age_end_months": 6
+  },
+  {
+    "id": "fm_03",
+    "domain": "FM",
+    "text": "Pega objetos pequenos com preensão em pinça inferior",
+    "age_start_months": 6,
+    "age_end_months": 9
+  },
+  {
+    "id": "fm_04",
+    "domain": "FM",
+    "text": "Bate palmas",
+    "age_start_months": 9,
+    "age_end_months": 12
+  },
+  {
+    "id": "fm_05",
+    "domain": "FM",
+    "text": "Faz torre de 2 cubos",
+    "age_start_months": 12,
+    "age_end_months": 15
+  },
+  {
+    "id": "fm_06",
+    "domain": "FM",
+    "text": "Rabisca espontaneamente",
+    "age_start_months": 15,
+    "age_end_months": 18
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "resp_padrao",
+    "domain": "respiracao",
+    "text": "Padrão respiratório (nasal/oral)."
+  },
+  {
+    "id": "resp_coordenacao",
+    "domain": "respiracao",
+    "text": "Coordenação respiração-deglutição."
+  },
+  {
+    "id": "resp_apneia",
+    "domain": "respiracao",
+    "text": "Apneia ou pausa respiratória durante deglutição."
+  }
+]

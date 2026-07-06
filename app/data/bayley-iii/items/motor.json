@@ -1,0 +1,66 @@
+[
+  {
+    "id": "mot_01",
+    "domain": "MOT",
+    "text": "Senta com apoio",
+    "age_start_months": 6,
+    "age_end_months": 9,
+    "difficulty": 1
+  },
+  {
+    "id": "mot_02",
+    "domain": "MOT",
+    "text": "Senta sem apoio",
+    "age_start_months": 9,
+    "age_end_months": 12,
+    "difficulty": 2
+  },
+  {
+    "id": "mot_03",
+    "domain": "MOT",
+    "text": "Engatinha",
+    "age_start_months": 12,
+    "age_end_months": 15,
+    "difficulty": 3
+  },
+  {
+    "id": "mot_04",
+    "domain": "MOT",
+    "text": "Fica em pé com apoio",
+    "age_start_months": 15,
+    "age_end_months": 18,
+    "difficulty": 4
+  },
+  {
+    "id": "mot_05",
+    "domain": "MOT",
+    "text": "Anda sem apoio",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "difficulty": 5
+  },
+  {
+    "id": "mot_06",
+    "domain": "MOT",
+    "text": "Corre",
+    "age_start_months": 24,
+    "age_end_months": 30,
+    "difficulty": 6
+  },
+  {
+    "id": "mot_07",
+    "domain": "MOT",
+    "text": "Sobe escadas com apoio",
+    "age_start_months": 30,
+    "age_end_months": 36,
+    "difficulty": 7
+  },
+  {
+    "id": "mot_08",
+    "domain": "MOT",
+    "text": "Pula com os dois pés",
+    "age_start_months": 36,
+    "age_end_months": 42,
+    "difficulty": 8
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "pard_og_contexto",
+    "domain": "geral",
+    "input_type": "text",
+    "text": "Contexto da avaliação e posicionamento adotado."
+  },
+  {
+    "id": "pard_og_comportamento",
+    "domain": "geral",
+    "input_type": "text",
+    "text": "Comportamento geral durante a avaliação."
+  },
+  {
+    "id": "pard_og_recomendacoes",
+    "domain": "geral",
+    "input_type": "text",
+    "text": "Recomendações clínicas preliminares."
+  }
+]

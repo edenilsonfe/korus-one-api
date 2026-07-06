@@ -1,0 +1,22 @@
+[
+  {
+    "id": "face_simetria",
+    "domain": "face",
+    "text": "Simetria facial em repouso e durante movimento."
+  },
+  {
+    "id": "face_tonus",
+    "domain": "face",
+    "text": "Tônus e mobilidade da musculatura facial."
+  },
+  {
+    "id": "face_expressao",
+    "domain": "face",
+    "text": "Expressão facial e mímica."
+  },
+  {
+    "id": "face_sensibilidade",
+    "domain": "face",
+    "text": "Sensibilidade facial."
+  }
+]

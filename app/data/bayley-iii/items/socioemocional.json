@@ -1,0 +1,50 @@
+[
+  {
+    "id": "soc_01",
+    "domain": "SOC",
+    "text": "Sorri em resposta social",
+    "age_start_months": 6,
+    "age_end_months": 9,
+    "difficulty": 1
+  },
+  {
+    "id": "soc_02",
+    "domain": "SOC",
+    "text": "Demonstra ansiedade de separação",
+    "age_start_months": 9,
+    "age_end_months": 12,
+    "difficulty": 2
+  },
+  {
+    "id": "soc_03",
+    "domain": "SOC",
+    "text": "Brinca de esconde-esconde",
+    "age_start_months": 12,
+    "age_end_months": 18,
+    "difficulty": 3
+  },
+  {
+    "id": "soc_04",
+    "domain": "SOC",
+    "text": "Imita comportamentos dos pares",
+    "age_start_months": 18,
+    "age_end_months": 24,
+    "difficulty": 4
+  },
+  {
+    "id": "soc_05",
+    "domain": "SOC",
+    "text": "Brincadeira paralela",
+    "age_start_months": 24,
+    "age_end_months": 30,
+    "difficulty": 5
+  },
+  {
+    "id": "soc_06",
+    "domain": "SOC",
+    "text": "Brincadeira cooperativa simples",
+    "age_start_months": 30,
+    "age_end_months": 36,
+    "difficulty": 6
+  }
+]

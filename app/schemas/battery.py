@@ -52,6 +52,8 @@ class BatterySubformItem(CamelModel):
     stimulus_type: Optional[str] = None
     input_type: Optional[str] = None
     options: list[dict[str, Any]] = Field(default_factory=list)
+    age_start_months: Optional[int] = None
+    age_end_months: Optional[int] = None
 
 
 class BatterySubformFormResponse(CamelModel):
@@ -67,6 +69,7 @@ class BatterySubformFormResponse(CamelModel):
     input_type: str = "scale"
     items: list[BatterySubformItem]
     filler: str = "clinician"
+    administration_rules: Optional[dict[str, Any]] = None
 
 
 class BatterySubformResponse(CamelModel):

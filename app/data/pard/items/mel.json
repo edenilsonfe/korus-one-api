@@ -1,0 +1,22 @@
+[
+  {
+    "id": "pard_ml_preparo",
+    "domain": "consistencias",
+    "text": "Preparo e posicionamento para mel/honey"
+  },
+  {
+    "id": "pard_ml_sorvo",
+    "domain": "consistencias",
+    "text": "Sorvo de líquido espessado mel"
+  },
+  {
+    "id": "pard_ml_sequencia",
+    "domain": "consistencias",
+    "text": "Sequência de 3 deglutições consecutivas"
+  },
+  {
+    "id": "pard_ml_pos",
+    "domain": "consistencias",
+    "text": "Comportamento pós-deglutição"
+  }
+]

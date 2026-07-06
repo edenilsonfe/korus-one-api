@@ -20,7 +20,13 @@ from app.services.timeline import create_timeline_event
 async def seed_protocols(session) -> None:
     for p in PROTOCOLS:
         existing = await session.get(ProtocolCatalog, p["id"])
-        if not existing:
+        if existing:
+            existing.name = p["name"]
+            existing.full_name = p["full_name"]
+            existing.description = p["description"]
+            existing.age_range = p["age_range"]
+            existing.field_templates = p["field_templates"]
+        else:
             session.add(ProtocolCatalog(**p))
 
 

@@ -226,17 +226,130 @@ def score_fluency_module(
 
 def _observational_level(percentage: float, interpretations: list[dict[str, Any]]) -> str:
     for band in interpretations:
-        min_pct = float(band.get("min_percentage", 0))
-        max_pct = float(band.get("max_percentage", 100))
-        if min_pct <= percentage <= max_pct:
+        if "min_percentage" in band:
+            min_pct = float(band.get("min_percentage", 0))
+            max_pct = float(band.get("max_percentage", 100))
+            if min_pct <= percentage <= max_pct:
+                return str(band.get("level", "unknown"))
+        elif "min" in band and "max" in band:
+            min_val = float(band["min"])
+            max_val = float(band["max"])
+            if min_val <= percentage <= max_val:
+                return str(band.get("level", "unknown"))
+    return "unknown"
+
+
+def _developmental_level(delay_count: int, interpretations: list[dict[str, Any]]) -> str:
+    sorted_bands = sorted(interpretations, key=lambda b: int(b.get("max_delays", 999)))
+    for band in sorted_bands:
+        max_delays = int(band.get("max_delays", 999))
+        if delay_count <= max_delays:
             return str(band.get("level", "unknown"))
     return "unknown"
+
+
+def _resolve_scale_direction(
+    package: InstrumentContentPackage, mod: dict[str, Any]
+) -> str | None:
+    return mod.get("scale_direction") or package.scoring.get("scale_direction")
+
+
+def _is_developmental_pass(ans: dict[str, Any]) -> bool:
+    response = ans.get("response")
+    if response in ("pass", "present", "yes"):
+        return True
+    value = ans.get("value")
+    return value is not None and int(value) >= 1
+
+
+def _is_developmental_fail(ans: dict[str, Any]) -> bool:
+    response = ans.get("response")
+    if response in ("fail", "absent", "no"):
+        return True
+    value = ans.get("value")
+    return value is not None and int(value) == 0
+
+
+def _apply_basal_ceiling_window(
+    items: list[dict[str, Any]],
+    answers: dict[str, Any],
+    admin_rules: dict[str, Any],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    session = _item_answer(answers, "_session")
+    session_meta: dict[str, Any] = {}
+    if not session:
+        return items, session_meta
+
+    basal_index = session.get("basal_index")
+    ceiling_index = session.get("ceiling_index")
+    if basal_index is None and ceiling_index is None:
+        basal_rule = int(admin_rules.get("basal_rule") or 0)
+        ceiling_rule = int(admin_rules.get("ceiling_rule") or 0)
+        if not basal_rule and not ceiling_rule:
+            return items, session_meta
+
+        passes: list[bool] = []
+        for item in items:
+            ans = _item_answer(answers, item["id"])
+            if ans:
+                passes.append(_is_developmental_pass(ans))
+            else:
+                passes.append(False)
+
+        start_index = session.get("start_index")
+        if start_index is None and admin_rules:
+            start_index = len(items) // 2
+        start_index = int(start_index or 0)
+
+        if basal_rule and basal_index is None:
+            streak = 0
+            for idx in range(start_index, -1, -1):
+                if idx < len(passes) and passes[idx]:
+                    streak += 1
+                    if streak >= basal_rule:
+                        basal_index = idx
+                        break
+                else:
+                    streak = 0
+            if basal_index is None:
+                basal_index = 0
+
+        if ceiling_rule and ceiling_index is None:
+            streak = 0
+            for idx in range(start_index, len(items)):
+                ans = _item_answer(answers, items[idx]["id"])
+                if ans and _is_developmental_fail(ans):
+                    streak += 1
+                    if streak >= ceiling_rule:
+                        ceiling_index = idx
+                        break
+                else:
+                    streak = 0
+            if ceiling_index is None:
+                ceiling_index = len(items) - 1
+
+    session_meta = {
+        "basal_index": basal_index,
+        "ceiling_index": ceiling_index,
+        "start_index": session.get("start_index"),
+    }
+
+    filtered: list[dict[str, Any]] = []
+    for idx, item in enumerate(items):
+        if basal_index is not None and idx < basal_index:
+            continue
+        if ceiling_index is not None and idx > ceiling_index:
+            continue
+        filtered.append(item)
+    return filtered or items, session_meta
 
 
 def score_observational_module(
     package: InstrumentContentPackage,
     module_slug: str,
     answers: dict[str, Any],
+    *,
+    patient_age_months: int | None = None,
 ) -> dict[str, Any]:
     mod = package.get_module_config(module_slug)
     items = package.get_module_items(module_slug)
@@ -259,6 +372,10 @@ def score_observational_module(
     scale = mod.get("scale") or package.scale
     max_value = max((int(s["value"]) for s in scale), default=2)
     interpretations = package.scoring.get("interpretations", [])
+    zero_label = next((str(s.get("label", "")) for s in scale if int(s["value"]) == 0), "")
+    zero_is_not_observed = mod.get("zero_is_not_observed")
+    if zero_is_not_observed is None:
+        zero_is_not_observed = "não observado" in zero_label.lower() or "not observed" in zero_label.lower()
 
     item_details: list[dict[str, Any]] = []
     not_observed = 0
@@ -338,7 +455,7 @@ def score_observational_module(
             continue
 
         value = int(value)
-        if value == 0:
+        if value == 0 and zero_is_not_observed:
             not_observed += 1
             item_details.append(
                 {
@@ -368,7 +485,19 @@ def score_observational_module(
             attention_items.append(item.get("text", item["id"]))
 
     percentage = round((points / possible_points) * 100, 1) if possible_points else 0.0
-    level = _observational_level(percentage, interpretations)
+    scale_direction = _resolve_scale_direction(package, mod)
+    if scale_direction == "lower_is_better":
+        percentage = round(100 - percentage, 1)
+
+    interpretations = package.scoring.get("interpretations", [])
+    if interpretations and "min_percentage" not in interpretations[0] and "min" in interpretations[0]:
+        max_band = max(float(b.get("max", 0)) for b in interpretations)
+        level = _observational_level(
+            percentage if max_band <= 100 else float(points),
+            interpretations,
+        )
+    else:
+        level = _observational_level(percentage, interpretations)
 
     return {
         "module_kind": "observational",
@@ -379,12 +508,123 @@ def score_observational_module(
         "level": level,
         "points": points,
         "possible_points": possible_points,
+        "sum": points,
+        "max_sum": possible_points,
+        "scale_direction": scale_direction,
         "not_observed": not_observed,
         "unanswered": unanswered,
         "strengths": strengths,
         "attention_items": attention_items,
         "items": item_details,
         "summary": f"{mod.get('title', module_slug)}: {percentage}% ({level})",
+    }
+
+
+def score_developmental_module(
+    package: InstrumentContentPackage,
+    module_slug: str,
+    answers: dict[str, Any],
+    *,
+    patient_age_months: int | None = None,
+) -> dict[str, Any]:
+    mod = package.get_module_config(module_slug)
+    items = package.get_module_items(module_slug)
+    admin_rules = package.scoring.get("administration_rules", {})
+    scored_items, session_meta = _apply_basal_ceiling_window(items, answers, admin_rules)
+
+    item_details: list[dict[str, Any]] = []
+    delays: list[dict[str, Any]] = []
+    passes = 0
+    fails = 0
+    unanswered = 0
+
+    for item in scored_items:
+        ans = _item_answer(answers, item["id"])
+        if not ans:
+            unanswered += 1
+            item_details.append(
+                {
+                    "id": item["id"],
+                    "text": item.get("text"),
+                    "status": "unanswered",
+                    "age_start_months": item.get("age_start_months"),
+                    "age_end_months": item.get("age_end_months"),
+                }
+            )
+            continue
+
+        passed = _is_developmental_pass(ans)
+        failed = _is_developmental_fail(ans)
+        response = ans.get("response")
+        if passed:
+            passes += 1
+            status = "pass"
+        elif failed:
+            fails += 1
+            status = "fail"
+        else:
+            status = "unset"
+
+        age_end = item.get("age_end_months")
+        is_delayed = False
+        if patient_age_months is not None and age_end is not None and failed:
+            if patient_age_months > int(age_end):
+                is_delayed = True
+                delays.append(
+                    {
+                        "id": item["id"],
+                        "text": item.get("text"),
+                        "age_end_months": age_end,
+                        "patient_age_months": patient_age_months,
+                    }
+                )
+
+        item_details.append(
+            {
+                "id": item["id"],
+                "text": item.get("text"),
+                "response": response,
+                "value": ans.get("value"),
+                "status": status,
+                "delayed": is_delayed,
+                "age_start_months": item.get("age_start_months"),
+                "age_end_months": age_end,
+                "notes": ans.get("notes", ""),
+            }
+        )
+
+    delay_count = len(delays)
+    interpretations = package.scoring.get("interpretations", [])
+    level = _developmental_level(delay_count, interpretations)
+    total_scored = passes + fails
+    pass_rate = round((passes / total_scored) * 100, 1) if total_scored else 0.0
+
+    session = _item_answer(answers, "_session")
+    if session and not session_meta:
+        session_meta = {
+            "basal_index": session.get("basal_index"),
+            "ceiling_index": session.get("ceiling_index"),
+            "start_index": session.get("start_index"),
+        }
+
+    return {
+        "module_kind": "developmental",
+        "module_slug": module_slug,
+        "domain": mod.get("domain", module_slug),
+        "title": mod.get("title", module_slug),
+        "passes": passes,
+        "fails": fails,
+        "delay_count": delay_count,
+        "delays": delays,
+        "level": level,
+        "percentage": pass_rate,
+        "unanswered": unanswered,
+        "items": item_details,
+        "session": session_meta,
+        "summary": (
+            f"{mod.get('title', module_slug)}: {passes}/{total_scored} passou, "
+            f"{delay_count} atraso(s) ({level})"
+        ),
     }
 
 
@@ -441,12 +681,15 @@ def score_battery_subform(
         "pragmatics": score_pragmatics_module,
         "observational": score_observational_module,
         "qualitative": score_observational_module,
+        "developmental": score_developmental_module,
     }
     handler = dispatch.get(kind)
     if not handler:
         total = len(answers)
         return {"module_kind": kind, "module_slug": module_slug, "total_items": total, "summary": "Concluído"}
     if kind in ("phonology", "vocabulary"):
+        return handler(package, module_slug, answers, patient_age_months=patient_age_months)
+    if kind in ("observational", "qualitative", "developmental"):
         return handler(package, module_slug, answers, patient_age_months=patient_age_months)
     return handler(package, module_slug, answers)
 
@@ -526,10 +769,27 @@ def synthesize_battery_scores(
                             "detail": f"{proc.get('count')} ocorrências — persistente para idade",
                         }
                     )
+        if score.get("module_kind") == "developmental":
+            for delay in score.get("delays") or []:
+                critical_items.append(
+                    {
+                        "type": "developmental_delay",
+                        "label": delay.get("text"),
+                        "detail": (
+                            f"Atraso para idade (limite {delay.get('age_end_months')} meses, "
+                            f"paciente {delay.get('patient_age_months')} meses)"
+                        ),
+                    }
+                )
 
     overall = round(sum(percentages) / len(percentages), 1) if percentages else 0.0
     engine = package.scoring.get("engine", "battery_module_kind")
     title = package.instrument_title
+    default_interpretation = (
+        f"Desempenho agregado de {overall}% nos módulos aplicados. "
+        "Correlacionar achados com avaliação clínica completa."
+    )
+    interpretation = default_interpretation
 
     observational_meta: dict[str, Any] = {}
     if engine == "observational_domains":
@@ -550,6 +810,41 @@ def synthesize_battery_scores(
             "unanswered_count": unanswered_total,
         }
 
+    developmental_meta: dict[str, Any] = {}
+    if engine == "developmental_screening":
+        total_delays = 0
+        delay_domains: list[dict[str, Any]] = []
+        domain_levels: dict[str, str] = {}
+        for score in subform_scores:
+            if score.get("module_kind") != "developmental":
+                continue
+            delay_count = int(score.get("delay_count") or 0)
+            total_delays += delay_count
+            domain_id = str(score.get("domain") or score["module_slug"])
+            domain_levels[domain_id] = str(score.get("level", "unknown"))
+            if delay_count > 0:
+                delay_domains.append(
+                    {
+                        "domain": domain_id,
+                        "title": score.get("title", domain_id),
+                        "delay_count": delay_count,
+                        "level": score.get("level"),
+                    }
+                )
+        developmental_meta = {
+            "total_delays": total_delays,
+            "delay_domains": delay_domains,
+            "domain_levels": domain_levels,
+        }
+        if domain_levels:
+            altered_domains = sum(
+                1 for lvl in domain_levels.values() if lvl in ("delay", "caution", "altered")
+            )
+            interpretation = (
+                f"Triagem do desenvolvimento: {total_delays} atraso(s) detectado(s) "
+                f"em {altered_domains} domínio(s). Correlacionar com avaliação clínica completa."
+            )
+
     return {
         "engine": engine,
         "domains": domains,
@@ -558,11 +853,9 @@ def synthesize_battery_scores(
         "percentage": overall,
         "critical_items": critical_items,
         **observational_meta,
+        **developmental_meta,
         "summary": f"{title} — desempenho geral {overall}%",
-        "interpretation": (
-            f"Desempenho agregado de {overall}% nos módulos aplicados. "
-            "Correlacionar achados com avaliação clínica completa."
-        ),
+        "interpretation": interpretation,
     }
 
 

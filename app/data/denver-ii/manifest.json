@@ -1,316 +1,79 @@
 {
-  "version": 1,
-  "package_id": "denver-ii-br",
+  "version": 2,
+  "package_id": "denver-ii-br-v1",
   "instrument_slug": "denver-ii",
   "instrument_title": "Denver II — Triagem do Desenvolvimento",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
   "norms_region": "BR",
   "archetype": "observational",
+  "supports_multi_session": true,
   "scale": [
-    {
-      "value": 0,
-      "label": "Ausente / Não observado"
-    },
-    {
-      "value": 1,
-      "label": "Parcial / Emergente"
-    },
-    {
-      "value": 2,
-      "label": "Presente / Adequado"
-    }
+    { "value": 0, "label": "Falha / Ausente" },
+    { "value": 1, "label": "Passa / Presente" }
   ],
   "domains": [
-    {
-      "id": "PS",
-      "title": "Módulo PS"
-    },
-    {
-      "id": "FM",
-      "title": "Módulo FM"
-    },
-    {
-      "id": "LA",
-      "title": "Módulo LA"
-    },
-    {
-      "id": "SP",
-      "title": "Módulo SP"
-    }
+    { "id": "PS", "title": "Pessoal-Social" },
+    { "id": "FM", "title": "Motor Fino" },
+    { "id": "LA", "title": "Linguagem" },
+    { "id": "MG", "title": "Motor Grosso" }
   ],
   "modules": {
-    "PS": {
-      "id": "PS",
-      "title": "Módulo PS",
-      "items": [
-        {
-          "id": "ps_01",
-          "domain": "PS",
-          "module": "PS",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "ps_02",
-          "domain": "PS",
-          "module": "PS",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "ps_03",
-          "domain": "PS",
-          "module": "PS",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "ps_04",
-          "domain": "PS",
-          "module": "PS",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "pessoal-social": {
+      "id": "pessoal-social",
+      "title": "Pessoal-Social",
+      "domain": "PS",
+      "module_kind": "developmental",
+      "items_file": "items/pessoal-social.json",
+      "item_count": 6,
+      "filler": "clinician"
     },
-    "FM": {
-      "id": "FM",
-      "title": "Módulo FM",
-      "items": [
-        {
-          "id": "fm_01",
-          "domain": "FM",
-          "module": "FM",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "fm_02",
-          "domain": "FM",
-          "module": "FM",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "fm_03",
-          "domain": "FM",
-          "module": "FM",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "fm_04",
-          "domain": "FM",
-          "module": "FM",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "motor-fino": {
+      "id": "motor-fino",
+      "title": "Motor Fino",
+      "domain": "FM",
+      "module_kind": "developmental",
+      "items_file": "items/motor-fino.json",
+      "item_count": 6,
+      "filler": "clinician"
     },
-    "LA": {
-      "id": "LA",
-      "title": "Módulo LA",
-      "items": [
-        {
-          "id": "la_01",
-          "domain": "LA",
-          "module": "LA",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "la_02",
-          "domain": "LA",
-          "module": "LA",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "la_03",
-          "domain": "LA",
-          "module": "LA",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "la_04",
-          "domain": "LA",
-          "module": "LA",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "linguagem": {
+      "id": "linguagem",
+      "title": "Linguagem",
+      "domain": "LA",
+      "module_kind": "developmental",
+      "items_file": "items/linguagem.json",
+      "item_count": 6,
+      "filler": "clinician"
     },
-    "SP": {
-      "id": "SP",
-      "title": "Módulo SP",
-      "items": [
-        {
-          "id": "sp_01",
-          "domain": "SP",
-          "module": "SP",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
-        },
-        {
-          "id": "sp_02",
-          "domain": "SP",
-          "module": "SP",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
-        },
-        {
-          "id": "sp_03",
-          "domain": "SP",
-          "module": "SP",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "sp_04",
-          "domain": "SP",
-          "module": "SP",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
-        }
-      ]
+    "motor-grosso": {
+      "id": "motor-grosso",
+      "title": "Motor Grosso",
+      "domain": "MG",
+      "module_kind": "developmental",
+      "items_file": "items/motor-grosso.json",
+      "item_count": 6,
+      "filler": "clinician"
     }
   },
-  "items": [
-    {
-      "id": "ps_01",
-      "domain": "PS",
-      "module": "PS",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "ps_02",
-      "domain": "PS",
-      "module": "PS",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "ps_03",
-      "domain": "PS",
-      "module": "PS",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "ps_04",
-      "domain": "PS",
-      "module": "PS",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    },
-    {
-      "id": "fm_01",
-      "domain": "FM",
-      "module": "FM",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "fm_02",
-      "domain": "FM",
-      "module": "FM",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "fm_03",
-      "domain": "FM",
-      "module": "FM",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "fm_04",
-      "domain": "FM",
-      "module": "FM",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    },
-    {
-      "id": "la_01",
-      "domain": "LA",
-      "module": "LA",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "la_02",
-      "domain": "LA",
-      "module": "LA",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "la_03",
-      "domain": "LA",
-      "module": "LA",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "la_04",
-      "domain": "LA",
-      "module": "LA",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    },
-    {
-      "id": "sp_01",
-      "domain": "SP",
-      "module": "SP",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
-    },
-    {
-      "id": "sp_02",
-      "domain": "SP",
-      "module": "SP",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
-    },
-    {
-      "id": "sp_03",
-      "domain": "SP",
-      "module": "SP",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
-    },
-    {
-      "id": "sp_04",
-      "domain": "SP",
-      "module": "SP",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
-    }
+  "subtests": [
+    { "id": "pessoal-social", "title": "Pessoal-Social", "item_count": 6 },
+    { "id": "motor-fino", "title": "Motor Fino", "item_count": 6 },
+    { "id": "linguagem", "title": "Linguagem", "item_count": 6 },
+    { "id": "motor-grosso", "title": "Motor Grosso", "item_count": 6 }
   ],
   "scoring": {
-    "engine": "observational_rubric",
-    "modules": {
-      "PS": {
-        "method": "mean",
-        "item_ids": [
-          "ps_01",
-          "ps_02",
-          "ps_03",
-          "ps_04"
-        ]
-      },
-      "FM": {
-        "method": "mean",
-        "item_ids": [
-          "fm_01",
-          "fm_02",
-          "fm_03",
-          "fm_04"
-        ]
-      },
-      "LA": {
-        "method": "mean",
-        "item_ids": [
-          "la_01",
-          "la_02",
-          "la_03",
-          "la_04"
-        ]
-      },
-      "SP": {
-        "method": "mean",
-        "item_ids": [
-          "sp_01",
-          "sp_02",
-          "sp_03",
-          "sp_04"
-        ]
-      }
-    }
+    "engine": "developmental_screening",
+    "interpretations": [
+      { "level": "expected", "max_delays": 0, "label": "Desenvolvimento esperado" },
+      { "level": "caution", "max_delays": 2, "label": "Atenção — possível atraso" },
+      { "level": "delay", "max_delays": 999, "label": "Atraso significativo" }
+    ]
   },
   "report": {
     "template_id": "denver-ii-br-v1",
-    "sections": [
-      "identificacao",
-      "resultados",
-      "interpretacao",
-      "recomendacoes"
-    ]
+    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
   },
   "informant_forms": [],
-  "requires_competency_ack": false,
-  "supports_multi_session": true,
-  "norms_file": "norms-br.json"
+  "requires_competency_ack": false
 }

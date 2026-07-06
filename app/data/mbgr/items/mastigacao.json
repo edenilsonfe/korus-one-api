@@ -1,0 +1,22 @@
+[
+  {
+    "id": "mast_padrao",
+    "domain": "mastigacao",
+    "text": "Padrão de mastigação (rotatório, vertical, unilateral)."
+  },
+  {
+    "id": "mast_residuo",
+    "domain": "mastigacao",
+    "text": "Resíduo oral após mastigação."
+  },
+  {
+    "id": "mast_tempo",
+    "domain": "mastigacao",
+    "text": "Tempo de mastigação."
+  },
+  {
+    "id": "mast_forca",
+    "domain": "mastigacao",
+    "text": "Força mastigatória."
+  }
+]

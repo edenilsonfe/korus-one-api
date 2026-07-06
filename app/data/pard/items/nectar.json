@@ -1,0 +1,22 @@
+[
+  {
+    "id": "pard_nc_preparo",
+    "domain": "consistencias",
+    "text": "Preparo e posicionamento para néctar"
+  },
+  {
+    "id": "pard_nc_sorvo",
+    "domain": "consistencias",
+    "text": "Sorvo de líquido espessado néctar"
+  },
+  {
+    "id": "pard_nc_sequencia",
+    "domain": "consistencias",
+    "text": "Sequência de 3 deglutições consecutivas"
+  },
+  {
+    "id": "pard_nc_pos",
+    "domain": "consistencias",
+    "text": "Comportamento pós-deglutição"
+  }
+]

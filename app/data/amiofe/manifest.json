@@ -1,134 +1,135 @@
 {
-  "version": 1,
-  "package_id": "amiofe-br",
+  "version": 2,
+  "package_id": "amiofe-br-v1",
   "instrument_slug": "amiofe",
   "instrument_title": "AMIOFE — Avaliação de Motricidade Orofacial",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "license_ref": "PUBLIC-STRUCTURE",
+  "content_status": "draft-knowledge",
   "norms_region": "BR",
-  "archetype": "scaled",
+  "archetype": "observational",
+  "supports_multi_session": true,
   "scale": [
-    {
-      "value": 0,
-      "label": "Nunca / Ausente"
-    },
-    {
-      "value": 1,
-      "label": "Ocasionalmente"
-    },
-    {
-      "value": 2,
-      "label": "Frequentemente"
-    },
-    {
-      "value": 3,
-      "label": "Muito frequentemente / Severo"
-    }
+    { "value": 0, "label": "Inadequado / ausente" },
+    { "value": 1, "label": "Parcialmente adequado" },
+    { "value": 2, "label": "Adequado" },
+    { "value": 3, "label": "Plenamente adequado" }
   ],
   "domains": [
-    {
-      "id": "TOTAL",
-      "title": "Pontuação total"
-    }
+    { "id": "historia", "title": "História clínica" },
+    { "id": "face", "title": "Face" },
+    { "id": "labios", "title": "Lábios" },
+    { "id": "lingua", "title": "Língua" },
+    { "id": "mobilidade", "title": "Mobilidade orofacial" },
+    { "id": "respiracao", "title": "Respiração" },
+    { "id": "mastigacao", "title": "Mastigação" },
+    { "id": "degluticao", "title": "Deglutição" },
+    { "id": "fala", "title": "Fala" }
   ],
-  "items": [
-    {
-      "id": "amiofe_01",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+  "modules": {
+    "historia": {
+      "id": "historia",
+      "title": "História clínica",
+      "domain": "historia",
+      "module_kind": "qualitative",
+      "items_file": "items/historia.json",
+      "item_count": 3,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_02",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+    "face": {
+      "id": "face",
+      "title": "Face",
+      "domain": "face",
+      "module_kind": "observational",
+      "items_file": "items/face.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_03",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+    "labios": {
+      "id": "labios",
+      "title": "Lábios",
+      "domain": "labios",
+      "module_kind": "observational",
+      "items_file": "items/labios.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_04",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+    "lingua": {
+      "id": "lingua",
+      "title": "Língua",
+      "domain": "lingua",
+      "module_kind": "observational",
+      "items_file": "items/lingua.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_05",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+    "mobilidade": {
+      "id": "mobilidade",
+      "title": "Mobilidade orofacial",
+      "domain": "mobilidade",
+      "module_kind": "observational",
+      "items_file": "items/mobilidade.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_06",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+    "respiracao": {
+      "id": "respiracao",
+      "title": "Respiração",
+      "domain": "respiracao",
+      "module_kind": "observational",
+      "items_file": "items/respiracao.json",
+      "item_count": 3,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_07",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+    "mastigacao": {
+      "id": "mastigacao",
+      "title": "Mastigação",
+      "domain": "mastigacao",
+      "module_kind": "observational",
+      "items_file": "items/mastigacao.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_08",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+    "degluticao": {
+      "id": "degluticao",
+      "title": "Deglutição",
+      "domain": "degluticao",
+      "module_kind": "observational",
+      "items_file": "items/degluticao.json",
+      "item_count": 4,
+      "filler": "clinician"
     },
-    {
-      "id": "amiofe_09",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
-    },
-    {
-      "id": "amiofe_10",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+    "fala": {
+      "id": "fala",
+      "title": "Fala",
+      "domain": "fala",
+      "module_kind": "observational",
+      "items_file": "items/fala.json",
+      "item_count": 4,
+      "filler": "clinician"
     }
+  },
+  "subtests": [
+    { "id": "historia", "title": "História clínica", "item_count": 3 },
+    { "id": "face", "title": "Face", "item_count": 4 },
+    { "id": "labios", "title": "Lábios", "item_count": 4 },
+    { "id": "lingua", "title": "Língua", "item_count": 4 },
+    { "id": "mobilidade", "title": "Mobilidade orofacial", "item_count": 4 },
+    { "id": "respiracao", "title": "Respiração", "item_count": 3 },
+    { "id": "mastigacao", "title": "Mastigação", "item_count": 4 },
+    { "id": "degluticao", "title": "Deglutição", "item_count": 4 },
+    { "id": "fala", "title": "Fala", "item_count": 4 }
   ],
   "scoring": {
-    "engine": "scaled_sum",
-    "domains": {
-      "TOTAL": {
-        "method": "sum",
-        "item_ids": [
-          "amiofe_01",
-          "amiofe_02",
-          "amiofe_03",
-          "amiofe_04",
-          "amiofe_05",
-          "amiofe_06",
-          "amiofe_07",
-          "amiofe_08",
-          "amiofe_09",
-          "amiofe_10"
-        ]
-      }
-    },
+    "engine": "observational_domains",
     "interpretations": [
-      {
-        "min": 0,
-        "max": 10,
-        "label": "Desempenho adequado"
-      },
-      {
-        "min": 11,
-        "max": 20,
-        "label": "Alteração leve"
-      },
-      {
-        "min": 21,
-        "max": 30,
-        "label": "Alteração moderada a severa"
-      }
+      { "min": 0, "max": 30, "level": "altered", "label": "Função orofacial inadequada" },
+      { "min": 31, "max": 60, "level": "attention", "label": "Função parcialmente adequada" },
+      { "min": 61, "max": 100, "level": "expected", "label": "Função orofacial adequada" }
     ]
   },
   "report": {
     "template_id": "amiofe-br-v1",
-    "sections": [
-      "identificacao",
-      "resultados",
-      "interpretacao",
-      "recomendacoes"
-    ]
+    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
   },
-  "informant_forms": [],
-  "norms_file": "norms-br.json"
+  "informant_forms": []
 }
