@@ -1,0 +1,86 @@
+[
+  {
+    "id": "W1",
+    "domain": "W",
+    "module": "W",
+    "text": "W1 — Lavar as mãos O estudante irá Lavar as mãos Poderá Lavar as mãos\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Lavar as mãos O estudante irá Lavar as mãos Poderá Lavar as mãos",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "W2",
+    "domain": "W",
+    "module": "W",
+    "text": "W2 — Secar as mãos O estudante irá Secar as mãos Poderá Secar as mãos\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Secar as mãos O estudante irá Secar as mãos Poderá Secar as mãos",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "W3",
+    "domain": "W",
+    "module": "W",
+    "text": "W3 — Lavar o rosto O estudante irá Lavar o rosto Poderá Lavar o rosto\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Lavar o rosto O estudante irá Lavar o rosto Poderá Lavar o rosto",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "W4",
+    "domain": "W",
+    "module": "W",
+    "text": "W4 — Secar o rosto O estudante irá Secar o rosto Poderá Secar o rosto\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Secar o rosto O estudante irá Secar o rosto Poderá Secar o rosto",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "W5",
+    "domain": "W",
+    "module": "W",
+    "text": "W5 — Pentear ou escovar os cabelos O estudante irá Pentear ou escovar os\n\nObjetivo: cabelos Poderá Pentear ou escovar os cabelos\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Pentear ou escovar os cabelos O estudante irá Pentear ou escovar os",
+    "objective": "cabelos Poderá Pentear ou escovar os cabelos",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "W6",
+    "domain": "W",
+    "module": "W",
+    "text": "W6 — Escovar os dentes O estudante irá Escovar os dentes Poderá Escovar os dentes\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Escovar os dentes O estudante irá Escovar os dentes Poderá Escovar os dentes",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "W7",
+    "domain": "W",
+    "module": "W",
+    "text": "W7 — Assoar o nariz O estudante irá Assoar o nariz Poderá Assoar o nariz\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Assoar o nariz O estudante irá Assoar o nariz Poderá Assoar o nariz",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  }
+]

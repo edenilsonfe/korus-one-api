@@ -1,0 +1,110 @@
+[
+  {
+    "id": "I1",
+    "domain": "I",
+    "module": "I",
+    "text": "I1 — Vocalizar sons da fala identificáveis Fazer várias vocalizações\n\nObjetivo: espontâneas incluindo sons da fala Faz várias vocalizações espontâneas incluindo sons\n\nPergunta: da fala?\n\nExemplo: parecidos pelo menos 10 minutos por hora.\n\nCritérios: 4= Frequentemente diz palavras ou balbucia sons\n3= 5 minutos por hora\n2= 2 minutos por hora\n1= 10 minutos por diz.",
+    "task_name": "Vocalizar sons da fala identificáveis Fazer várias vocalizações",
+    "objective": "espontâneas incluindo sons da fala Faz várias vocalizações espontâneas incluindo sons",
+    "question": "da fala?",
+    "example": "parecidos pelo menos 10 minutos por hora.",
+    "criteria": "4= Frequentemente diz palavras ou balbucia sons\n3= 5 minutos por hora\n2= 2 minutos por hora\n1= 10 minutos por diz.",
+    "notes": ""
+  },
+  {
+    "id": "I2",
+    "domain": "I",
+    "module": "I",
+    "text": "I2 — Dizer palavras ou sons que se assemelham a palavras\n\nObjetivo: espontaneamente Dizer várias palavras ou sons que se assemelham Diz várias palavras ou sons que se assemelham a\n\nPergunta: palavras?\n\nCritérios: 4= 30 palavras por hora\n3= 10 palavras por hora\n2= uma palavra por hora\n1= 5 palavras por dia",
+    "task_name": "Dizer palavras ou sons que se assemelham a palavras",
+    "objective": "espontaneamente Dizer várias palavras ou sons que se assemelham Diz várias palavras ou sons que se assemelham a",
+    "question": "palavras?",
+    "example": "",
+    "criteria": "4= 30 palavras por hora\n3= 10 palavras por hora\n2= uma palavra por hora\n1= 5 palavras por dia",
+    "notes": ""
+  },
+  {
+    "id": "I3",
+    "domain": "I",
+    "module": "I",
+    "text": "I3 — Dizer frases espontaneamente Dizer várias frases de forma natural\n\nObjetivo: Diz várias frases de forma\n\nPergunta: natural?\n\nCritérios: 4= 30 frases por dia\n3= 10 frases por dia\n2= 5 frases por dia\n1= uma frase por dia",
+    "task_name": "Dizer frases espontaneamente Dizer várias frases de forma natural",
+    "objective": "Diz várias frases de forma",
+    "question": "natural?",
+    "example": "",
+    "criteria": "4= 30 frases por dia\n3= 10 frases por dia\n2= 5 frases por dia\n1= uma frase por dia",
+    "notes": ""
+  },
+  {
+    "id": "I4",
+    "domain": "I",
+    "module": "I",
+    "text": "I4 — Cantar canções com modelos Cantar canções quando outros\n\nObjetivo: cantam Canta canções quando outros\n\nPergunta: cantam?\n\nCritérios: 4= canta 2 frases de 5 canções\n3= Canta uma frase de 5 canções\n2= 1 frase de 2 canções\n1= Uma palavra de uma canção",
+    "task_name": "Cantar canções com modelos Cantar canções quando outros",
+    "objective": "cantam Canta canções quando outros",
+    "question": "cantam?",
+    "example": "",
+    "criteria": "4= canta 2 frases de 5 canções\n3= Canta uma frase de 5 canções\n2= 1 frase de 2 canções\n1= Uma palavra de uma canção",
+    "notes": ""
+  },
+  {
+    "id": "I5",
+    "domain": "I",
+    "module": "I",
+    "text": "I5 — Cantar canções com modelos Cantar canções sem a presença alheia\n\nObjetivo: Canta canções sem a\n\nPergunta: presença alheia?\n\nCritérios: 4= canta 2 frases de 5 canções\n3= Canta uma frase de 5 canções\n2= 1 frase de 2 canções\n1= Uma palavra de uma canção",
+    "task_name": "Cantar canções com modelos Cantar canções sem a presença alheia",
+    "objective": "Canta canções sem a",
+    "question": "presença alheia?",
+    "example": "",
+    "criteria": "4= canta 2 frases de 5 canções\n3= Canta uma frase de 5 canções\n2= 1 frase de 2 canções\n1= Uma palavra de uma canção",
+    "notes": ""
+  },
+  {
+    "id": "I6",
+    "domain": "I",
+    "module": "I",
+    "text": "I6 — Imitação vocal espontânea Repetira palavras ditas por outros\n\nObjetivo: espontaneamente por dia espontaneamente pelo menos 5 vozes por dia\n\nCritérios: 2= Repete pelo menos 5 vezes\n1= 5 vezes por semana\n2= Repete palavras ditas por outros\n1= 5 vezes por semana",
+    "task_name": "Imitação vocal espontânea Repetira palavras ditas por outros",
+    "objective": "espontaneamente por dia espontaneamente pelo menos 5 vozes por dia",
+    "question": "",
+    "example": "",
+    "criteria": "2= Repete pelo menos 5 vezes\n1= 5 vezes por semana\n2= Repete palavras ditas por outros\n1= 5 vezes por semana",
+    "notes": ""
+  },
+  {
+    "id": "I7",
+    "domain": "I",
+    "module": "I",
+    "text": "I7 — Pedir espontaneamente Pede coisas espontaneamente\n\nObjetivo: por dia\n\nCritérios: 2= Solicita 10 objetos ou ações\n1= 10 por semana\n2= Solicita pelo menos 10 objetos ou ações por dia\n1= 10 Objetos por semana",
+    "task_name": "Pedir espontaneamente Pede coisas espontaneamente",
+    "objective": "por dia",
+    "question": "",
+    "example": "",
+    "criteria": "2= Solicita 10 objetos ou ações\n1= 10 por semana\n2= Solicita pelo menos 10 objetos ou ações por dia\n1= 10 Objetos por semana",
+    "notes": ""
+  },
+  {
+    "id": "I8",
+    "domain": "I",
+    "module": "I",
+    "text": "I8 — Nomear espontaneamente Nomeia espontaneamente\n\nObjetivo: atividades pelos menos 10 vezes por dia. 10 vezes por dia\n\nCritérios: 2= Nomeia objetos, ações ou\n1= 10 vezes por semana\n2= Nomeia objetos, ações ou atividades pelo menos\n1= 10 vezes por semana",
+    "task_name": "Nomear espontaneamente Nomeia espontaneamente",
+    "objective": "atividades pelos menos 10 vezes por dia. 10 vezes por dia",
+    "question": "",
+    "example": "",
+    "criteria": "2= Nomeia objetos, ações ou\n1= 10 vezes por semana\n2= Nomeia objetos, ações ou atividades pelo menos\n1= 10 vezes por semana",
+    "notes": ""
+  },
+  {
+    "id": "I9",
+    "domain": "I",
+    "module": "I",
+    "text": "I9 — Conversar espontaneamente Conversa espontaneamente\n\nObjetivo: comentários apropriados em uma conversa ou discussão pelo menos 10 vezes por dia. menos 10 vezes por dia\n\nCritérios: 2= Espontaneamente faz\n1= 10 vezes por semana\n2= Faz comentários apropriados em conversas pelo\n1= 10 vezes por semana",
+    "task_name": "Conversar espontaneamente Conversa espontaneamente",
+    "objective": "comentários apropriados em uma conversa ou discussão pelo menos 10 vezes por dia. menos 10 vezes por dia",
+    "question": "",
+    "example": "",
+    "criteria": "2= Espontaneamente faz\n1= 10 vezes por semana\n2= Faz comentários apropriados em conversas pelo\n1= 10 vezes por semana",
+    "notes": ""
+  }
+]

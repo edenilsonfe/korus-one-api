@@ -1,148 +1,979 @@
 {
-  "version": 1,
-  "package_id": "ablls-r-br",
+  "version": 2,
+  "package_id": "ablls-r-br-v1",
   "instrument_slug": "ablls-r",
-  "instrument_title": "ABLLS-R — Assessment of Basic Language and Learning Skills",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "instrument_title": "ABLLS-R — Avaliação de Habilidades Básicas de Linguagem e Aprendizagem",
+  "publisher": "Tradução pt-BR (protocolo Partington 2006; uso clínico requer licença oficial)",
+  "license_ref": "PARTINGTON-ABLLS-R-STRUCTURE",
+  "content_status": "official-structure",
   "norms_region": "BR",
+  "norms_file": "norms-br.json",
   "archetype": "multi_domain",
+  "supports_multi_session": true,
   "scale": [
     {
       "value": 0,
-      "label": "Não adquirido"
+      "label": "Não adquirido (0)"
     },
     {
       "value": 1,
-      "label": "Emergente"
+      "label": "Emergente / parcial (1)"
     },
     {
       "value": 2,
-      "label": "Adquirido"
+      "label": "Adquirido (≥2 no protocolo)"
     }
   ],
   "domains": [
     {
       "id": "A",
-      "title": "Domínio A"
+      "title": "A — Cooperação e eficácia do reforçador"
     },
     {
       "id": "B",
-      "title": "Domínio B"
+      "title": "B — Desempenho visual"
     },
     {
       "id": "C",
-      "title": "Domínio C"
+      "title": "C — Linguagem receptiva"
+    },
+    {
+      "id": "D",
+      "title": "D — Imitação motora"
+    },
+    {
+      "id": "E",
+      "title": "E — Imitação vocal"
+    },
+    {
+      "id": "F",
+      "title": "F — Pedidos (mands)"
+    },
+    {
+      "id": "G",
+      "title": "G — Nomeação (tacts)"
+    },
+    {
+      "id": "H",
+      "title": "H — Intraverbais"
+    },
+    {
+      "id": "I",
+      "title": "I — Vocalizações espontâneas"
+    },
+    {
+      "id": "J",
+      "title": "J — Sintaxe e gramática"
+    },
+    {
+      "id": "K",
+      "title": "K — Brincadeira e lazer"
+    },
+    {
+      "id": "L",
+      "title": "L — Interação social"
+    },
+    {
+      "id": "M",
+      "title": "M — Instrução em grupo"
+    },
+    {
+      "id": "N",
+      "title": "N — Rotinas de sala de aula"
+    },
+    {
+      "id": "P",
+      "title": "P — Generalização"
+    },
+    {
+      "id": "Q",
+      "title": "Q — Leitura"
+    },
+    {
+      "id": "R",
+      "title": "R — Matemática"
+    },
+    {
+      "id": "S",
+      "title": "S — Escrita"
+    },
+    {
+      "id": "T",
+      "title": "T — Soletração"
+    },
+    {
+      "id": "U",
+      "title": "U — Vestir-se"
+    },
+    {
+      "id": "V",
+      "title": "V — Alimentação"
+    },
+    {
+      "id": "W",
+      "title": "W — Higiene pessoal"
+    },
+    {
+      "id": "X",
+      "title": "X — Banheiro"
+    },
+    {
+      "id": "Y",
+      "title": "Y — Motor grosso"
+    },
+    {
+      "id": "Z",
+      "title": "Z — Motor fino"
     }
   ],
-  "items": [
-    {
-      "id": "A_item_01",
+  "items_file": "items/all.json",
+  "modules": {
+    "A": {
+      "id": "A",
+      "title": "A — Cooperação e eficácia do reforçador",
       "domain": "A",
-      "text": "[Sample] Critério 1 do domínio A."
+      "items_file": "items/A.json",
+      "item_count": 19
     },
-    {
-      "id": "A_item_02",
-      "domain": "A",
-      "text": "[Sample] Critério 2 do domínio A."
-    },
-    {
-      "id": "A_item_03",
-      "domain": "A",
-      "text": "[Sample] Critério 3 do domínio A."
-    },
-    {
-      "id": "A_item_04",
-      "domain": "A",
-      "text": "[Sample] Critério 4 do domínio A."
-    },
-    {
-      "id": "A_item_05",
-      "domain": "A",
-      "text": "[Sample] Critério 5 do domínio A."
-    },
-    {
-      "id": "B_item_01",
+    "B": {
+      "id": "B",
+      "title": "B — Desempenho visual",
       "domain": "B",
-      "text": "[Sample] Critério 1 do domínio B."
+      "items_file": "items/B.json",
+      "item_count": 27
     },
-    {
-      "id": "B_item_02",
-      "domain": "B",
-      "text": "[Sample] Critério 2 do domínio B."
-    },
-    {
-      "id": "B_item_03",
-      "domain": "B",
-      "text": "[Sample] Critério 3 do domínio B."
-    },
-    {
-      "id": "B_item_04",
-      "domain": "B",
-      "text": "[Sample] Critério 4 do domínio B."
-    },
-    {
-      "id": "B_item_05",
-      "domain": "B",
-      "text": "[Sample] Critério 5 do domínio B."
-    },
-    {
-      "id": "C_item_01",
+    "C": {
+      "id": "C",
+      "title": "C — Linguagem receptiva",
       "domain": "C",
-      "text": "[Sample] Critério 1 do domínio C."
+      "items_file": "items/C.json",
+      "item_count": 57
     },
-    {
-      "id": "C_item_02",
-      "domain": "C",
-      "text": "[Sample] Critério 2 do domínio C."
+    "D": {
+      "id": "D",
+      "title": "D — Imitação motora",
+      "domain": "D",
+      "items_file": "items/D.json",
+      "item_count": 27
     },
-    {
-      "id": "C_item_03",
-      "domain": "C",
-      "text": "[Sample] Critério 3 do domínio C."
+    "E": {
+      "id": "E",
+      "title": "E — Imitação vocal",
+      "domain": "E",
+      "items_file": "items/E.json",
+      "item_count": 20
     },
-    {
-      "id": "C_item_04",
-      "domain": "C",
-      "text": "[Sample] Critério 4 do domínio C."
+    "F": {
+      "id": "F",
+      "title": "F — Pedidos (mands)",
+      "domain": "F",
+      "items_file": "items/F.json",
+      "item_count": 29
     },
-    {
-      "id": "C_item_05",
-      "domain": "C",
-      "text": "[Sample] Critério 5 do domínio C."
+    "G": {
+      "id": "G",
+      "title": "G — Nomeação (tacts)",
+      "domain": "G",
+      "items_file": "items/G.json",
+      "item_count": 47
+    },
+    "H": {
+      "id": "H",
+      "title": "H — Intraverbais",
+      "domain": "H",
+      "items_file": "items/H.json",
+      "item_count": 49
+    },
+    "I": {
+      "id": "I",
+      "title": "I — Vocalizações espontâneas",
+      "domain": "I",
+      "items_file": "items/I.json",
+      "item_count": 9
+    },
+    "J": {
+      "id": "J",
+      "title": "J — Sintaxe e gramática",
+      "domain": "J",
+      "items_file": "items/J.json",
+      "item_count": 20
+    },
+    "K": {
+      "id": "K",
+      "title": "K — Brincadeira e lazer",
+      "domain": "K",
+      "items_file": "items/K.json",
+      "item_count": 15
+    },
+    "L": {
+      "id": "L",
+      "title": "L — Interação social",
+      "domain": "L",
+      "items_file": "items/L.json",
+      "item_count": 34
+    },
+    "M": {
+      "id": "M",
+      "title": "M — Instrução em grupo",
+      "domain": "M",
+      "items_file": "items/M.json",
+      "item_count": 12
+    },
+    "N": {
+      "id": "N",
+      "title": "N — Rotinas de sala de aula",
+      "domain": "N",
+      "items_file": "items/N.json",
+      "item_count": 10
+    },
+    "P": {
+      "id": "P",
+      "title": "P — Generalização",
+      "domain": "P",
+      "items_file": "items/P.json",
+      "item_count": 6
+    },
+    "Q": {
+      "id": "Q",
+      "title": "Q — Leitura",
+      "domain": "Q",
+      "items_file": "items/Q.json",
+      "item_count": 17
+    },
+    "R": {
+      "id": "R",
+      "title": "R — Matemática",
+      "domain": "R",
+      "items_file": "items/R.json",
+      "item_count": 29
+    },
+    "S": {
+      "id": "S",
+      "title": "S — Escrita",
+      "domain": "S",
+      "items_file": "items/S.json",
+      "item_count": 10
+    },
+    "T": {
+      "id": "T",
+      "title": "T — Soletração",
+      "domain": "T",
+      "items_file": "items/T.json",
+      "item_count": 7
+    },
+    "U": {
+      "id": "U",
+      "title": "U — Vestir-se",
+      "domain": "U",
+      "items_file": "items/U.json",
+      "item_count": 15
+    },
+    "V": {
+      "id": "V",
+      "title": "V — Alimentação",
+      "domain": "V",
+      "items_file": "items/V.json",
+      "item_count": 10
+    },
+    "W": {
+      "id": "W",
+      "title": "W — Higiene pessoal",
+      "domain": "W",
+      "items_file": "items/W.json",
+      "item_count": 7
+    },
+    "X": {
+      "id": "X",
+      "title": "X — Banheiro",
+      "domain": "X",
+      "items_file": "items/X.json",
+      "item_count": 10
+    },
+    "Y": {
+      "id": "Y",
+      "title": "Y — Motor grosso",
+      "domain": "Y",
+      "items_file": "items/Y.json",
+      "item_count": 30
+    },
+    "Z": {
+      "id": "Z",
+      "title": "Z — Motor fino",
+      "domain": "Z",
+      "items_file": "items/Z.json",
+      "item_count": 28
     }
-  ],
+  },
   "scoring": {
     "engine": "domain_mastery",
     "domains": {
       "A": {
         "method": "mastery_pct",
         "item_ids": [
-          "A_item_01",
-          "A_item_02",
-          "A_item_03",
-          "A_item_04",
-          "A_item_05"
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5",
+          "A6",
+          "A7",
+          "A8",
+          "A9",
+          "A10",
+          "A11",
+          "A12",
+          "A13",
+          "A14",
+          "A15",
+          "A16",
+          "A17",
+          "A18",
+          "A19"
         ]
       },
       "B": {
         "method": "mastery_pct",
         "item_ids": [
-          "B_item_01",
-          "B_item_02",
-          "B_item_03",
-          "B_item_04",
-          "B_item_05"
+          "B1",
+          "B2",
+          "B3",
+          "B4",
+          "B5",
+          "B6",
+          "B7",
+          "B8",
+          "B9",
+          "B10",
+          "B11",
+          "B12",
+          "B13",
+          "B14",
+          "B15",
+          "B16",
+          "B17",
+          "B18",
+          "B19",
+          "B20",
+          "B21",
+          "B22",
+          "B23",
+          "B24",
+          "B25",
+          "B26",
+          "B27"
         ]
       },
       "C": {
         "method": "mastery_pct",
         "item_ids": [
-          "C_item_01",
-          "C_item_02",
-          "C_item_03",
-          "C_item_04",
-          "C_item_05"
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C17",
+          "C18",
+          "C19",
+          "C20",
+          "C21",
+          "C22",
+          "C23",
+          "C24",
+          "C25",
+          "C26",
+          "C27",
+          "C28",
+          "C29",
+          "C30",
+          "C31",
+          "C32",
+          "C33",
+          "C34",
+          "C35",
+          "C36",
+          "C37",
+          "C38",
+          "C39",
+          "C40",
+          "C41",
+          "C42",
+          "C43",
+          "C44",
+          "C45",
+          "C46",
+          "C47",
+          "C48",
+          "C49",
+          "C50",
+          "C51",
+          "C52",
+          "C53",
+          "C54",
+          "C55",
+          "C56",
+          "C57"
+        ]
+      },
+      "D": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "D6",
+          "D7",
+          "D8",
+          "D9",
+          "D10",
+          "D11",
+          "D12",
+          "D13",
+          "D14",
+          "D15",
+          "D16",
+          "D17",
+          "D18",
+          "D19",
+          "D20",
+          "D21",
+          "D22",
+          "D23",
+          "D24",
+          "D25",
+          "D26",
+          "D27"
+        ]
+      },
+      "E": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "E1",
+          "E2",
+          "E3",
+          "E4",
+          "E5",
+          "E6",
+          "E7",
+          "E8",
+          "E9",
+          "E10",
+          "E11",
+          "E12",
+          "E13",
+          "E14",
+          "E15",
+          "E16",
+          "E17",
+          "E18",
+          "E19",
+          "E20"
+        ]
+      },
+      "F": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6",
+          "F7",
+          "F8",
+          "F9",
+          "F10",
+          "F11",
+          "F12",
+          "F13",
+          "F14",
+          "F15",
+          "F16",
+          "F17",
+          "F18",
+          "F19",
+          "F20",
+          "F21",
+          "F22",
+          "F23",
+          "F24",
+          "F25",
+          "F26",
+          "F27",
+          "F28",
+          "F29"
+        ]
+      },
+      "G": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "G8",
+          "G9",
+          "G10",
+          "G11",
+          "G12",
+          "G13",
+          "G14",
+          "G15",
+          "G16",
+          "G17",
+          "G18",
+          "G19",
+          "G20",
+          "G21",
+          "G22",
+          "G23",
+          "G24",
+          "G25",
+          "G26",
+          "G27",
+          "G28",
+          "G29",
+          "G30",
+          "G31",
+          "G32",
+          "G33",
+          "G34",
+          "G35",
+          "G36",
+          "G37",
+          "G38",
+          "G39",
+          "G40",
+          "G41",
+          "G42",
+          "G43",
+          "G44",
+          "G45",
+          "G46",
+          "G47"
+        ]
+      },
+      "H": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "H1",
+          "H2",
+          "H3",
+          "H4",
+          "H5",
+          "H6",
+          "H7",
+          "H8",
+          "H9",
+          "H10",
+          "H11",
+          "H12",
+          "H13",
+          "H14",
+          "H15",
+          "H16",
+          "H17",
+          "H18",
+          "H19",
+          "H20",
+          "H21",
+          "H22",
+          "H23",
+          "H24",
+          "H25",
+          "H26",
+          "H27",
+          "H28",
+          "H29",
+          "H30",
+          "H31",
+          "H32",
+          "H33",
+          "H34",
+          "H35",
+          "H36",
+          "H37",
+          "H38",
+          "H39",
+          "H40",
+          "H41",
+          "H42",
+          "H43",
+          "H44",
+          "H45",
+          "H46",
+          "H47",
+          "H48",
+          "H49"
+        ]
+      },
+      "I": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "I1",
+          "I2",
+          "I3",
+          "I4",
+          "I5",
+          "I6",
+          "I7",
+          "I8",
+          "I9"
+        ]
+      },
+      "J": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "J1",
+          "J2",
+          "J3",
+          "J4",
+          "J5",
+          "J6",
+          "J7",
+          "J8",
+          "J9",
+          "J10",
+          "J11",
+          "J12",
+          "J13",
+          "J14",
+          "J15",
+          "J16",
+          "J17",
+          "J18",
+          "J19",
+          "J20"
+        ]
+      },
+      "K": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "K5",
+          "K6",
+          "K7",
+          "K8",
+          "K9",
+          "K10",
+          "K11",
+          "K12",
+          "K13",
+          "K14",
+          "K15"
+        ]
+      },
+      "L": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "L1",
+          "L2",
+          "L3",
+          "L4",
+          "L5",
+          "L6",
+          "L7",
+          "L8",
+          "L9",
+          "L10",
+          "L11",
+          "L12",
+          "L13",
+          "L14",
+          "L15",
+          "L16",
+          "L17",
+          "L18",
+          "L19",
+          "L20",
+          "L21",
+          "L22",
+          "L23",
+          "L24",
+          "L25",
+          "L26",
+          "L27",
+          "L28",
+          "L29",
+          "L30",
+          "L31",
+          "L32",
+          "L33",
+          "L34"
+        ]
+      },
+      "M": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9",
+          "M10",
+          "M11",
+          "M12"
+        ]
+      },
+      "N": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "N1",
+          "N2",
+          "N3",
+          "N4",
+          "N5",
+          "N6",
+          "N7",
+          "N8",
+          "N9",
+          "N10"
+        ]
+      },
+      "P": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ]
+      },
+      "Q": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q6",
+          "Q7",
+          "Q8",
+          "Q9",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17"
+        ]
+      },
+      "R": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6",
+          "R7",
+          "R8",
+          "R9",
+          "R10",
+          "R11",
+          "R12",
+          "R13",
+          "R14",
+          "R15",
+          "R16",
+          "R17",
+          "R18",
+          "R19",
+          "R20",
+          "R21",
+          "R22",
+          "R23",
+          "R24",
+          "R25",
+          "R26",
+          "R27",
+          "R28",
+          "R29"
+        ]
+      },
+      "S": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8",
+          "S9",
+          "S10"
+        ]
+      },
+      "T": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6",
+          "T7"
+        ]
+      },
+      "U": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "U1",
+          "U2",
+          "U3",
+          "U4",
+          "U5",
+          "U6",
+          "U7",
+          "U8",
+          "U9",
+          "U10",
+          "U11",
+          "U12",
+          "U13",
+          "U14",
+          "U15"
+        ]
+      },
+      "V": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "V1",
+          "V2",
+          "V3",
+          "V4",
+          "V5",
+          "V6",
+          "V7",
+          "V8",
+          "V9",
+          "V10"
+        ]
+      },
+      "W": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6",
+          "W7"
+        ]
+      },
+      "X": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5",
+          "X6",
+          "X7",
+          "X8",
+          "X9",
+          "X10"
+        ]
+      },
+      "Y": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "Y1",
+          "Y2",
+          "Y3",
+          "Y4",
+          "Y5",
+          "Y6",
+          "Y7",
+          "Y8",
+          "Y9",
+          "Y10",
+          "Y11",
+          "Y12",
+          "Y13",
+          "Y14",
+          "Y15",
+          "Y16",
+          "Y17",
+          "Y18",
+          "Y19",
+          "Y20",
+          "Y21",
+          "Y22",
+          "Y23",
+          "Y24",
+          "Y25",
+          "Y26",
+          "Y27",
+          "Y28",
+          "Y29",
+          "Y30"
+        ]
+      },
+      "Z": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "Z1",
+          "Z2",
+          "Z3",
+          "Z4",
+          "Z5",
+          "Z6",
+          "Z7",
+          "Z8",
+          "Z9",
+          "Z10",
+          "Z11",
+          "Z12",
+          "Z13",
+          "Z14",
+          "Z15",
+          "Z16",
+          "Z17",
+          "Z18",
+          "Z19",
+          "Z20",
+          "Z21",
+          "Z22",
+          "Z23",
+          "Z24",
+          "Z25",
+          "Z26",
+          "Z27",
+          "Z28"
         ]
       }
     },
@@ -175,6 +1006,5 @@
     ]
   },
   "informant_forms": [],
-  "suggested_goals_template": true,
-  "norms_file": "norms-br.json"
+  "suggested_goals_template": true
 }

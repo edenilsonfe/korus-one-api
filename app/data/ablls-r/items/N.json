@@ -1,0 +1,122 @@
+[
+  {
+    "id": "N1",
+    "domain": "N",
+    "module": "N",
+    "text": "N1 — Seguir rotinas diárias O aluno seguirá as rotinas da aula de maneira independente\n\nObjetivo: O aluno seguirá as rotinas da aula de maneira independente\n\nCritérios: 2= De forma independente\n1= 50% de forma independente",
+    "task_name": "Seguir rotinas diárias O aluno seguirá as rotinas da aula de maneira independente",
+    "objective": "O aluno seguirá as rotinas da aula de maneira independente",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= 50% de forma independente",
+    "notes": ""
+  },
+  {
+    "id": "N2",
+    "domain": "N",
+    "module": "N",
+    "text": "N2 — Trabalhar de maneira independente em rotinas não\n\nObjetivo: acadêmicas O estudante trabalhará de maneira independente em atividades que não são acadêmicas como as de recreação, por exemplo. O estudante trabalhará de maneira independente em atividades que não são acadêmicas como as de recreação, por exemplo. Jogos em geral\n\nCritérios: 4= De forma Independente\n3= 15 minutos\n2= 10 minutos\n1= 5 minutos",
+    "task_name": "Trabalhar de maneira independente em rotinas não",
+    "objective": "acadêmicas O estudante trabalhará de maneira independente em atividades que não são acadêmicas como as de recreação, por exemplo. O estudante trabalhará de maneira independente em atividades que não são acadêmicas como as de recreação, por exemplo. Jogos em geral",
+    "question": "",
+    "example": "",
+    "criteria": "4= De forma Independente\n3= 15 minutos\n2= 10 minutos\n1= 5 minutos",
+    "notes": ""
+  },
+  {
+    "id": "N3",
+    "domain": "N",
+    "module": "N",
+    "text": "N3 — Sentar e esperar de forma adequada a transição de uma atividade para outra\n\nObjetivo: O estudante esperará de forma adequada entre uma atividade e outra O estudante esperará de forma adequada entre uma atividade e outra minutos\n\nCritérios: 2= De forma independente por até 2\n1= Até 30 segundos",
+    "task_name": "Sentar e esperar de forma adequada a transição de uma atividade para outra",
+    "objective": "O estudante esperará de forma adequada entre uma atividade e outra O estudante esperará de forma adequada entre uma atividade e outra minutos",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente por até 2\n1= Até 30 segundos",
+    "notes": ""
+  },
+  {
+    "id": "N4",
+    "domain": "N",
+    "module": "N",
+    "text": "N4 — Mudar de atividade ou se mover em outro contexto O estudante fará transições\n\nObjetivo: adequadas entre uma atividade e outra (mudança de local) O estudante fará transições adequadas entre uma atividade e outra (mudança de local)\n\nCritérios: 2= De forma independente\n1= 50% das instruções com ajuda",
+    "task_name": "Mudar de atividade ou se mover em outro contexto O estudante fará transições",
+    "objective": "adequadas entre uma atividade e outra (mudança de local) O estudante fará transições adequadas entre uma atividade e outra (mudança de local)",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= 50% das instruções com ajuda",
+    "notes": ""
+  },
+  {
+    "id": "N5",
+    "domain": "N",
+    "module": "N",
+    "text": "N5 — Esperar a sua vez durante as atividades O estudante esperará a sua\n\nObjetivo: vez chegar de maneira adequada ara realizar alguma atividade O estudante esperará a sua vez chegar de maneira adequada ara realizar alguma atividade minutos segundos\n\nCritérios: 2= De forma independente por até 2\n1= De forma independente por até 30",
+    "task_name": "Esperar a sua vez durante as atividades O estudante esperará a sua",
+    "objective": "vez chegar de maneira adequada ara realizar alguma atividade O estudante esperará a sua vez chegar de maneira adequada ara realizar alguma atividade minutos segundos",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente por até 2\n1= De forma independente por até 30",
+    "notes": ""
+  },
+  {
+    "id": "N6",
+    "domain": "N",
+    "module": "N",
+    "text": "N6 — Estar em uma fila O aluno seguirá as instruções para formar uma fila e esperar\n\nObjetivo: adequadamente nela O aluno seguirá as instruções para formar uma fila e esperar adequadamente nela\n\nCritérios: 2= De forma independente\n1= 50% das instruções sem sugestões",
+    "task_name": "Estar em uma fila O aluno seguirá as instruções para formar uma fila e esperar",
+    "objective": "adequadamente nela O aluno seguirá as instruções para formar uma fila e esperar adequadamente nela",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= 50% das instruções sem sugestões",
+    "notes": ""
+  },
+  {
+    "id": "N7",
+    "domain": "N",
+    "module": "N",
+    "text": "N7 — Trabalhar de maneira independente em rotinas acadêmicas\n\nObjetivo: O estudante trabalhará de maneira independente em atividades que são acadêmicas O estudante trabalhará de maneira independente em atividades que são acadêmicas Folha de exercícios\n\nCritérios: 4= De forma Independente\n3= 15 minutos\n2= 10 minutos\n1= 5 minutos",
+    "task_name": "Trabalhar de maneira independente em rotinas acadêmicas",
+    "objective": "O estudante trabalhará de maneira independente em atividades que são acadêmicas O estudante trabalhará de maneira independente em atividades que são acadêmicas Folha de exercícios",
+    "question": "",
+    "example": "",
+    "criteria": "4= De forma Independente\n3= 15 minutos\n2= 10 minutos\n1= 5 minutos",
+    "notes": ""
+  },
+  {
+    "id": "N8",
+    "domain": "N",
+    "module": "N",
+    "text": "N8 — Retirar e posicionar os materiais de forma adequada E aluno saber manusear\n\nObjetivo: os materiais dentro da sala de maneira adequada Retira e posiciona os materiais de maneira\n\nPergunta: organizada?\n\nExemplo: Antes de fazer uma atividade, o aluno vai até o armário, retira os materiais que vão ser usados.\n\nCritérios: 2= De forma independente\n1= Apenas em 50% das vezes e com apoio",
+    "task_name": "Retirar e posicionar os materiais de forma adequada E aluno saber manusear",
+    "objective": "os materiais dentro da sala de maneira adequada Retira e posiciona os materiais de maneira",
+    "question": "organizada?",
+    "example": "Antes de fazer uma atividade, o aluno vai até o armário, retira os materiais que vão ser usados.",
+    "criteria": "2= De forma independente\n1= Apenas em 50% das vezes e com apoio",
+    "notes": ""
+  },
+  {
+    "id": "N9",
+    "domain": "N",
+    "module": "N",
+    "text": "N9 — Completar uma tarefa, entregar o trabalho para o professor, e guardar os materiais\n\nObjetivo: O aluno seguirá as instruções do professor para realizar os trabalhos e em seguira organizar os materiais em seus devidos lugares Segue as instruções do professor, depois recolhe e guarda os materiais que\n\nPergunta: foram utilizados?\n\nExemplo: Após terminar a atividade, o aluno guardar todo o material de volta no armário, tal coo encontrou?\n\nCritérios: 2= De forma independente\n1= Apenas em 50% das vezes e com apoio",
+    "task_name": "Completar uma tarefa, entregar o trabalho para o professor, e guardar os materiais",
+    "objective": "O aluno seguirá as instruções do professor para realizar os trabalhos e em seguira organizar os materiais em seus devidos lugares Segue as instruções do professor, depois recolhe e guarda os materiais que",
+    "question": "foram utilizados?",
+    "example": "Após terminar a atividade, o aluno guardar todo o material de volta no armário, tal coo encontrou?",
+    "criteria": "2= De forma independente\n1= Apenas em 50% das vezes e com apoio",
+    "notes": ""
+  },
+  {
+    "id": "N10",
+    "domain": "N",
+    "module": "N",
+    "text": "N10 — Esperar e se preparar de forma adequada as transições O aluno esperará de\n\nObjetivo: forma adequada a próxima atividade Espera as transições de aula de forma\n\nPergunta: satisfatória?\n\nCritérios: 2= De forma independente\n1= Apenas em 50% das vezes e com apoio",
+    "task_name": "Esperar e se preparar de forma adequada as transições O aluno esperará de",
+    "objective": "forma adequada a próxima atividade Espera as transições de aula de forma",
+    "question": "satisfatória?",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Apenas em 50% das vezes e com apoio",
+    "notes": ""
+  }
+]

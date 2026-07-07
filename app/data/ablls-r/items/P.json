@@ -1,0 +1,74 @@
+[
+  {
+    "id": "P1",
+    "domain": "P",
+    "module": "P",
+    "text": "P1 — Generalizar vários estímulos Usar as habilidades adquiridas para um\n\nObjetivo: objeto com outros exemplos que exijam resposta similar Usa as habilidades adquiridas para um objeto com outros exemplos que exijam resposta\n\nPergunta: similar?\n\nExemplo: Quando lhe ensinam a nomear uma xícara marrom como \"xícara\". Depois é capaz de entender que existem xícaras verdes, azuis, amarelas... com um estimulo ou generaliza a respeito de vários estímulos da mesma classe depois de 2 estímulos. depois de 10 ensaios\n\nCritérios: 2= Adquire respostas de nomear e de seleção\n1= Pode  generalizar a estímulos similares",
+    "task_name": "Generalizar vários estímulos Usar as habilidades adquiridas para um",
+    "objective": "objeto com outros exemplos que exijam resposta similar Usa as habilidades adquiridas para um objeto com outros exemplos que exijam resposta",
+    "question": "similar?",
+    "example": "Quando lhe ensinam a nomear uma xícara marrom como \"xícara\". Depois é capaz de entender que existem xícaras verdes, azuis, amarelas... com um estimulo ou generaliza a respeito de vários estímulos da mesma classe depois de 2 estímulos. depois de 10 ensaios",
+    "criteria": "2= Adquire respostas de nomear e de seleção\n1= Pode  generalizar a estímulos similares",
+    "notes": ""
+  },
+  {
+    "id": "P2",
+    "domain": "P",
+    "module": "P",
+    "text": "P2 — Generalizar vários professores O aluno irá generalizar\n\nObjetivo: as habilidades adquiridas com outros professores Generaliza as habilidades adquiridas com\n\nPergunta: outros professores?\n\nExemplo: Aprende o significado de \"xícara\" com um professor e depois utiliza este conhecimento com qualquer outro. outros professores professores\n\nCritérios: 2= Sempre mostra habilidades adquiridas com\n1= Sempre trabalha bem com 4 ou mais",
+    "task_name": "Generalizar vários professores O aluno irá generalizar",
+    "objective": "as habilidades adquiridas com outros professores Generaliza as habilidades adquiridas com",
+    "question": "outros professores?",
+    "example": "Aprende o significado de \"xícara\" com um professor e depois utiliza este conhecimento com qualquer outro. outros professores professores",
+    "criteria": "2= Sempre mostra habilidades adquiridas com\n1= Sempre trabalha bem com 4 ou mais",
+    "notes": ""
+  },
+  {
+    "id": "P3",
+    "domain": "P",
+    "module": "P",
+    "text": "P3 — Generalizar vários ambientes Mostrar as habilidades adquiridas em diversas\n\nObjetivo: situações de ensino e em outras situações Mostra as habilidades adquiridas em diversas situações de ensino e em\n\nPergunta: outras situações?\n\nExemplo: Aprende o significado de \"xícara\" na escola e depois utiliza este conhecimento em qualquer outro lugar. ajudas fora da situação de ensino original situação de ensino original com algumas ajudas verbais\n\nCritérios: 2= Sempre mostra habilidades adquiridas sem\n1= Mostra habilidades adquiridas fora da",
+    "task_name": "Generalizar vários ambientes Mostrar as habilidades adquiridas em diversas",
+    "objective": "situações de ensino e em outras situações Mostra as habilidades adquiridas em diversas situações de ensino e em",
+    "question": "outras situações?",
+    "example": "Aprende o significado de \"xícara\" na escola e depois utiliza este conhecimento em qualquer outro lugar. ajudas fora da situação de ensino original situação de ensino original com algumas ajudas verbais",
+    "criteria": "2= Sempre mostra habilidades adquiridas sem\n1= Mostra habilidades adquiridas fora da",
+    "notes": ""
+  },
+  {
+    "id": "P4",
+    "domain": "P",
+    "module": "P",
+    "text": "P4 — Mostrar habilidades em grupo O aluno poderá mostrar\n\nObjetivo: as habilidades aprendidas em diversas outras situações em grupo Mostra as habilidades aprendidas em diversas outras situações em\n\nPergunta: grupo?\n\nExemplo: Aprende o significado de \"xícara\" em uma situação de ensino e depois utiliza este conhecimento em qualquer outro lugar com um grupo de pessoas. espontânea em um grupo ajudas verbais\n\nCritérios: 2= Mostra habilidades adquiridas de forma\n1= mostra habilidades em grupos com várias",
+    "task_name": "Mostrar habilidades em grupo O aluno poderá mostrar",
+    "objective": "as habilidades aprendidas em diversas outras situações em grupo Mostra as habilidades aprendidas em diversas outras situações em",
+    "question": "grupo?",
+    "example": "Aprende o significado de \"xícara\" em uma situação de ensino e depois utiliza este conhecimento em qualquer outro lugar com um grupo de pessoas. espontânea em um grupo ajudas verbais",
+    "criteria": "2= Mostra habilidades adquiridas de forma\n1= mostra habilidades em grupos com várias",
+    "notes": ""
+  },
+  {
+    "id": "P5",
+    "domain": "P",
+    "module": "P",
+    "text": "P5 — Formas generalizadas de responder O aluno poderá produzir\n\nObjetivo: outras respostas apropriadas depois de aprender uma resposta adequada em uma situação particular Produz outras respostas apropriadas depois de aprender uma resposta adequada em uma situação\n\nPergunta: particular?\n\nExemplo: Quando vê um cachorro pode responder \"cachorro\", \"cachorrinho\", \"ao ao\"... Ou quando lhe pedem para dizer nomes de coisas de comer, ele apresenta um vocabulário mais amplo. e de forma espontânea, ao invés de usar somente uma resposta e usa várias respostas em várias situações algumas ajudas verbais\n\nCritérios: 2= Usa uma variedade de respostas adequadas\n1= Usa algumas respostas alternativas com",
+    "task_name": "Formas generalizadas de responder O aluno poderá produzir",
+    "objective": "outras respostas apropriadas depois de aprender uma resposta adequada em uma situação particular Produz outras respostas apropriadas depois de aprender uma resposta adequada em uma situação",
+    "question": "particular?",
+    "example": "Quando vê um cachorro pode responder \"cachorro\", \"cachorrinho\", \"ao ao\"... Ou quando lhe pedem para dizer nomes de coisas de comer, ele apresenta um vocabulário mais amplo. e de forma espontânea, ao invés de usar somente uma resposta e usa várias respostas em várias situações algumas ajudas verbais",
+    "criteria": "2= Usa uma variedade de respostas adequadas\n1= Usa algumas respostas alternativas com",
+    "notes": ""
+  },
+  {
+    "id": "P6",
+    "domain": "P",
+    "module": "P",
+    "text": "P6 — Generalização de habilidades de linguagem O estudante poderá\n\nObjetivo: usar palavras adquiridas no ensino direto de habilidades de linguagem em outras habilidades que impliquem linguagem Usar palavras adquiridas no ensino direto de habilidades de linguagem em outras habilidades que impliquem\n\nPergunta: linguagem?\n\nExemplo: Consegue ver a figura de um objeto e dar o nome e vice-versa receptivamente um objeto quando lhe dizem sua função, ele poderá nomear o objeto quando lhe dizem a função ele pode pedir pelo objeto e identificá-lo receptivamente.\n\nCritérios: 2= Quando lhe é ensinado a identificar\n1= Quando lhe ensinam o nome de um objeto",
+    "task_name": "Generalização de habilidades de linguagem O estudante poderá",
+    "objective": "usar palavras adquiridas no ensino direto de habilidades de linguagem em outras habilidades que impliquem linguagem Usar palavras adquiridas no ensino direto de habilidades de linguagem em outras habilidades que impliquem",
+    "question": "linguagem?",
+    "example": "Consegue ver a figura de um objeto e dar o nome e vice-versa receptivamente um objeto quando lhe dizem sua função, ele poderá nomear o objeto quando lhe dizem a função ele pode pedir pelo objeto e identificá-lo receptivamente.",
+    "criteria": "2= Quando lhe é ensinado a identificar\n1= Quando lhe ensinam o nome de um objeto",
+    "notes": ""
+  }
+]

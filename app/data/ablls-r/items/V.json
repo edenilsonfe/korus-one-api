@@ -1,0 +1,122 @@
+[
+  {
+    "id": "V1",
+    "domain": "V",
+    "module": "V",
+    "text": "V1 — Comer comida com a mão O estudante irá Comer comida com a mão Come comida com a mão?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Comer comida com a mão O estudante irá Comer comida com a mão Come comida com a mão?",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V2",
+    "domain": "V",
+    "module": "V",
+    "text": "V2 — Beber usando canudo O estudante irá Beber usando canudo Bebe usando canudo?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Beber usando canudo O estudante irá Beber usando canudo Bebe usando canudo?",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V3",
+    "domain": "V",
+    "module": "V",
+    "text": "V3 — Beber do copo O estudante irá Beber do copo Bebe do copo?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Beber do copo O estudante irá Beber do copo Bebe do copo?",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V4",
+    "domain": "V",
+    "module": "V",
+    "text": "V4 — Comer de forma independente usando colher ou garfo O estudante irá Comer de\n\nObjetivo: forma independente usando colher ou garfo Come de forma independente usando\n\nPergunta: colher ou garfo?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Comer de forma independente usando colher ou garfo O estudante irá Comer de",
+    "objective": "forma independente usando colher ou garfo Come de forma independente usando",
+    "question": "colher ou garfo?",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V5",
+    "domain": "V",
+    "module": "V",
+    "text": "V5 — Passar manteiga no pão O estudante irá Passar manteiga no pão Passa manteiga no pão?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Passar manteiga no pão O estudante irá Passar manteiga no pão Passa manteiga no pão?",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V6",
+    "domain": "V",
+    "module": "V",
+    "text": "V6 — Colocar suco no copo O estudante irá Colocar suco no copo Coloca suco no copo?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Colocar suco no copo O estudante irá Colocar suco no copo Coloca suco no copo?",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V7",
+    "domain": "V",
+    "module": "V",
+    "text": "V7 — Cortar comida com a faca O estudante irá Cortar comida com a faca Cortar comida com a faca\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Cortar comida com a faca O estudante irá Cortar comida com a faca Cortar comida com a faca",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V8",
+    "domain": "V",
+    "module": "V",
+    "text": "V8 — Ajudar a por a mesa O estudante irá Ajudar a por a mesa Ajudar a por a mesa\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Ajudar a por a mesa O estudante irá Ajudar a por a mesa Ajudar a por a mesa",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V9",
+    "domain": "V",
+    "module": "V",
+    "text": "V9 — Limpar a mesa depois de comer O estudante irá Limpar a mesa depois de comer\n\nObjetivo: Limpar a mesa depois de comer\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Limpar a mesa depois de comer O estudante irá Limpar a mesa depois de comer",
+    "objective": "Limpar a mesa depois de comer",
+    "question": "",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  },
+  {
+    "id": "V10",
+    "domain": "V",
+    "module": "V",
+    "text": "V10 — Manter as áreas de comer limpas O estudante irá Manter as áreas de comer limpas\n\nObjetivo: Mantem as áreas de comer\n\nPergunta: limpas?\n\nCritérios: 2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "task_name": "Manter as áreas de comer limpas O estudante irá Manter as áreas de comer limpas",
+    "objective": "Mantem as áreas de comer",
+    "question": "limpas?",
+    "example": "",
+    "criteria": "2= De forma independente\n1= Com ajudas verbais e gestuais",
+    "notes": ""
+  }
+]

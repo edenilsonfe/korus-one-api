@@ -39,6 +39,23 @@ def test_vb_mapp_domain_mastery():
     assert "LING" in scores["domains"]
 
 
+def test_ablls_r_domain_mastery():
+    package = get_instrument_content_package("ablls-r")
+    assert package.version == 2
+    assert len(package.get_items()) == 544
+    assert len(package.modules) == 25
+
+    domain_a = package.scoring["domains"]["A"]
+    assert len(domain_a["item_ids"]) == 19
+    answers = {item_id: 2 for item_id in domain_a["item_ids"][:5]}
+    scores = InstrumentScoringService.score(package, answers)
+    assert scores["engine"] == "domain_mastery"
+    assert scores["domains"]["A"] == round((5 / 19) * 100, 1)
+    assert "M11" in package.scoring["domains"]["M"]["item_ids"]
+    assert "J20" in package.scoring["domains"]["J"]["item_ids"]
+    assert "J21" not in {it["id"] for it in package.get_items()}
+
+
 def test_spm_subform_scoring():
     from app.services.spm_content_package import get_spm_content_package
     from app.services.spm_scoring_service import compute_subform_scores, synthesize_battery_scores

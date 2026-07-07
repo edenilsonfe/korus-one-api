@@ -1,0 +1,86 @@
+[
+  {
+    "id": "T1",
+    "domain": "T",
+    "module": "T",
+    "text": "T1 — Igualar letras individuais com letras apresentadas em\n\nObjetivo: um cartão com uma palavra O estudante irá Igualar letras individuais com letras apresentadas em um cartão com uma palavra Iguala letras individuais com letras apresentadas em um cartão com\n\nPergunta: uma palavra?\n\nExemplo: Quando lhe apresentado um cartão com a palavra pássaro, ele poderá igualar as letras individuais com as letras do cartão (Como se fosse um quebra-cabeças) mais, algumas das quais são similares.\n\nCritérios: 2= Pode igualar letras em palavras de até 5 letras a\n1= Pode igualar letras em palavras de até 3 letras",
+    "task_name": "Igualar letras individuais com letras apresentadas em",
+    "objective": "um cartão com uma palavra O estudante irá Igualar letras individuais com letras apresentadas em um cartão com uma palavra Iguala letras individuais com letras apresentadas em um cartão com",
+    "question": "uma palavra?",
+    "example": "Quando lhe apresentado um cartão com a palavra pássaro, ele poderá igualar as letras individuais com as letras do cartão (Como se fosse um quebra-cabeças) mais, algumas das quais são similares.",
+    "criteria": "2= Pode igualar letras em palavras de até 5 letras a\n1= Pode igualar letras em palavras de até 3 letras",
+    "notes": ""
+  },
+  {
+    "id": "T2",
+    "domain": "T",
+    "module": "T",
+    "text": "T2 — Completar as letras que faltam nas palavras O estudante irá\n\nObjetivo: Completar as letras que faltam nas palavras Completa as letras que faltam nas\n\nPergunta: palavras?\n\nExemplo: Quando lhe for apresentado o desenho de um gato e a palavra incompleta g_to, o aluno poderá incluir a letra \"a\" para completar a palavra. palavra em ao menos 10 palavras posição da palavra em 5 palavras\n\nCritérios: 2= Pode adicionar uma letra em qualquer posição da\n1= Pode adicionar uma letra em pelo menos uma",
+    "task_name": "Completar as letras que faltam nas palavras O estudante irá",
+    "objective": "Completar as letras que faltam nas palavras Completa as letras que faltam nas",
+    "question": "palavras?",
+    "example": "Quando lhe for apresentado o desenho de um gato e a palavra incompleta g_to, o aluno poderá incluir a letra \"a\" para completar a palavra. palavra em ao menos 10 palavras posição da palavra em 5 palavras",
+    "criteria": "2= Pode adicionar uma letra em qualquer posição da\n1= Pode adicionar uma letra em pelo menos uma",
+    "notes": ""
+  },
+  {
+    "id": "T3",
+    "domain": "T",
+    "module": "T",
+    "text": "T3 — Copiar palavras O estudante irá Copiar palavras Copia palavras?\n\nCritérios: 2= Pode copiar palavras de 6 letras\n1= Pode copiar palavras de 3 letras",
+    "task_name": "Copiar palavras O estudante irá Copiar palavras Copia palavras?",
+    "objective": "",
+    "question": "",
+    "example": "",
+    "criteria": "2= Pode copiar palavras de 6 letras\n1= Pode copiar palavras de 3 letras",
+    "notes": ""
+  },
+  {
+    "id": "T4",
+    "domain": "T",
+    "module": "T",
+    "text": "T4 — Escrever letras que faltam nas palavras O estudante irá\n\nObjetivo: Escrever letras que faltam nas palavras Escreve letras que\n\nPergunta: faltam nas palavras?\n\nExemplo: Quando lhe for apresentado o desenho de um gato e a palavra incompleta g_to, o aluno poderá escrever a letra \"a\" para completar a palavra. palavra em ao menos 10 palavras posição da palavra em 5 palavras\n\nCritérios: 2= Pode adicionar uma letra em qualquer posição da\n1= Pode adicionar uma letra em pelo menos uma",
+    "task_name": "Escrever letras que faltam nas palavras O estudante irá",
+    "objective": "Escrever letras que faltam nas palavras Escreve letras que",
+    "question": "faltam nas palavras?",
+    "example": "Quando lhe for apresentado o desenho de um gato e a palavra incompleta g_to, o aluno poderá escrever a letra \"a\" para completar a palavra. palavra em ao menos 10 palavras posição da palavra em 5 palavras",
+    "criteria": "2= Pode adicionar uma letra em qualquer posição da\n1= Pode adicionar uma letra em pelo menos uma",
+    "notes": ""
+  },
+  {
+    "id": "T5",
+    "domain": "T",
+    "module": "T",
+    "text": "T5 — Soletrar palavras de forma oral O estudante irá Soletrar palavras de\n\nObjetivo: forma oral Soletra palavras de\n\nPergunta: forma oral?\n\nCritérios: 4= 25 palavras\n3= 10 palavras\n2= 5 palavras\n1= 2 palavras",
+    "task_name": "Soletrar palavras de forma oral O estudante irá Soletrar palavras de",
+    "objective": "forma oral Soletra palavras de",
+    "question": "forma oral?",
+    "example": "",
+    "criteria": "4= 25 palavras\n3= 10 palavras\n2= 5 palavras\n1= 2 palavras",
+    "notes": ""
+  },
+  {
+    "id": "T6",
+    "domain": "T",
+    "module": "T",
+    "text": "T6 — Soletrar palavras de forma escrita O estudante irá Soletrar palavras de\n\nObjetivo: forma escrita Soletra palavras de\n\nPergunta: forma escrita?\n\nCritérios: 4= 25 palavras\n3= 10 palavras\n2= 5 palavras\n1= 2 palavras",
+    "task_name": "Soletrar palavras de forma escrita O estudante irá Soletrar palavras de",
+    "objective": "forma escrita Soletra palavras de",
+    "question": "forma escrita?",
+    "example": "",
+    "criteria": "4= 25 palavras\n3= 10 palavras\n2= 5 palavras\n1= 2 palavras",
+    "notes": ""
+  },
+  {
+    "id": "T7",
+    "domain": "T",
+    "module": "T",
+    "text": "T7 — Soletrar seu próprio nome O estudante irá Soletrar seu próprio\n\nObjetivo: nome Soletra seu próprio\n\nPergunta: nome?\n\nExemplo: forma escrita ou via teclado forma escrita ou via teclado\n\nCritérios: 2= Pode soletrar seu nome próprio oralmente  e em\n1= Pode soletrar seu nome próprio oralmente  e em",
+    "task_name": "Soletrar seu próprio nome O estudante irá Soletrar seu próprio",
+    "objective": "nome Soletra seu próprio",
+    "question": "nome?",
+    "example": "forma escrita ou via teclado forma escrita ou via teclado",
+    "criteria": "2= Pode soletrar seu nome próprio oralmente  e em\n1= Pode soletrar seu nome próprio oralmente  e em",
+    "notes": ""
+  }
+]
