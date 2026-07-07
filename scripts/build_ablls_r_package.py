@@ -27,10 +27,336 @@ from ablls_r_item_catalog import (  # noqa: E402
 TASK_MARKER = re.compile(r"^([A-Z])\s*(\d+)\s*$")
 SCALE_ROW = re.compile(r"^0(\s+1(\s+2(\s+3(\s+4)?)?)?)?\s*$")
 HEADER_ROW = re.compile(
-    r"^Tarefa\s+Resultado\s+Nome",
+    r"^Tarefa\s+Resultado\s+Nome|Tarefa\s+Objetivo\s+da\s+Tarefa",
     re.I,
 )
 CRITERION_ROW = re.compile(r"^[0-4]=\s*")
+NOTE_ROW = re.compile(r"^(?:Nota:|Apêndice)", re.I)
+
+# PDF extract reads columns in order: Nome | Objetivo | Pergunta | Exemplo | Critérios.
+OBJECTIVE_OPENER = re.compile(
+    r"^(?:"
+    r"Quando (?:se |um |uma |o |a |lhe |é |existem|outros|tiver|começarem|apresentam|oferece|realizar|nao |não |for |há |houver|são |necessário|precisa|dois|três|existir|na )"
+    r"|O estudante "
+    r"|O aluno "
+    r"|Em uma "
+    r"|Em um "
+    r"|Se tiver "
+    r"|Se lhe "
+    r"|Se começarem "
+    r"|Indica "
+    r"|Nomear "
+    r"|Fazer "
+    r"|Dizer "
+    r"|Cantar "
+    r"|Participar"
+    r"|Responderá"
+    r"|O reforçador "
+    r"|Completar (?:palavras|frases|a palavra|a frase|as letras|as palavras|com |uma tarefa,|uma frase)"
+    r"|Manter "
+    r"|Mostrar "
+    r"|Aceitar "
+    r"|Procurar "
+    r"|Imitar "
+    r"|Vocalizar "
+    r"|Seguir "
+    r"|Identificar "
+    r"|Contar "
+    r"|Ler "
+    r"|Escrever "
+    r"|Copiar "
+    r"|Depois de "
+    r"|Quando um "
+    r"|Quando uma "
+    r"|Compre-la "
+    r"|O estudante poderá "
+    r"|O aluno poderá "
+    r")",
+    re.I,
+)
+
+QUESTION_OPENER = re.compile(
+    r"^(?:"
+    r"Demonstra "
+    r"|Pegará "
+    r"|Nomeia "
+    r"|Usa "
+    r"|Pode "
+    r"|Coloque "
+    r"|Segue "
+    r"|Responde "
+    r"|Levanta "
+    r"|Senta "
+    r"|Veste "
+    r"|Come "
+    r"|Bebe "
+    r"|Faz "
+    r"|Canta "
+    r"|Completa "
+    r"|Imita "
+    r"|Identifica "
+    r"|Conta "
+    r"|Lê "
+    r"|Escreve "
+    r"|Iguala "
+    r"|Soletra "
+    r"|Chuta "
+    r"|Pega "
+    r"|Quando participa"
+    r"|Quando lhe "
+    r"|Quando é perguntado"
+    r"|Quando o estudante "
+    r"|Qual "
+    r"|Quantos "
+    r"|Quem "
+    r"|Onde "
+    r"|Como "
+    r"|O aluno irá"
+    r"|O estudante irá"
+    r"|Olhará "
+    r"|Olha "
+    r"|Seguirá "
+    r"|Permite "
+    r"|Possui "
+    r"|Brinca "
+    r"|Explora "
+    r"|Procura "
+    r"|Espera "
+    r"|Aguarda "
+    r"|Pede "
+    r"|Solicita "
+    r"|Indica "
+    r"|Escolhe "
+    r"|Seleciona "
+    r"|Toca "
+    r"|Aponta "
+    r"|Trabalha "
+    r"|Procura a "
+    r"|Compartilha "
+    r"|Oferece "
+    r"|Começará "
+    r"|Chama "
+    r"|Entrega "
+    r"|Mostra "
+    r"|Subir "
+    r"|Descer "
+    r"|Calça "
+    r"|Calçar "
+    r"|Vestir "
+    r"|Veste "
+    r"|Come "
+    r"|Bebe "
+    r"|Lava "
+    r"|Seca "
+    r"|Penteia "
+    r"|Escova "
+    r"|Assoa "
+    r"|Urina "
+    r"|Defeca "
+    r"|Utiliza "
+    r"|Controla "
+    r"|Caminha "
+    r"|Corre "
+    r"|Pula "
+    r"|Arremessa "
+    r"|Rola "
+    r"|Equilibra "
+    r"|Gira "
+    r"|Balança "
+    r"|Caminha "
+    r"|Corre "
+    r"|Ajoelha"
+    r"|Agacha"
+    r"|Gallopa"
+    r"|Galopa"
+    r"|Salta "
+    r"|Pula "
+    r"|Nada "
+    r"|Rema "
+    r"|Pedala "
+    r"|Anda "
+    r")",
+    re.I,
+)
+
+
+def _join_lines(lines: list[str]) -> str:
+    return re.sub(r"\s+", " ", " ".join(lines)).strip()
+
+
+def _preprocess_lines(lines: list[str]) -> list[str]:
+    """Split lines where question and criteria were merged (common in Y/Z)."""
+    out: list[str] = []
+    for line in lines:
+        if re.search(r"\?\s*\d=", line):
+            q_part, crit_part = re.split(r"(?<=\?)\s*(?=\d=)", line, maxsplit=1)
+            out.append(q_part.strip())
+            if crit_part.strip():
+                out.append(crit_part.strip())
+            continue
+        # Example + criteria on same line without '?' (Y/Z motor items).
+        if re.search(r"\s\d=\s", line) and not CRITERION_ROW.match(line):
+            body_part, crit_part = re.split(r"\s(?=\d=)", line, maxsplit=1)
+            if body_part.strip():
+                out.append(body_part.strip())
+            if crit_part.strip():
+                out.append(crit_part.strip())
+            continue
+        out.append(line)
+    return out
+
+
+def _split_motor_style(body: list[str]) -> dict[str, str] | None:
+    """Y/Z rows: 'Nome O estudante poderá' then 'Nome Pergunta? exemplo'."""
+    if not body or len(body) > 6:
+        return None
+    first = body[0]
+    if not re.search(r"\sO estudante poderá\s*$", first, re.I):
+        return None
+    task_name, _ = re.split(r"\s+O estudante poderá\s*$", first, maxsplit=1, flags=re.I)
+    if len(body) >= 2 and "?" in body[1]:
+        q_line = body[1]
+        q_match = re.search(r"(.+?\?)", q_line)
+        question = q_match.group(1).strip() if q_match else q_line.strip()
+        example_tail = q_line[q_match.end() :].strip() if q_match else ""
+        example_lines = ([example_tail] if example_tail else []) + body[2:]
+        return {
+            "task_name": task_name.strip(),
+            "objective": f"O estudante poderá {task_name.strip()}",
+            "question": question,
+            "example": _join_lines([ln for ln in example_lines if ln and not CRITERION_ROW.match(ln)]),
+            "criteria": "",
+            "notes": "",
+        }
+    return None
+
+
+def _split_compact_line(line: str) -> dict[str, str] | None:
+    """Parse single-line motor tasks: 'Nome O aluno poderá Nome Pergunta? N= ...'."""
+    m = re.match(
+        r"^(?P<name>.+?)\s+(?P<obj>O aluno poderá\s+.+?)\s+(?P<q>.+?\?)\s*(?P<crit>\d=.+)$",
+        line,
+        re.I,
+    )
+    if not m:
+        return None
+    return {
+        "task_name": m.group("name").strip(),
+        "objective": m.group("obj").strip(),
+        "question": m.group("q").strip(),
+        "example": "",
+        "criteria": m.group("crit").strip(),
+        "notes": "",
+    }
+
+
+def _split_criteria(lines: list[str]) -> tuple[list[str], list[str]]:
+    """Criteria column is last — split at first line matching N=."""
+    first_crit = next((i for i, line in enumerate(lines) if CRITERION_ROW.match(line)), None)
+    if first_crit is None:
+        return lines, []
+
+    body = lines[:first_crit]
+    criteria_merged: list[str] = []
+    for line in lines[first_crit:]:
+        if NOTE_ROW.match(line):
+            body.append(line)
+            continue
+        if CRITERION_ROW.match(line):
+            criteria_merged.append(line)
+        elif criteria_merged and not HEADER_ROW.search(line):
+            criteria_merged[-1] = f"{criteria_merged[-1]} {line}"
+    return body, criteria_merged
+
+
+def _objective_start(body: list[str]) -> int:
+    for i, line in enumerate(body):
+        if OBJECTIVE_OPENER.match(line.strip()):
+            return i
+    # ponytail: if no opener, first line is usually task name only.
+    return 1 if len(body) > 1 else 0
+
+
+def _question_start(body: list[str], obj_start: int, task_name: str = "") -> int:
+    task_first = task_name.split()[0].lower() if task_name else ""
+    for i in range(obj_start, len(body)):
+        if QUESTION_OPENER.match(body[i].strip()):
+            return i
+        if task_first and i > obj_start and body[i].lower().startswith(task_first):
+            return i
+    # Fallback: first line containing '?' after objective block.
+    for i in range(obj_start, len(body)):
+        if "?" in body[i]:
+            return i
+    return obj_start
+
+
+def _question_end(body: list[str], q_start: int) -> int:
+    last = q_start
+    for i in range(q_start, len(body)):
+        if "?" in body[i]:
+            last = i
+    return last
+
+
+def _split_block(lines: list[str]) -> dict[str, str]:
+    """Split PDF block using column order: Nome | Objetivo | Pergunta | Exemplo | Critérios."""
+    if not lines:
+        return {
+            "task_name": "",
+            "objective": "",
+            "question": "",
+            "example": "",
+            "criteria": "",
+            "notes": "",
+        }
+
+    lines = _preprocess_lines(lines)
+
+    # Single-line compact motor/self-help rows.
+    if len(lines) == 1:
+        compact = _split_compact_line(lines[0])
+        if compact:
+            return compact
+
+    body, criteria_raw = _split_criteria(lines)
+    notes_lines = [ln for ln in body if NOTE_ROW.match(ln)]
+    body = [ln for ln in body if not NOTE_ROW.match(ln) and not HEADER_ROW.search(ln)]
+
+    motor = _split_motor_style(body)
+    if motor:
+        motor["criteria"] = "\n".join(criteria_raw) if criteria_raw else motor["criteria"]
+        if motor["criteria"] and re.search(r"\d=.*\d=", motor["criteria"]):
+            parts = re.findall(r"\d=\s*[^0-9]+?(?=\s*\d=|$)", motor["criteria"])
+            if len(parts) > 1:
+                motor["criteria"] = "\n".join(p.strip() for p in parts)
+        return motor
+
+    obj_start = _objective_start(body)
+    task_name = _join_lines(body[:obj_start])
+
+    q_start = _question_start(body, obj_start, task_name)
+    q_end = _question_end(body, q_start)
+
+    objective = _join_lines(body[obj_start:q_start])
+    question = _join_lines(body[q_start : q_end + 1])
+    example = _join_lines(body[q_end + 1 :])
+    criteria = "\n".join(criteria_raw)
+    # Unpack inline dual criteria (e.g. "1= Sim  0= Não").
+    if criteria and re.search(r"\d=.*\d=", criteria):
+        parts = re.findall(r"\d=\s*[^0-9]+?(?=\s*\d=|$)", criteria)
+        if len(parts) > 1:
+            criteria = "\n".join(p.strip() for p in parts)
+    notes = _join_lines(notes_lines)
+
+    return {
+        "task_name": task_name,
+        "objective": objective,
+        "question": question,
+        "example": example,
+        "criteria": criteria,
+        "notes": notes,
+    }
 
 
 def _normalize_task_id(domain: str, number: int) -> str:
@@ -51,80 +377,6 @@ def _strip_noise(lines: list[str]) -> list[str]:
             continue
         cleaned.append(s)
     return cleaned
-
-
-def _split_block(lines: list[str]) -> dict[str, str]:
-    """Heuristic split of PDF block into protocol fields."""
-    if not lines:
-        return {
-            "task_name": "",
-            "objective": "",
-            "question": "",
-            "example": "",
-            "criteria": "",
-            "notes": "",
-        }
-
-    criteria_lines: list[str] = []
-    body: list[str] = []
-    for line in lines:
-        if CRITERION_ROW.match(line) or line.startswith("Nota:"):
-            criteria_lines.append(line)
-        else:
-            body.append(line)
-
-    # Task name: first 1–3 short lines before a long objective line.
-    name_parts: list[str] = []
-    idx = 0
-    while idx < len(body) and len(name_parts) < 4:
-        line = body[idx]
-        if len(line) > 90 and name_parts:
-            break
-        name_parts.append(line)
-        idx += 1
-        if len(" ".join(name_parts)) > 70 and idx < len(body) and len(body[idx]) > 90:
-            break
-
-    remainder = body[idx:]
-    objective = ""
-    question = ""
-    example = ""
-    notes = ""
-
-    if remainder:
-        # Find question line (often ends with ?)
-        q_idx = next((i for i, ln in enumerate(remainder) if "?" in ln), None)
-        if q_idx is not None:
-            objective = " ".join(remainder[:q_idx]).strip()
-            question = remainder[q_idx].strip()
-            after_q = remainder[q_idx + 1 :]
-            if after_q:
-                # Example often before criteria-like short lines
-                ex_end = len(after_q)
-                for i, ln in enumerate(after_q):
-                    if CRITERION_ROW.match(ln):
-                        ex_end = i
-                        break
-                example = " ".join(after_q[:ex_end]).strip()
-                extra_notes = [ln for ln in after_q[ex_end:] if ln.startswith("Nota:")]
-                if extra_notes:
-                    notes = " ".join(extra_notes)
-        else:
-            objective = " ".join(remainder).strip()
-
-    criteria = "\n".join(criteria_lines)
-    note_inline = [ln for ln in lines if ln.startswith("Nota:") or ln.startswith("Apêndice")]
-    if note_inline and not notes:
-        notes = " ".join(note_inline)
-
-    return {
-        "task_name": " ".join(name_parts).strip(),
-        "objective": objective,
-        "question": question,
-        "example": example,
-        "criteria": criteria,
-        "notes": notes,
-    }
 
 
 def parse_extract(text: str) -> dict[str, dict[str, str]]:
