@@ -4,12 +4,10 @@ PROTOCOL_TO_INSTRUMENT_SLUG: dict[str, str] = {
     "abfw": "abfw",
     "proc": "proc",
     "tvip": "tvip",
-    "ppvt": "ppvt",
     "ados2": "ados-2",
     "cars": "cars",
     "vbmapp": "vb-mapp",
     "abllsr": "ablls-r",
-    "afls": "afls",
     "tli": "tli",
     "denver2": "denver-ii",
     "bayley3": "bayley-iii",
@@ -35,7 +33,6 @@ CLIENT_SCORED_PROTOCOLS: frozenset[str] = frozenset(
         "rastreio-tdah",
         "rastreio-tea",
         "asrs",
-        "discalculia",
         "dislexia",
         "sdq",
         "vanderbilt",
@@ -43,7 +40,6 @@ CLIENT_SCORED_PROTOCOLS: frozenset[str] = frozenset(
         "desenvolvimento-infantil",
         "habilidades-sociais",
         "desempenho-escolar",
-        "entrevista-aprendizagem",
         "portage",
     }
 )

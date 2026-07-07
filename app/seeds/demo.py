@@ -8,7 +8,7 @@ from sqlalchemy import select
 from app.core.constants import AVATAR_COLORS, CLINICAL_DOMAIN_CATALOG
 from app.core.security import hash_password
 from app.db.session import AsyncSessionLocal, engine
-from app.models.assessment import ProtocolCatalog
+from app.models.assessment import Assessment, ProtocolCatalog
 from app.models.caregiver import Caregiver
 from app.models.goal import ClinicalDomainSnapshot, Goal
 from app.models.patient import Patient
@@ -18,6 +18,7 @@ from app.services.timeline import create_timeline_event
 
 
 async def seed_protocols(session) -> None:
+    active_ids = {p["id"] for p in PROTOCOLS}
     for p in PROTOCOLS:
         existing = await session.get(ProtocolCatalog, p["id"])
         if existing:
@@ -28,6 +29,16 @@ async def seed_protocols(session) -> None:
             existing.field_templates = p["field_templates"]
         else:
             session.add(ProtocolCatalog(**p))
+
+    result = await session.execute(select(ProtocolCatalog))
+    for existing in result.scalars().all():
+        if existing.id in active_ids:
+            continue
+        has_assessments = await session.execute(
+            select(Assessment.id).where(Assessment.protocol_id == existing.id).limit(1)
+        )
+        if has_assessments.scalar_one_or_none() is None:
+            await session.delete(existing)
 
 
 async def seed_demo(session) -> None:

@@ -43,19 +43,6 @@ PROTOCOLS = [
         ],
     },
     {
-        "id": "ppvt",
-        "name": "PPVT",
-        "full_name": "Peabody Picture Vocabulary Test",
-        "description": "Avaliação do vocabulário receptivo por nomeação de figuras.",
-        "age_range": "2 a 18 anos",
-        "field_templates": [
-            {"key": "pontuacao_bruta", "label": "Pontuação bruta"},
-            {"key": "idade_equivalente", "label": "Idade equivalente"},
-            {"key": "percentil", "label": "Percentil"},
-            {"key": "classificacao", "label": "Classificação"},
-        ],
-    },
-    {
         "id": "mchat",
         "name": "M-CHAT-R/F",
         "full_name": "Modified Checklist for Autism in Toddlers — Revised with Follow-Up",
@@ -122,20 +109,6 @@ PROTOCOLS = [
             {"key": "sociais", "label": "Habilidades sociais"},
             {"key": "autoajuda", "label": "Autoajuda"},
             {"key": "leitura", "label": "Leitura"},
-        ],
-    },
-    {
-        "id": "afls",
-        "name": "AFLS",
-        "full_name": "Assessment of Functional Living Skills",
-        "description": "Avaliação de habilidades funcionais para vida independente.",
-        "age_range": "2 a adultos",
-        "field_templates": [
-            {"key": "vestir", "label": "Vestir"},
-            {"key": "alimentacao", "label": "Alimentação"},
-            {"key": "higiene", "label": "Higiene pessoal"},
-            {"key": "domesticas", "label": "Habilidades domésticas"},
-            {"key": "comunidade", "label": "Comunidade"},
         ],
     },
     {
@@ -387,20 +360,6 @@ PROTOCOLS = [
         ],
     },
     {
-        "id": "discalculia",
-        "name": "Rastreio Discalculia",
-        "full_name": "Rastreio de Discalculia",
-        "description": "Checklist observacional de dificuldades em matemática e raciocínio numérico.",
-        "age_range": "6 a 14 anos",
-        "field_templates": [
-            {"key": "numeros", "label": "Números e quantidades"},
-            {"key": "operacoes", "label": "Operações básicas"},
-            {"key": "problemas", "label": "Problemas matemáticos"},
-            {"key": "raciocinio", "label": "Raciocínio lógico-matemático"},
-            {"key": "nivel_risco", "label": "Nível de risco"},
-        ],
-    },
-    {
         "id": "dislexia",
         "name": "Rastreio Dislexia",
         "full_name": "Rastreio de Dislexia",
@@ -493,19 +452,6 @@ PROTOCOLS = [
             {"key": "areas_destaque", "label": "Áreas em destaque"},
             {"key": "classificacao", "label": "Classificação"},
             {"key": "conduta", "label": "Conduta"},
-        ],
-    },
-    {
-        "id": "entrevista-aprendizagem",
-        "name": "Entrev. Aprendizagem",
-        "full_name": "Entrevista de Aprendizagem",
-        "description": "Avaliação clínica estruturada em 5 blocos — contexto, reação, produção e síntese.",
-        "age_range": "Escolar",
-        "field_templates": [
-            {"key": "contexto", "label": "Contexto e materiais"},
-            {"key": "reacao_inicial", "label": "Reação inicial"},
-            {"key": "indicadores", "label": "Indicadores observados"},
-            {"key": "hipoteses", "label": "Hipóteses e encaminhamentos"},
         ],
     },
     {

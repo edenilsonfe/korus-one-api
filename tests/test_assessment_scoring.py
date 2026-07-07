@@ -24,7 +24,6 @@ from app.services.assessment_scoring import (
         ("spm", "spm"),
         ("fois", "manifest"),
         ("m-chat", "client"),
-        ("entrevista-aprendizagem", "client"),
     ],
 )
 def test_get_protocol_scoring_mode(protocol_id: str, expected_mode: str):
