@@ -5,6 +5,14 @@ from pydantic import Field
 from app.schemas.common import CamelModel
 
 
+class NormsStatusDto(CamelModel):
+    level: str
+    label: str
+    detail: str
+    show_standard_scores: bool = False
+    source: Optional[str] = None
+
+
 class InstrumentManifestResponse(CamelModel):
     package_id: str
     instrument_slug: str
@@ -23,6 +31,7 @@ class InstrumentManifestResponse(CamelModel):
     supports_multi_session: bool = False
     norms_region: Optional[str] = None
     has_norms: bool = False
+    norms_status: Optional[NormsStatusDto] = None
 
 
 class InstrumentContentItem(CamelModel):
@@ -60,6 +69,7 @@ class InstrumentScoreResponse(CamelModel):
     cutoffs: list[dict[str, Any]] = Field(default_factory=list)
     subtests: dict[str, Any] = Field(default_factory=dict)
     pending_modules: list[str] = Field(default_factory=list)
+    norms_status: Optional[NormsStatusDto] = None
 
 
 class ProtocolCapabilitiesResponse(CamelModel):

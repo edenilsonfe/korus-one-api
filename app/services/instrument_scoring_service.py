@@ -1,6 +1,7 @@
 from typing import Any
 
 from app.services.instrument_content_package import InstrumentContentPackage
+from app.services.norms_status import attach_norms_status
 
 MASTERY_ACQUIRED = 2
 
@@ -19,7 +20,8 @@ class InstrumentScoringService:
         handler = dispatch.get(engine)
         if not handler:
             raise ValueError(f"Unsupported scoring engine: {engine}")
-        return handler(package, answers)
+        scores = handler(package, answers)
+        return attach_norms_status(scores, package)
 
     @staticmethod
     def _require_answer(answers: dict[str, Any], item_id: str) -> int | float:

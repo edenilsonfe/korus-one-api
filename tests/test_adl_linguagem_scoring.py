@@ -78,6 +78,32 @@ def test_adl2_synthesize_with_norms():
     assert synth.get("global_standard_score") is not None
 
 
+def test_adl2_synthesize_qualitative_young_child():
+    _clear()
+    package = get_instrument_content_package("adl-linguagem")
+    lr_answers = {f"lr_{num:02d}": {"response": "pass"} for num in range(3, 10)}
+    le_answers = {f"le_{num:02d}": {"response": "pass"} for num in range(1, 15)}
+    subform_scores = [
+        score_adl2_module(
+            package, "linguagem-compreensiva", lr_answers, patient_age_months=24
+        ),
+        score_adl2_module(
+            package, "linguagem-expressiva", le_answers, patient_age_months=24
+        ),
+    ]
+    assert subform_scores[1].get("norm_status") == "qualitative"
+    assert subform_scores[1].get("developmental_age_band") == "24-29"
+
+    synth = synthesize_battery_scores(
+        package, subform_scores, patient_age_months=24
+    )
+    assert synth.get("interpretation_mode") == "qualitative"
+    assert synth.get("norms_applied") is not True
+    le = synth["domains"]["LE"]
+    assert le.get("developmental_age_band") == "24-29"
+    assert le.get("standard_score") is None
+
+
 def test_adl_linguagem_pdf_export():
     _clear()
     package = get_instrument_content_package("adl-linguagem")

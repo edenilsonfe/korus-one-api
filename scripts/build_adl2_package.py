@@ -115,8 +115,13 @@ def _build_global_sum_table(min_sum: int, max_sum: int, min_std: int, max_std: i
         rows.append({"sum": total, "standard": std})
     return rows
 
-STUB_RAW_TABLE = [(i, 50 + min(i, 50)) for i in range(0, 61)]
-STUB_AGE_BANDS = {"12-17", "18-23", "24-29", "30-35"}
+# Manual Examinador ADL 2 (2019), Cap. 2: 1a0m–2a11m = interpretação qualitativa por faixa
+# alcançada — Anexo 3 (EP) aplica-se a partir de 3 anos (36m+).
+QUALITATIVE_AGE_BANDS = {"12-17", "18-23", "24-29", "30-35"}
+QUALITATIVE_NOTE = (
+    "Manual ADL 2: resultados qualitativos (idade de desenvolvimento por faixa alcançada). "
+    "Sem conversão para escore padrão — Anexo 3 a partir de 3 anos."
+)
 
 
 def build_items(domain: str, catalog: dict[int, tuple[int, int, str]]) -> list[dict]:
@@ -144,11 +149,11 @@ def build_norms() -> dict:
     for domain_id in ("LR", "LE"):
         by_band: dict[str, dict] = {}
         for band_id, _, _ in AGE_BANDS:
-            if band_id in STUB_AGE_BANDS:
+            if band_id in QUALITATIVE_AGE_BANDS:
                 by_band[band_id] = {
-                    "status": "stub",
-                    "note": "Anexo 3 (12–35m) pendente — EP aproximado.",
-                    "raw_to_standard": _rows(STUB_RAW_TABLE),
+                    "status": "qualitative",
+                    "note": QUALITATIVE_NOTE,
+                    "raw_to_standard": [],
                 }
             elif band_id in NORM_TABLES and NORM_TABLES[band_id][domain_id]:
                 by_band[band_id] = {
@@ -156,16 +161,16 @@ def build_norms() -> dict:
                     "raw_to_standard": _rows(NORM_TABLES[band_id][domain_id]),
                 }
             else:
-                by_band[band_id] = {"status": "stub", "raw_to_standard": _rows(STUB_RAW_TABLE)}
+                by_band[band_id] = {"status": "stub", "raw_to_standard": []}
         domains[domain_id] = {"by_age_band": by_band}
 
     global_by_band: dict[str, dict] = {}
     for band_id, _, _ in AGE_BANDS:
-        if band_id in STUB_AGE_BANDS:
+        if band_id in QUALITATIVE_AGE_BANDS:
             global_by_band[band_id] = {
-                "status": "stub",
-                "note": "Tabela global LC+LE pendente para faixa 12–35m.",
-                "sum_to_standard": _build_global_sum_table(108, 230, 54, 115),
+                "status": "qualitative",
+                "note": QUALITATIVE_NOTE,
+                "sum_to_standard": [],
             }
         elif band_id in NORM_TABLES:
             global_by_band[band_id] = {
@@ -192,6 +197,8 @@ def build_norms() -> dict:
             {"level": "moderate", "min_standard": 70, "max_standard": 76, "label": "Distúrbio moderado"},
             {"level": "severe", "min_standard": 40, "max_standard": 69, "label": "Distúrbio severo"},
         ],
+        "qualitative_age_bands": sorted(QUALITATIVE_AGE_BANDS),
+        "qualitative_max_months": 35,
     }
 
 

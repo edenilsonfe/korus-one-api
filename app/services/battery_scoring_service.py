@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.services.instrument_content_package import InstrumentContentPackage
+from app.services.norms_status import attach_norms_status
 
 
 def _patient_age_months(birth_date) -> int | None:
@@ -279,6 +280,63 @@ def _resolve_age_band_id(norms: dict[str, Any], patient_age_months: int | None) 
     return None
 
 
+def _adl2_qualitative_max_months(package: InstrumentContentPackage) -> int:
+    norms = package.get_norms()
+    return int(norms.get("qualitative_max_months") or 35)
+
+
+def _adl2_band_is_qualitative(
+    package: InstrumentContentPackage, age_band_id: str | None
+) -> bool:
+    if not age_band_id:
+        return False
+    norms = package.get_norms()
+    qualitative = set(norms.get("qualitative_age_bands") or [])
+    if age_band_id in qualitative:
+        return True
+    band_data = (
+        norms.get("domains", {})
+        .get("LR", {})
+        .get("by_age_band", {})
+        .get(age_band_id, {})
+    )
+    return band_data.get("status") == "qualitative"
+
+
+def _infer_adl2_developmental_age_band(
+    items: list[dict[str, Any]],
+    answers: dict[str, Any],
+    admin_rules: dict[str, Any],
+    norms: dict[str, Any],
+) -> str | None:
+    scored_items, _ = _apply_basal_ceiling_window(items, answers, admin_rules)
+    max_end: int | None = None
+    for item in scored_items:
+        if _is_developmental_pass(_item_answer(answers, item["id"])):
+            end = int(item.get("age_end_months") or 0)
+            if end and (max_end is None or end > max_end):
+                max_end = end
+    if max_end is None:
+        return None
+    return _resolve_age_band_id(norms, max_end)
+
+
+ADL2_AGE_BAND_LABELS: dict[str, str] = {
+    "12-17": "1a0m a 1a5m",
+    "18-23": "1a6m a 1a11m",
+    "24-29": "2a0m a 2a5m",
+    "30-35": "2a6m a 2a11m",
+    "36-41": "3a0m a 3a5m",
+    "42-47": "3a6m a 3a11m",
+    "48-53": "4a0m a 4a5m",
+    "54-59": "4a6m a 4a11m",
+    "60-65": "5a0m a 5a5m",
+    "66-71": "5a6m a 5a11m",
+    "72-77": "6a0m a 6a5m",
+    "78-83": "6a6m a 6a11m",
+}
+
+
 def _classify_standard_score(
     standard: int, interpretations: list[dict[str, Any]]
 ) -> dict[str, str]:
@@ -391,6 +449,13 @@ def _apply_adl2_domain_norms(
     norms = package.get_norms()
     by_band = norms.get("domains", {}).get(domain_id, {}).get("by_age_band", {})
     band_data = by_band.get(age_band_id or "", {})
+    if band_data.get("status") == "qualitative":
+        return {
+            "raw_score": raw_score,
+            "age_band": age_band_id,
+            "norm_status": "qualitative",
+            "interpretation_mode": "developmental_age_band",
+        }
     table = band_data.get("raw_to_standard", [])
     standard = _lookup_norm_table(table, raw_score, "raw", "standard")
     out: dict[str, Any] = {
@@ -446,6 +511,15 @@ def score_adl2_module(
     raw = _compute_adl2_raw_score(items, answers, admin_rules)
     result["module_kind"] = "adl2"
     result["raw_score"] = raw
+    norms = package.get_norms()
+    chrono_band = _resolve_age_band_id(norms, patient_age_months)
+    if _adl2_band_is_qualitative(package, chrono_band):
+        dev_band = _infer_adl2_developmental_age_band(items, answers, admin_rules, norms)
+        if dev_band:
+            result["developmental_age_band"] = dev_band
+            result["developmental_age_label"] = ADL2_AGE_BAND_LABELS.get(dev_band, dev_band)
+        result["norm_status"] = "qualitative"
+        result["interpretation_mode"] = "developmental_age_band"
     result["summary"] = (
         f"{mod.get('title', module_slug)}: bruto {raw}, "
         f"{result.get('passes', 0)} acerto(s), {result.get('delay_count', 0)} atraso(s)"
@@ -1116,11 +1190,24 @@ def synthesize_battery_scores(
                 developmental_meta["global_level"] = cls["level"]
                 developmental_meta["global_classification_label"] = cls["label"]
         if domain_levels:
-            interpretation = (
-                f"ADL 2: EP global {developmental_meta.get('global_standard_score', '—')} "
-                f"({developmental_meta.get('global_classification_label', 'sem norma')}). "
-                f"{total_delays} atraso(s) por idade nos itens aplicados."
-            )
+            lr_entry = domains.get("LR") if isinstance(domains.get("LR"), dict) else {}
+            le_entry = domains.get("LE") if isinstance(domains.get("LE"), dict) else {}
+            qualitative_mode = _adl2_band_is_qualitative(package, age_band)
+            if qualitative_mode:
+                lr_label = lr_entry.get("developmental_age_label") or lr_entry.get("developmental_age_band")
+                le_label = le_entry.get("developmental_age_label") or le_entry.get("developmental_age_band")
+                interpretation = (
+                    f"ADL 2 (1a0m–2a11m): interpretação qualitativa conforme manual. "
+                    f"Faixa de desenvolvimento LC: {lr_label or '—'}; LE: {le_label or '—'}. "
+                    f"{total_delays} atraso(s) por idade nos itens aplicados."
+                )
+                developmental_meta["interpretation_mode"] = "qualitative"
+            else:
+                interpretation = (
+                    f"ADL 2: EP global {developmental_meta.get('global_standard_score', '—')} "
+                    f"({developmental_meta.get('global_classification_label', 'sem norma')}). "
+                    f"{total_delays} atraso(s) por idade nos itens aplicados."
+                )
         else:
             interpretation = default_interpretation
     elif engine == "developmental_screening":
@@ -1186,18 +1273,21 @@ def synthesize_battery_scores(
                 f"em {altered_domains} domínio(s). Correlacionar com avaliação clínica completa."
             )
 
-    return {
-        "engine": engine,
-        "domains": domains,
-        "subforms": subform_scores,
-        "total": overall,
-        "percentage": overall,
-        "critical_items": critical_items,
-        **observational_meta,
-        **developmental_meta,
-        "summary": f"{title} — desempenho geral {overall}%",
-        "interpretation": interpretation,
-    }
+    return attach_norms_status(
+        {
+            "engine": engine,
+            "domains": domains,
+            "subforms": subform_scores,
+            "total": overall,
+            "percentage": overall,
+            "critical_items": critical_items,
+            **observational_meta,
+            **developmental_meta,
+            "summary": f"{title} — desempenho geral {overall}%",
+            "interpretation": interpretation,
+        },
+        package,
+    )
 
 
 def battery_scores_to_fields(scores: dict[str, Any]) -> list[dict[str, str]]:

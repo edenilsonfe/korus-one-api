@@ -249,9 +249,14 @@ class InstrumentContentPackage:
             manifest["informant_forms"] = self.informant_forms
         manifest["requires_competency_ack"] = self.data.get("requires_competency_ack", False)
         manifest["supports_multi_session"] = self.data.get("supports_multi_session", False)
+        manifest["has_norms"] = bool(self.get_norms()) or bool(self.data.get("norms_file"))
+        from app.services.norms_status import summarize_norms_status
+
+        manifest["norms_status"] = summarize_norms_status(self)
         if self.norms_region:
             manifest["norms_region"] = self.norms_region
-            manifest["has_norms"] = bool(self.get_norms())
+        elif self.data.get("norms_file"):
+            manifest["norms_region"] = str(self.get_norms().get("region") or "BR")
         return manifest
 
     def public_items_payload(self, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
