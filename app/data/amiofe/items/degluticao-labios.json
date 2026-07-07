@@ -1,0 +1,9 @@
+[
+  {
+    "id": "deg_lab_comportamento_labios",
+    "domain": "degluticao",
+    "text": "Deglutição — comportamento dos lábios",
+    "max_points": 6,
+    "input_type": "scale"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fala_articulacao",
+    "domain": "fala",
+    "text": "Articulação",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "fala_diccao",
+    "domain": "fala",
+    "text": "Díção e inteligibilidade",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "fala_ritmo",
+    "domain": "fala",
+    "text": "Ritmo e fluência",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "fala_resistencia",
+    "domain": "fala",
+    "text": "Resistência em exercícios",
+    "max_points": 3,
+    "input_type": "scale"
+  }
+]

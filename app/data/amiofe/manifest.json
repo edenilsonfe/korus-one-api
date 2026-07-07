@@ -1,38 +1,102 @@
 {
-  "version": 2,
-  "package_id": "amiofe-br-v1",
+  "version": 3,
+  "package_id": "amiofe-e-br-v1",
   "instrument_slug": "amiofe",
-  "instrument_title": "AMIOFE — Avaliação de Motricidade Orofacial",
-  "license_ref": "PUBLIC-STRUCTURE",
-  "content_status": "draft-knowledge",
+  "instrument_title": "AMIOFE-E — Avaliação Miofuncional Orofacial com Escores Expandido",
+  "license_ref": "Felicio2010-REPRODUCTION-CITED",
+  "content_status": "official-structure",
   "norms_region": "BR",
+  "norms_file": "norms-br.json",
   "archetype": "observational",
   "supports_multi_session": true,
   "scale": [
-    { "value": 0, "label": "Inadequado / ausente" },
-    { "value": 1, "label": "Parcialmente adequado" },
-    { "value": 2, "label": "Adequado" },
-    { "value": 3, "label": "Plenamente adequado" }
+    {
+      "value": 4,
+      "label": "Normal (4)"
+    },
+    {
+      "value": 3,
+      "label": "Leve (3)"
+    },
+    {
+      "value": 2,
+      "label": "Moderado (2)"
+    },
+    {
+      "value": 1,
+      "label": "Severo (1)"
+    }
   ],
   "domains": [
-    { "id": "historia", "title": "História clínica" },
-    { "id": "face", "title": "Face" },
-    { "id": "labios", "title": "Lábios" },
-    { "id": "lingua", "title": "Língua" },
-    { "id": "mobilidade", "title": "Mobilidade orofacial" },
-    { "id": "respiracao", "title": "Respiração" },
-    { "id": "mastigacao", "title": "Mastigação" },
-    { "id": "degluticao", "title": "Deglutição" },
-    { "id": "fala", "title": "Fala" }
+    {
+      "id": "identificacao",
+      "title": "Identificação"
+    },
+    {
+      "id": "face",
+      "title": "Face"
+    },
+    {
+      "id": "bochechas",
+      "title": "Bochechas"
+    },
+    {
+      "id": "relacao_mandibular",
+      "title": "Relação mandibular"
+    },
+    {
+      "id": "labios",
+      "title": "Lábios"
+    },
+    {
+      "id": "mentual",
+      "title": "Músculo mentual"
+    },
+    {
+      "id": "lingua",
+      "title": "Língua"
+    },
+    {
+      "id": "palato",
+      "title": "Palato"
+    },
+    {
+      "id": "mobilidade",
+      "title": "Mobilidade"
+    },
+    {
+      "id": "respiracao",
+      "title": "Respiração"
+    },
+    {
+      "id": "degluticao",
+      "title": "Deglutição"
+    },
+    {
+      "id": "mastigacao",
+      "title": "Mastigação"
+    },
+    {
+      "id": "oclusao",
+      "title": "Oclusão"
+    },
+    {
+      "id": "historia",
+      "title": "História clínica"
+    },
+    {
+      "id": "fala",
+      "title": "Fala"
+    }
   ],
   "modules": {
-    "historia": {
-      "id": "historia",
-      "title": "História clínica",
-      "domain": "historia",
+    "identificacao": {
+      "id": "identificacao",
+      "title": "Identificação e queixa",
+      "domain": "identificacao",
       "module_kind": "qualitative",
-      "items_file": "items/historia.json",
-      "item_count": 3,
+      "items_file": "items/identificacao.json",
+      "item_count": 2,
       "filler": "clinician"
     },
     "face": {
@@ -41,8 +105,83 @@
       "domain": "face",
       "module_kind": "observational",
       "items_file": "items/face.json",
-      "item_count": 4,
-      "filler": "clinician"
+      "item_count": 3,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 12
+    },
+    "bochechas": {
+      "id": "bochechas",
+      "title": "Bochechas",
+      "domain": "bochechas",
+      "module_kind": "observational",
+      "items_file": "items/bochechas.json",
+      "item_count": 2,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 8
+    },
+    "relacao-mandibular": {
+      "id": "relacao-mandibular",
+      "title": "Relação mandíbula/maxila",
+      "domain": "relacao_mandibular",
+      "module_kind": "observational",
+      "items_file": "items/relacao-mandibular.json",
+      "item_count": 3,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 12
     },
     "labios": {
       "id": "labios",
@@ -50,8 +189,55 @@
       "domain": "labios",
       "module_kind": "observational",
       "items_file": "items/labios.json",
-      "item_count": 4,
-      "filler": "clinician"
+      "item_count": 3,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 12
+    },
+    "musculo-mentual": {
+      "id": "musculo-mentual",
+      "title": "Músculo mentual",
+      "domain": "mentual",
+      "module_kind": "observational",
+      "items_file": "items/musculo-mentual.json",
+      "item_count": 1,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 4
     },
     "lingua": {
       "id": "lingua",
@@ -59,17 +245,199 @@
       "domain": "lingua",
       "module_kind": "observational",
       "items_file": "items/lingua.json",
-      "item_count": 4,
-      "filler": "clinician"
+      "item_count": 2,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 8
     },
-    "mobilidade": {
-      "id": "mobilidade",
-      "title": "Mobilidade orofacial",
+    "palato": {
+      "id": "palato",
+      "title": "Palato duro",
+      "domain": "palato",
+      "module_kind": "observational",
+      "items_file": "items/palato.json",
+      "item_count": 2,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 8
+    },
+    "mobilidade-lingua": {
+      "id": "mobilidade-lingua",
+      "title": "Mobilidade — língua",
       "domain": "mobilidade",
       "module_kind": "observational",
-      "items_file": "items/mobilidade.json",
+      "items_file": "items/mobilidade-lingua.json",
+      "item_count": 6,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 6,
+          "label": "Normal (6)"
+        },
+        {
+          "value": 5,
+          "label": "Habilidade insuficiente (5)"
+        },
+        {
+          "value": 4,
+          "label": "Insuficiente com movimentos associados (4)"
+        },
+        {
+          "value": 3,
+          "label": "Insuficiente com tremor (3)"
+        },
+        {
+          "value": 2,
+          "label": "Insuficiente com associados e tremor (2)"
+        },
+        {
+          "value": 1,
+          "label": "Ausência de habilidade (1)"
+        }
+      ],
+      "max_sum": 36
+    },
+    "mobilidade-labial": {
+      "id": "mobilidade-labial",
+      "title": "Mobilidade — lábios",
+      "domain": "mobilidade",
+      "module_kind": "observational",
+      "items_file": "items/mobilidade-labial.json",
       "item_count": 4,
-      "filler": "clinician"
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 6,
+          "label": "Normal (6)"
+        },
+        {
+          "value": 5,
+          "label": "Habilidade insuficiente (5)"
+        },
+        {
+          "value": 4,
+          "label": "Insuficiente com movimentos associados (4)"
+        },
+        {
+          "value": 3,
+          "label": "Insuficiente com tremor (3)"
+        },
+        {
+          "value": 2,
+          "label": "Insuficiente com associados e tremor (2)"
+        },
+        {
+          "value": 1,
+          "label": "Ausência de habilidade (1)"
+        }
+      ],
+      "max_sum": 24
+    },
+    "mobilidade-mandibula": {
+      "id": "mobilidade-mandibula",
+      "title": "Mobilidade — mandíbula",
+      "domain": "mobilidade",
+      "module_kind": "observational",
+      "items_file": "items/mobilidade-mandibula.json",
+      "item_count": 5,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 6,
+          "label": "Normal (6)"
+        },
+        {
+          "value": 5,
+          "label": "Habilidade insuficiente (5)"
+        },
+        {
+          "value": 4,
+          "label": "Insuficiente com movimentos associados (4)"
+        },
+        {
+          "value": 3,
+          "label": "Insuficiente com tremor (3)"
+        },
+        {
+          "value": 2,
+          "label": "Insuficiente com associados e tremor (2)"
+        },
+        {
+          "value": 1,
+          "label": "Ausência de habilidade (1)"
+        }
+      ],
+      "max_sum": 30
+    },
+    "mobilidade-bochechas": {
+      "id": "mobilidade-bochechas",
+      "title": "Mobilidade — bochechas",
+      "domain": "mobilidade",
+      "module_kind": "observational",
+      "items_file": "items/mobilidade-bochechas.json",
+      "item_count": 4,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 6,
+          "label": "Normal (6)"
+        },
+        {
+          "value": 5,
+          "label": "Habilidade insuficiente (5)"
+        },
+        {
+          "value": 4,
+          "label": "Insuficiente com movimentos associados (4)"
+        },
+        {
+          "value": 3,
+          "label": "Insuficiente com tremor (3)"
+        },
+        {
+          "value": 2,
+          "label": "Insuficiente com associados e tremor (2)"
+        },
+        {
+          "value": 1,
+          "label": "Ausência de habilidade (1)"
+        }
+      ],
+      "max_sum": 24
     },
     "respiracao": {
       "id": "respiracao",
@@ -77,59 +445,617 @@
       "domain": "respiracao",
       "module_kind": "observational",
       "items_file": "items/respiracao.json",
+      "item_count": 1,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 4
+    },
+    "degluticao-labios": {
+      "id": "degluticao-labios",
+      "title": "Deglutição — lábios",
+      "domain": "degluticao",
+      "module_kind": "observational",
+      "items_file": "items/degluticao-labios.json",
+      "item_count": 1,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 6,
+          "label": "Vedam sem esforço aparente (6)"
+        },
+        {
+          "value": 4,
+          "label": "Vedam com contração/interposição leve (4)"
+        },
+        {
+          "value": 3,
+          "label": "Moderada (3)"
+        },
+        {
+          "value": 2,
+          "label": "Severa (2)"
+        },
+        {
+          "value": 1,
+          "label": "Não vedam a cavidade oral (1)"
+        }
+      ],
+      "max_sum": 6
+    },
+    "degluticao-lingua": {
+      "id": "degluticao-lingua",
+      "title": "Deglutição — língua",
+      "domain": "degluticao",
+      "module_kind": "observational",
+      "items_file": "items/degluticao-lingua.json",
+      "item_count": 1,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 4
+    },
+    "degluticao-sinais": {
+      "id": "degluticao-sinais",
+      "title": "Deglutição — sinais associados",
+      "domain": "degluticao",
+      "module_kind": "observational",
+      "items_file": "items/degluticao-sinais.json",
+      "item_count": 6,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 2,
+          "label": "Ausente (2)"
+        },
+        {
+          "value": 1,
+          "label": "Presente (1)"
+        }
+      ],
+      "max_sum": 12
+    },
+    "degluticao-eficiencia": {
+      "id": "degluticao-eficiencia",
+      "title": "Deglutição — eficiência",
+      "domain": "degluticao",
+      "module_kind": "observational",
+      "items_file": "items/degluticao-eficiencia.json",
+      "item_count": 2,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 3,
+          "label": "Não repete deglutição (3)"
+        },
+        {
+          "value": 2,
+          "label": "Uma repetição (2)"
+        },
+        {
+          "value": 1,
+          "label": "Deglutições múltiplas (1)"
+        }
+      ],
+      "max_sum": 6
+    },
+    "mastigacao-padrao": {
+      "id": "mastigacao-padrao",
+      "title": "Mastigação — padrão",
+      "domain": "mastigacao",
+      "module_kind": "observational",
+      "items_file": "items/mastigacao-padrao.json",
+      "item_count": 1,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 10,
+          "label": "Bilateral alternada 50/50–40/60 (10)"
+        },
+        {
+          "value": 8,
+          "label": "Simultânea vertical (8)"
+        },
+        {
+          "value": 6,
+          "label": "Unilateral preferencial grau 1 (6)"
+        },
+        {
+          "value": 4,
+          "label": "Unilateral preferencial grau 2 (4)"
+        },
+        {
+          "value": 2,
+          "label": "Unilateral crônica (2)"
+        },
+        {
+          "value": 1,
+          "label": "Não tritura / anterior (1–2)"
+        }
+      ],
+      "max_sum": 10
+    },
+    "mastigacao-sinais": {
+      "id": "mastigacao-sinais",
+      "title": "Mastigação — sinais associados",
+      "domain": "mastigacao",
+      "module_kind": "observational",
+      "items_file": "items/mastigacao-sinais.json",
       "item_count": 3,
-      "filler": "clinician"
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 2,
+          "label": "Ausente (2)"
+        },
+        {
+          "value": 1,
+          "label": "Presente (1)"
+        }
+      ],
+      "max_sum": 6
+    },
+    "mastigacao-mordida": {
+      "id": "mastigacao-mordida",
+      "title": "Mastigação — mordida",
+      "domain": "mastigacao",
+      "module_kind": "observational",
+      "items_file": "items/mastigacao-mordida.json",
+      "item_count": 1,
+      "filler": "clinician",
+      "scale": [
+        {
+          "value": 4,
+          "label": "Normal (4)"
+        },
+        {
+          "value": 3,
+          "label": "Leve (3)"
+        },
+        {
+          "value": 2,
+          "label": "Moderado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Severo (1)"
+        }
+      ],
+      "max_sum": 4
+    },
+    "analise-oclusal": {
+      "id": "analise-oclusal",
+      "title": "Análise da oclusão",
+      "domain": "oclusao",
+      "module_kind": "qualitative",
+      "items_file": "items/analise-oclusal.json",
+      "item_count": 6,
+      "filler": "clinician",
+      "required": false
+    }
+  },
+  "legacy_modules": {
+    "historia": {
+      "id": "historia",
+      "title": "História clínica (legado)",
+      "domain": "historia",
+      "module_kind": "qualitative",
+      "items_file": "items/legacy/historia.json",
+      "item_count": 3,
+      "filler": "clinician",
+      "required": false,
+      "deprecated": true
+    },
+    "mobilidade": {
+      "id": "mobilidade",
+      "title": "Mobilidade orofacial (legado)",
+      "domain": "mobilidade",
+      "module_kind": "observational",
+      "items_file": "items/legacy/mobilidade.json",
+      "item_count": 4,
+      "filler": "clinician",
+      "required": false,
+      "deprecated": true,
+      "scale": [
+        {
+          "value": 3,
+          "label": "Plenamente adequado (3)"
+        },
+        {
+          "value": 2,
+          "label": "Adequado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Parcialmente adequado (1)"
+        },
+        {
+          "value": 0,
+          "label": "Inadequado / ausente (0)"
+        }
+      ],
+      "max_sum": 12
     },
     "mastigacao": {
       "id": "mastigacao",
-      "title": "Mastigação",
+      "title": "Mastigação (legado)",
       "domain": "mastigacao",
       "module_kind": "observational",
-      "items_file": "items/mastigacao.json",
+      "items_file": "items/legacy/mastigacao.json",
       "item_count": 4,
-      "filler": "clinician"
+      "filler": "clinician",
+      "required": false,
+      "deprecated": true,
+      "scale": [
+        {
+          "value": 3,
+          "label": "Plenamente adequado (3)"
+        },
+        {
+          "value": 2,
+          "label": "Adequado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Parcialmente adequado (1)"
+        },
+        {
+          "value": 0,
+          "label": "Inadequado / ausente (0)"
+        }
+      ],
+      "max_sum": 12
     },
     "degluticao": {
       "id": "degluticao",
-      "title": "Deglutição",
+      "title": "Deglutição (legado)",
       "domain": "degluticao",
       "module_kind": "observational",
-      "items_file": "items/degluticao.json",
+      "items_file": "items/legacy/degluticao.json",
       "item_count": 4,
-      "filler": "clinician"
+      "filler": "clinician",
+      "required": false,
+      "deprecated": true,
+      "scale": [
+        {
+          "value": 3,
+          "label": "Plenamente adequado (3)"
+        },
+        {
+          "value": 2,
+          "label": "Adequado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Parcialmente adequado (1)"
+        },
+        {
+          "value": 0,
+          "label": "Inadequado / ausente (0)"
+        }
+      ],
+      "max_sum": 12
     },
     "fala": {
       "id": "fala",
-      "title": "Fala",
+      "title": "Fala (legado)",
       "domain": "fala",
       "module_kind": "observational",
-      "items_file": "items/fala.json",
+      "items_file": "items/legacy/fala.json",
       "item_count": 4,
-      "filler": "clinician"
+      "filler": "clinician",
+      "required": false,
+      "deprecated": true,
+      "scale": [
+        {
+          "value": 3,
+          "label": "Plenamente adequado (3)"
+        },
+        {
+          "value": 2,
+          "label": "Adequado (2)"
+        },
+        {
+          "value": 1,
+          "label": "Parcialmente adequado (1)"
+        },
+        {
+          "value": 0,
+          "label": "Inadequado / ausente (0)"
+        }
+      ],
+      "max_sum": 12
     }
   },
   "subtests": [
-    { "id": "historia", "title": "História clínica", "item_count": 3 },
-    { "id": "face", "title": "Face", "item_count": 4 },
-    { "id": "labios", "title": "Lábios", "item_count": 4 },
-    { "id": "lingua", "title": "Língua", "item_count": 4 },
-    { "id": "mobilidade", "title": "Mobilidade orofacial", "item_count": 4 },
-    { "id": "respiracao", "title": "Respiração", "item_count": 3 },
-    { "id": "mastigacao", "title": "Mastigação", "item_count": 4 },
-    { "id": "degluticao", "title": "Deglutição", "item_count": 4 },
-    { "id": "fala", "title": "Fala", "item_count": 4 }
+    {
+      "id": "identificacao",
+      "title": "Identificação e queixa",
+      "item_count": 2
+    },
+    {
+      "id": "face",
+      "title": "Face",
+      "item_count": 3
+    },
+    {
+      "id": "bochechas",
+      "title": "Bochechas",
+      "item_count": 2
+    },
+    {
+      "id": "relacao-mandibular",
+      "title": "Relação mandíbula/maxila",
+      "item_count": 3
+    },
+    {
+      "id": "labios",
+      "title": "Lábios",
+      "item_count": 3
+    },
+    {
+      "id": "musculo-mentual",
+      "title": "Músculo mentual",
+      "item_count": 1
+    },
+    {
+      "id": "lingua",
+      "title": "Língua",
+      "item_count": 2
+    },
+    {
+      "id": "palato",
+      "title": "Palato duro",
+      "item_count": 2
+    },
+    {
+      "id": "mobilidade-lingua",
+      "title": "Mobilidade — língua",
+      "item_count": 6
+    },
+    {
+      "id": "mobilidade-labial",
+      "title": "Mobilidade — lábios",
+      "item_count": 4
+    },
+    {
+      "id": "mobilidade-mandibula",
+      "title": "Mobilidade — mandíbula",
+      "item_count": 5
+    },
+    {
+      "id": "mobilidade-bochechas",
+      "title": "Mobilidade — bochechas",
+      "item_count": 4
+    },
+    {
+      "id": "respiracao",
+      "title": "Respiração",
+      "item_count": 1
+    },
+    {
+      "id": "degluticao-labios",
+      "title": "Deglutição — lábios",
+      "item_count": 1
+    },
+    {
+      "id": "degluticao-lingua",
+      "title": "Deglutição — língua",
+      "item_count": 1
+    },
+    {
+      "id": "degluticao-sinais",
+      "title": "Deglutição — sinais associados",
+      "item_count": 6
+    },
+    {
+      "id": "degluticao-eficiencia",
+      "title": "Deglutição — eficiência",
+      "item_count": 2
+    },
+    {
+      "id": "mastigacao-padrao",
+      "title": "Mastigação — padrão",
+      "item_count": 1
+    },
+    {
+      "id": "mastigacao-sinais",
+      "title": "Mastigação — sinais associados",
+      "item_count": 3
+    },
+    {
+      "id": "mastigacao-mordida",
+      "title": "Mastigação — mordida",
+      "item_count": 1
+    },
+    {
+      "id": "analise-oclusal",
+      "title": "Análise da oclusão",
+      "item_count": 6,
+      "required": false
+    }
   ],
   "scoring": {
     "engine": "observational_domains",
+    "scale_direction": "higher_is_better",
     "interpretations": [
-      { "min": 0, "max": 30, "level": "altered", "label": "Função orofacial inadequada" },
-      { "min": 31, "max": 60, "level": "attention", "label": "Função parcialmente adequada" },
-      { "min": 61, "max": 100, "level": "expected", "label": "Função orofacial adequada" }
-    ]
+      {
+        "min": 0,
+        "max": 59,
+        "level": "altered",
+        "label": "Função orofacial inadequada"
+      },
+      {
+        "min": 60,
+        "max": 79,
+        "level": "attention",
+        "label": "Função parcialmente adequada"
+      },
+      {
+        "min": 80,
+        "max": 100,
+        "level": "expected",
+        "label": "Função orofacial adequada"
+      }
+    ],
+    "total_score": {
+      "reference_max": 103,
+      "normalize": true,
+      "dmo_cutoff": 89,
+      "dmo_cutoff_child": 89,
+      "child_age_months_max": 144,
+      "reference_mean_adult": 95.0,
+      "reference_sd_adult": 4.0,
+      "reference_mean_child": 92.0,
+      "reference_sd_child": 3.0,
+      "categories": [
+        {
+          "id": "aparencia",
+          "title": "Aparência e postura",
+          "modules": [
+            "face",
+            "bochechas",
+            "relacao-mandibular",
+            "labios",
+            "musculo-mentual",
+            "lingua",
+            "palato"
+          ],
+          "max_sum": 64
+        },
+        {
+          "id": "mobilidade",
+          "title": "Mobilidade",
+          "modules": [
+            "mobilidade-lingua",
+            "mobilidade-labial",
+            "mobilidade-mandibula",
+            "mobilidade-bochechas"
+          ],
+          "max_sum": 114
+        },
+        {
+          "id": "funcoes",
+          "title": "Funções",
+          "modules": [
+            "respiracao",
+            "degluticao-labios",
+            "degluticao-lingua",
+            "degluticao-sinais",
+            "degluticao-eficiencia",
+            "mastigacao-padrao",
+            "mastigacao-sinais",
+            "mastigacao-mordida"
+          ],
+          "max_sum": 52
+        }
+      ],
+      "classification_adult": [
+        {
+          "min": 91,
+          "max": 103,
+          "level": "expected",
+          "label": "Normal — sem DMO"
+        },
+        {
+          "min": 87,
+          "max": 90,
+          "level": "attention",
+          "label": "DMO muito leve"
+        },
+        {
+          "min": 83,
+          "max": 86,
+          "level": "mild",
+          "label": "DMO leve"
+        },
+        {
+          "min": 79,
+          "max": 82,
+          "level": "moderate",
+          "label": "DMO moderado"
+        },
+        {
+          "min": 0,
+          "max": 78,
+          "level": "altered",
+          "label": "DMO severo"
+        }
+      ],
+      "classification_child": [
+        {
+          "min": 89,
+          "max": 103,
+          "level": "expected",
+          "label": "Normal — sem DMO"
+        },
+        {
+          "min": 86,
+          "max": 88,
+          "level": "attention",
+          "label": "DMO muito leve"
+        },
+        {
+          "min": 83,
+          "max": 85,
+          "level": "mild",
+          "label": "DMO leve"
+        },
+        {
+          "min": 80,
+          "max": 82,
+          "level": "moderate",
+          "label": "DMO moderado"
+        },
+        {
+          "min": 0,
+          "max": 79,
+          "level": "altered",
+          "label": "DMO severo"
+        }
+      ]
+    }
   },
   "report": {
-    "template_id": "amiofe-br-v1",
-    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
+    "template_id": "amiofe-e-br-v1",
+    "sections": [
+      "identificacao",
+      "resultados",
+      "interpretacao",
+      "recomendacoes"
+    ]
   },
   "informant_forms": []
 }

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "mast_mord_mordida",
+    "domain": "mastigacao",
+    "text": "Mastigação — padrão de mordida (incisivos a molares)",
+    "max_points": 4,
+    "input_type": "scale"
+  }
+]

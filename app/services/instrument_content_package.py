@@ -93,9 +93,20 @@ class InstrumentContentPackage:
         return []
 
     def get_module_config(self, module_slug: str) -> dict[str, Any]:
-        if module_slug not in self.modules:
-            raise KeyError(f"Module '{module_slug}' not found in package '{self.slug}'")
-        return self.modules[module_slug]
+        if module_slug in self.modules:
+            return self.modules[module_slug]
+        legacy = self.data.get("legacy_modules") or {}
+        if module_slug in legacy:
+            entry = dict(legacy[module_slug])
+            entry.setdefault("id", module_slug)
+            entry.setdefault("deprecated", True)
+            return entry
+        raise KeyError(f"Module '{module_slug}' not found in package '{self.slug}'")
+
+    def is_legacy_module(self, module_slug: str) -> bool:
+        if module_slug in self.modules:
+            return bool(self.modules[module_slug].get("deprecated"))
+        return module_slug in (self.data.get("legacy_modules") or {})
 
     def get_module_items(self, module_slug: str) -> list[dict[str, Any]]:
         mod = self.get_module_config(module_slug)

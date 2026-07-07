@@ -1,8 +1,16 @@
 {
-  "version": 1,
+  "version": 2,
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
+  "instrument": "AMIOFE-E",
+  "status": "reference",
+  "note": "ETAMIOFE normalizado para escala 103 (Felício et al. 2010; Folha 2022). Graus por M±n·DP.",
+  "reference_max": 103,
+  "dmo_cutoff_adult": 89,
+  "dmo_cutoff_child": 89,
+  "reference_mean_adult": 95.0,
+  "reference_sd_adult": 4.0,
+  "reference_mean_child": 92.0,
+  "reference_sd_child": 3.0,
   "domains": {},
   "age_bands": []
 }

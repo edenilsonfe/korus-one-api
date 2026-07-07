@@ -1,0 +1,30 @@
+[
+  {
+    "id": "deg_reflexo",
+    "domain": "degluticao",
+    "text": "Reflexo de deglutição",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_fases",
+    "domain": "degluticao",
+    "text": "Fases da deglutição",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_escape",
+    "domain": "degluticao",
+    "text": "Escape oral/nasal",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_tosse",
+    "domain": "degluticao",
+    "text": "Tosse pós-deglutição",
+    "max_points": 3,
+    "input_type": "scale"
+  }
+]

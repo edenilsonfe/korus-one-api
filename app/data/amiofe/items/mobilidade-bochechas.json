@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mb_inflar",
+    "domain": "mobilidade",
+    "text": "Mobilidade das bochechas — inflar",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mb_sugar",
+    "domain": "mobilidade",
+    "text": "Mobilidade das bochechas — sugar",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mb_retrair",
+    "domain": "mobilidade",
+    "text": "Mobilidade das bochechas — retrair",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mb_lateralizar_ar",
+    "domain": "mobilidade",
+    "text": "Mobilidade das bochechas — lateralizar o ar (D/E)",
+    "max_points": 6,
+    "input_type": "scale"
+  }
+]

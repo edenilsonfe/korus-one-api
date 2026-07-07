@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mlb_protrusao",
+    "domain": "mobilidade",
+    "text": "Mobilidade labial — protrusão",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mlb_retracao",
+    "domain": "mobilidade",
+    "text": "Mobilidade labial — retração",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mlb_lateral_d",
+    "domain": "mobilidade",
+    "text": "Mobilidade labial — lateral direita",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mlb_lateral_e",
+    "domain": "mobilidade",
+    "text": "Mobilidade labial — lateral esquerda",
+    "max_points": 6,
+    "input_type": "scale"
+  }
+]

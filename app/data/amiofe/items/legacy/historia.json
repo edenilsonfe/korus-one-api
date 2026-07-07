@@ -2,19 +2,19 @@
   {
     "id": "hist_anamnese",
     "domain": "historia",
-    "text": "Queixa principal e história da disfagia/motricidade orofacial.",
+    "text": "Anamnese",
     "input_type": "text"
   },
   {
     "id": "hist_antecedentes",
     "domain": "historia",
-    "text": "Antecedentes neurológicos, cirúrgicos ou respiratórios relevantes.",
+    "text": "Antecedentes",
     "input_type": "text"
   },
   {
     "id": "hist_medicamentos",
     "domain": "historia",
-    "text": "Medicações em uso e impacto na função orofacial.",
+    "text": "Medicamentos",
     "input_type": "text"
   }
 ]

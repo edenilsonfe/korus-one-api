@@ -1,0 +1,9 @@
+[
+  {
+    "id": "deg_ling_comportamento_lingua",
+    "domain": "degluticao",
+    "text": "Deglutição — comportamento da língua",
+    "max_points": 4,
+    "input_type": "scale"
+  }
+]

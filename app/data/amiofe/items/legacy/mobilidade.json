@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mob_abertura",
+    "domain": "mobilidade",
+    "text": "Abertura mandibular",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "mob_fechamento",
+    "domain": "mobilidade",
+    "text": "Fechamento mandibular",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "mob_rapidos",
+    "domain": "mobilidade",
+    "text": "Movimentos rápidos",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "mob_resistencia",
+    "domain": "mobilidade",
+    "text": "Resistência à movimentação",
+    "max_points": 3,
+    "input_type": "scale"
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "ment_contracao",
+    "domain": "mentual",
+    "text": "Contração do músculo mentual (lábios ocluídos)",
+    "max_points": 4,
+    "input_type": "scale"
+  }
+]

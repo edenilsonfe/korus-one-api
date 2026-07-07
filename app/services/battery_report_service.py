@@ -40,6 +40,27 @@ def export_battery_pdf(battery: BatteryResponse, package: InstrumentContentPacka
 
     scores = battery.scores or {}
 
+    if scores.get("etamiofe_score") is not None:
+        story.append(Paragraph("Escore total AMIOFE-E (ETAMIOFE)", styles["Heading2"]))
+        story.append(
+            Paragraph(
+                f"ETAMIOFE: {scores.get('etamiofe_score')}/{scores.get('etamiofe_max', 103)} — "
+                f"{scores.get('severity_label', '—')}",
+                styles["Normal"],
+            )
+        )
+        dmo = "Presente" if scores.get("dmo_present") else "Ausente"
+        story.append(Paragraph(f"DMO: {dmo} (corte ≥ {scores.get('dmo_cutoff', 89)})", styles["Normal"]))
+        for cat_id, cat in (scores.get("categories") or {}).items():
+            if isinstance(cat, dict):
+                story.append(
+                    Paragraph(
+                        f"• {cat.get('title', cat_id)}: {cat.get('points', 0)}/{cat.get('max_sum', 0)}",
+                        styles["Normal"],
+                    )
+                )
+        story.append(Spacer(1, 12))
+
     if package.scoring.get("engine") in ("developmental_screening", "adl2"):
         story.append(Paragraph("Condições da aplicação", styles["Heading2"]))
         setup = scores.get("setup") or {}

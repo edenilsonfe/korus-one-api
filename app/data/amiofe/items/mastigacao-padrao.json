@@ -1,0 +1,9 @@
+[
+  {
+    "id": "mast_pad_padrao",
+    "domain": "mastigacao",
+    "text": "Padrão de mastigação (bilateral/alternada/unilateral/anterior)",
+    "max_points": 10,
+    "input_type": "scale"
+  }
+]

@@ -129,7 +129,7 @@ class BatteryService:
             title=mod.get("title", subform.subform_slug),
             module_kind=mod.get("module_kind", "generic"),
             domain=mod.get("domain"),
-            required=subform.required,
+            required=subform.required and not package.is_legacy_module(subform.subform_slug),
             status=subform.status,
             items_answered=subform.items_answered,
             items_total=subform.items_total,
@@ -364,7 +364,9 @@ class BatteryService:
         pending_required = [
             sf.subform_slug
             for sf in record.battery_subforms
-            if sf.required and sf.status != BATTERY_SUBFORM_STATUS_COMPLETED
+            if sf.required
+            and sf.status != BATTERY_SUBFORM_STATUS_COMPLETED
+            and not package.is_legacy_module(sf.subform_slug)
         ]
         if pending_required:
             raise HTTPException(

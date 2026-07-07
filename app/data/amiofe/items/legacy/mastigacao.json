@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mast_padrao",
+    "domain": "mastigacao",
+    "text": "Padrão de mastigação",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "mast_residuo",
+    "domain": "mastigacao",
+    "text": "Resíduo oral",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "mast_tempo",
+    "domain": "mastigacao",
+    "text": "Tempo de mastigação",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "mast_forca",
+    "domain": "mastigacao",
+    "text": "Força mastigatória",
+    "max_points": 3,
+    "input_type": "scale"
+  }
+]

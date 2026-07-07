@@ -1,0 +1,14 @@
+[
+  {
+    "id": "id_queixa",
+    "domain": "identificacao",
+    "text": "Queixa principal",
+    "input_type": "text"
+  },
+  {
+    "id": "id_inicio_problema",
+    "domain": "identificacao",
+    "text": "Início do problema",
+    "input_type": "text"
+  }
+]

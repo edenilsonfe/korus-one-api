@@ -1,0 +1,16 @@
+[
+  {
+    "id": "bochechas_volume",
+    "domain": "bochechas",
+    "text": "Volume das bochechas",
+    "max_points": 4,
+    "input_type": "scale"
+  },
+  {
+    "id": "bochechas_tensao_configuracao",
+    "domain": "bochechas",
+    "text": "Tensão/configuração das bochechas",
+    "max_points": 4,
+    "input_type": "scale"
+  }
+]

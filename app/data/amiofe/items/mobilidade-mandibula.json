@@ -1,0 +1,37 @@
+[
+  {
+    "id": "mm_abaixar",
+    "domain": "mobilidade",
+    "text": "Mobilidade mandibular — abaixar",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mm_elevar",
+    "domain": "mobilidade",
+    "text": "Mobilidade mandibular — elevar",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mm_lateral_d",
+    "domain": "mobilidade",
+    "text": "Mobilidade mandibular — lateral direita",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mm_lateral_e",
+    "domain": "mobilidade",
+    "text": "Mobilidade mandibular — lateral esquerda",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "mm_protruir",
+    "domain": "mobilidade",
+    "text": "Mobilidade mandibular — protruir",
+    "max_points": 6,
+    "input_type": "scale"
+  }
+]

@@ -1,17 +1,9 @@
 [
   {
-    "id": "resp_padrao",
+    "id": "resp_modo",
     "domain": "respiracao",
-    "text": "Padrão respiratório (nasal/oral)."
-  },
-  {
-    "id": "resp_coordenacao",
-    "domain": "respiracao",
-    "text": "Coordenação respiração-deglutição."
-  },
-  {
-    "id": "resp_apneia",
-    "domain": "respiracao",
-    "text": "Apneia ou pausa respiratória durante deglutição."
+    "text": "Modo respiratório",
+    "max_points": 4,
+    "input_type": "scale"
   }
 ]

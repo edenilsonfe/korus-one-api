@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ocl_angle_direito",
+    "domain": "oclusao",
+    "text": "Classificação de Angle — lado direito",
+    "input_type": "text"
+  },
+  {
+    "id": "ocl_angle_esquerdo",
+    "domain": "oclusao",
+    "text": "Classificação de Angle — lado esquerdo",
+    "input_type": "text"
+  },
+  {
+    "id": "ocl_linha_media",
+    "domain": "oclusao",
+    "text": "Linha média dentária",
+    "input_type": "text"
+  },
+  {
+    "id": "ocl_movimentos_funcionais",
+    "domain": "oclusao",
+    "text": "Movimentos mandibulares funcionais (medidas e desvios)",
+    "input_type": "text"
+  },
+  {
+    "id": "ocl_ruido_atm",
+    "domain": "oclusao",
+    "text": "Ruído ATM",
+    "input_type": "text"
+  },
+  {
+    "id": "ocl_tercos_face",
+    "domain": "oclusao",
+    "text": "Terços da face (cm)",
+    "input_type": "text"
+  }
+]

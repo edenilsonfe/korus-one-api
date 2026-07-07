@@ -1,0 +1,23 @@
+[
+  {
+    "id": "rm_relacao_vertical",
+    "domain": "relacao_mandibular",
+    "text": "Relação vertical mandíbula/maxila (EFL)",
+    "max_points": 4,
+    "input_type": "scale"
+  },
+  {
+    "id": "rm_relacao_anteroposterior",
+    "domain": "relacao_mandibular",
+    "text": "Relação antero-posterior",
+    "max_points": 4,
+    "input_type": "scale"
+  },
+  {
+    "id": "rm_linha_media",
+    "domain": "relacao_mandibular",
+    "text": "Relação com a linha média",
+    "max_points": 4,
+    "input_type": "scale"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "deg_eff_bolo_solido",
+    "domain": "degluticao",
+    "text": "Deglutição — eficiência bolo sólido",
+    "max_points": 3,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_eff_bolo_liquido",
+    "domain": "degluticao",
+    "text": "Deglutição — eficiência bolo líquido",
+    "max_points": 3,
+    "input_type": "scale"
+  }
+]

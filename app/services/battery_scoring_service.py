@@ -293,6 +293,95 @@ def _classify_standard_score(
     return {"level": "unknown", "label": ""}
 
 
+def _classify_raw_score(raw: int, interpretations: list[dict[str, Any]]) -> dict[str, str]:
+    for band in interpretations:
+        min_val = int(band.get("min", 0))
+        max_val = int(band.get("max", 999))
+        if min_val <= raw <= max_val:
+            return {
+                "level": str(band.get("level", "unknown")),
+                "label": str(band.get("label", "")),
+            }
+    return {"level": "unknown", "label": ""}
+
+
+def _synthesize_amiofe_totals(
+    package: InstrumentContentPackage,
+    subform_scores: list[dict[str, Any]],
+    *,
+    patient_age_months: int | None = None,
+) -> dict[str, Any]:
+    total_cfg = package.scoring.get("total_score") or {}
+    ref_max = int(total_cfg.get("reference_max") or 103)
+    cutoff = int(total_cfg.get("dmo_cutoff") or 89)
+    child_months_max = int(total_cfg.get("child_age_months_max") or 144)
+    if patient_age_months is not None and patient_age_months <= child_months_max:
+        cutoff = int(total_cfg.get("dmo_cutoff_child") or cutoff)
+        severity_bands = total_cfg.get("classification_child") or []
+    else:
+        severity_bands = total_cfg.get("classification_adult") or []
+
+    raw_points = 0
+    raw_possible = 0
+    module_scores: list[dict[str, Any]] = []
+    for score in subform_scores:
+        if score.get("module_kind") != "observational":
+            continue
+        mod = package.get_module_config(score["module_slug"])
+        if mod.get("deprecated") or package.is_legacy_module(score["module_slug"]):
+            continue
+        points = int(score.get("points") or score.get("sum") or 0)
+        possible = int(score.get("possible_points") or score.get("max_sum") or 0)
+        if not possible:
+            possible = int(mod.get("max_sum") or 0)
+        raw_points += points
+        raw_possible += possible
+        module_scores.append(
+            {
+                "module_slug": score["module_slug"],
+                "title": score.get("title", score["module_slug"]),
+                "points": points,
+                "max_sum": possible,
+            }
+        )
+
+    etamiofe = round(raw_points / raw_possible * ref_max) if raw_possible else None
+    pct = round(raw_points / raw_possible * 100, 1) if raw_possible else 0.0
+
+    categories: dict[str, Any] = {}
+    for cat in total_cfg.get("categories") or []:
+        cat_id = str(cat["id"])
+        cat_modules = set(cat.get("modules") or [])
+        cat_points = sum(m["points"] for m in module_scores if m["module_slug"] in cat_modules)
+        cat_max = int(cat.get("max_sum") or 0)
+        if not cat_max:
+            cat_max = sum(m["max_sum"] for m in module_scores if m["module_slug"] in cat_modules)
+        cat_pct = round(cat_points / cat_max * 100, 1) if cat_max else 0.0
+        categories[cat_id] = {
+            "title": cat.get("title", cat_id),
+            "points": cat_points,
+            "max_sum": cat_max,
+            "percentage": cat_pct,
+        }
+
+    severity = _classify_raw_score(etamiofe or 0, severity_bands) if etamiofe is not None else {}
+    dmo_present = etamiofe is not None and etamiofe < cutoff
+
+    return {
+        "raw_total_score": raw_points,
+        "raw_max_total": raw_possible,
+        "etamiofe_score": etamiofe,
+        "etamiofe_max": ref_max,
+        "etamiofe_percentage": round(etamiofe / ref_max * 100, 1) if etamiofe is not None else pct,
+        "dmo_cutoff": cutoff,
+        "dmo_present": dmo_present,
+        "severity_level": severity.get("level", "unknown"),
+        "severity_label": severity.get("label", ""),
+        "categories": categories,
+        "modules_scored": len(module_scores),
+    }
+
+
 def _apply_adl2_domain_norms(
     package: InstrumentContentPackage,
     domain_id: str,
@@ -940,6 +1029,19 @@ def synthesize_battery_scores(
             "not_observed_count": not_observed_total,
             "unanswered_count": unanswered_total,
         }
+        if package.scoring.get("total_score"):
+            amiofe_meta = _synthesize_amiofe_totals(
+                package, subform_scores, patient_age_months=patient_age_months
+            )
+            observational_meta.update(amiofe_meta)
+            if amiofe_meta.get("etamiofe_score") is not None:
+                interpretation = (
+                    f"ETAMIOFE {amiofe_meta['etamiofe_score']}/{amiofe_meta['etamiofe_max']} — "
+                    f"{amiofe_meta.get('severity_label', '—')}. "
+                    f"{'DMO presente' if amiofe_meta.get('dmo_present') else 'Sem DMO'} "
+                    f"(corte ≥ {amiofe_meta.get('dmo_cutoff')})."
+                )
+                overall = float(amiofe_meta.get("etamiofe_percentage") or overall)
 
     developmental_meta: dict[str, Any] = {}
     if engine == "adl2":

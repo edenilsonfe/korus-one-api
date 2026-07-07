@@ -1,0 +1,23 @@
+[
+  {
+    "id": "mast_sin_mov_cabeca_corpo",
+    "domain": "mastigacao",
+    "text": "Movimentação da cabeça ou outras partes do corpo",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "mast_sin_postura_alterada",
+    "domain": "mastigacao",
+    "text": "Postura alterada",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "mast_sin_escape_alimento",
+    "domain": "mastigacao",
+    "text": "Escape de alimento",
+    "max_points": 2,
+    "input_type": "scale"
+  }
+]

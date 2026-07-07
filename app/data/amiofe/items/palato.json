@@ -1,0 +1,16 @@
+[
+  {
+    "id": "pal_largura",
+    "domain": "palato",
+    "text": "Largura do palato duro",
+    "max_points": 4,
+    "input_type": "scale"
+  },
+  {
+    "id": "pal_altura",
+    "domain": "palato",
+    "text": "Altura do palato duro",
+    "max_points": 4,
+    "input_type": "scale"
+  }
+]

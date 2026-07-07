@@ -1,22 +1,16 @@
 [
   {
-    "id": "ling_protrusao",
+    "id": "ling_posicao_aparencia",
     "domain": "lingua",
-    "text": "Protrusão e lateralização da língua."
+    "text": "Posição/aparência da língua (contida, apertamento, interposição)",
+    "max_points": 4,
+    "input_type": "scale"
   },
   {
-    "id": "ling_elevacao",
+    "id": "ling_volume",
     "domain": "lingua",
-    "text": "Elevação da ponta e dorso lingual."
-  },
-  {
-    "id": "ling_grampo",
-    "domain": "lingua",
-    "text": "Movimento de grampo lingual."
-  },
-  {
-    "id": "ling_tremor",
-    "domain": "lingua",
-    "text": "Tremor ou fasciculação lingual."
+    "text": "Volume/aparência da língua",
+    "max_points": 4,
+    "input_type": "scale"
   }
 ]

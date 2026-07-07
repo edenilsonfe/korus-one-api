@@ -2,21 +2,22 @@
   {
     "id": "face_simetria",
     "domain": "face",
-    "text": "Simetria facial em repouso e durante movimento."
+    "text": "Simetria facial",
+    "max_points": 4,
+    "input_type": "scale"
   },
   {
-    "id": "face_tonus",
+    "id": "face_proporcao_tercos",
     "domain": "face",
-    "text": "Tônus e mobilidade da musculatura facial."
+    "text": "Proporção entre os terços da face",
+    "max_points": 4,
+    "input_type": "scale"
   },
   {
-    "id": "face_expressao",
+    "id": "face_sulco_nasolabial",
     "domain": "face",
-    "text": "Expressão facial e mímica."
-  },
-  {
-    "id": "face_sensibilidade",
-    "domain": "face",
-    "text": "Sensibilidade facial."
+    "text": "Sulco nasolabial",
+    "max_points": 4,
+    "input_type": "scale"
   }
 ]

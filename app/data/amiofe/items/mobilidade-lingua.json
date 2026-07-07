@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ml_protrusao",
+    "domain": "mobilidade",
+    "text": "Mobilidade da língua — protrusão",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "ml_retracao",
+    "domain": "mobilidade",
+    "text": "Mobilidade da língua — retração",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "ml_lateral_d",
+    "domain": "mobilidade",
+    "text": "Mobilidade da língua — lateral direita",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "ml_lateral_e",
+    "domain": "mobilidade",
+    "text": "Mobilidade da língua — lateral esquerda",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "ml_elevar",
+    "domain": "mobilidade",
+    "text": "Mobilidade da língua — elevar",
+    "max_points": 6,
+    "input_type": "scale"
+  },
+  {
+    "id": "ml_abaixar",
+    "domain": "mobilidade",
+    "text": "Mobilidade da língua — abaixar",
+    "max_points": 6,
+    "input_type": "scale"
+  }
+]

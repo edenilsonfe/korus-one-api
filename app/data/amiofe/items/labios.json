@@ -1,22 +1,23 @@
 [
   {
-    "id": "lab_selagem",
+    "id": "lab_funcao_repouso",
     "domain": "labios",
-    "text": "Selagem labial em repouso."
+    "text": "Função labial no repouso",
+    "max_points": 4,
+    "input_type": "scale"
   },
   {
-    "id": "lab_protrusao",
+    "id": "lab_volume_configuracao",
     "domain": "labios",
-    "text": "Protrusão e retrusão labial."
+    "text": "Volume e configuração labial",
+    "max_points": 4,
+    "input_type": "scale"
   },
   {
-    "id": "lab_vibracao",
+    "id": "lab_comissuras",
     "domain": "labios",
-    "text": "Vibração labial (/brrr/)."
-  },
-  {
-    "id": "lab_resistencia",
-    "domain": "labios",
-    "text": "Resistência à movimentação labial."
+    "text": "Comissuras labiais",
+    "max_points": 4,
+    "input_type": "scale"
   }
 ]

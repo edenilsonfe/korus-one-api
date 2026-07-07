@@ -1,0 +1,44 @@
+[
+  {
+    "id": "deg_sin_mov_cabeca_corpo",
+    "domain": "degluticao",
+    "text": "Movimentação da cabeça ou outras partes do corpo",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_sin_deslize_mandibula",
+    "domain": "degluticao",
+    "text": "Deslize da mandíbula",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_sin_tensao_facial",
+    "domain": "degluticao",
+    "text": "Tensão da musculatura facial",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_sin_escape_alimento",
+    "domain": "degluticao",
+    "text": "Escape de alimento",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_sin_engasgo",
+    "domain": "degluticao",
+    "text": "Engasgo",
+    "max_points": 2,
+    "input_type": "scale"
+  },
+  {
+    "id": "deg_sin_ruido",
+    "domain": "degluticao",
+    "text": "Ruído",
+    "max_points": 2,
+    "input_type": "scale"
+  }
+]
