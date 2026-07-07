@@ -268,6 +268,102 @@ def _apply_domain_norms(
     return out
 
 
+def _resolve_age_band_id(norms: dict[str, Any], patient_age_months: int | None) -> str | None:
+    if patient_age_months is None:
+        return None
+    for band in norms.get("age_bands", []):
+        start = int(band.get("start_months", 0))
+        end = int(band.get("end_months", 999))
+        if start <= patient_age_months <= end:
+            return str(band.get("id"))
+    return None
+
+
+def _classify_standard_score(
+    standard: int, interpretations: list[dict[str, Any]]
+) -> dict[str, str]:
+    for band in interpretations:
+        min_std = int(band.get("min_standard", band.get("min", 0)))
+        max_std = int(band.get("max_standard", band.get("max", 999)))
+        if min_std <= standard <= max_std:
+            return {
+                "level": str(band.get("level", "unknown")),
+                "label": str(band.get("label", "")),
+            }
+    return {"level": "unknown", "label": ""}
+
+
+def _apply_adl2_domain_norms(
+    package: InstrumentContentPackage,
+    domain_id: str,
+    raw_score: int,
+    age_band_id: str | None,
+) -> dict[str, Any]:
+    norms = package.get_norms()
+    by_band = norms.get("domains", {}).get(domain_id, {}).get("by_age_band", {})
+    band_data = by_band.get(age_band_id or "", {})
+    table = band_data.get("raw_to_standard", [])
+    standard = _lookup_norm_table(table, raw_score, "raw", "standard")
+    out: dict[str, Any] = {
+        "raw_score": raw_score,
+        "age_band": age_band_id,
+        "norm_status": band_data.get("status", "unknown"),
+    }
+    if standard is not None:
+        out["standard_score"] = standard
+        cls = _classify_standard_score(standard, package.scoring.get("interpretations", []))
+        out["level"] = cls["level"]
+        out["classification_label"] = cls["label"]
+    return out
+
+
+def _compute_adl2_raw_score(
+    items: list[dict[str, Any]],
+    answers: dict[str, Any],
+    admin_rules: dict[str, Any],
+) -> int:
+    scored_items, _ = _apply_basal_ceiling_window(items, answers, admin_rules)
+    last_pass = 0
+    fails = 0
+    for item in sorted(scored_items, key=lambda row: int(row.get("item_number") or 0)):
+        ans = _item_answer(answers, item["id"])
+        if _is_developmental_pass(ans):
+            last_pass = max(last_pass, int(item.get("item_number") or 0))
+        elif _is_developmental_fail(ans):
+            fails += 1
+    return max(0, last_pass - fails)
+
+
+def score_adl2_module(
+    package: InstrumentContentPackage,
+    module_slug: str,
+    answers: dict[str, Any],
+    *,
+    patient_age_months: int | None = None,
+) -> dict[str, Any]:
+    mod = package.get_module_config(module_slug)
+    if mod.get("scoring_role") == "prerequisite":
+        result = score_developmental_module(
+            package, module_slug, answers, patient_age_months=patient_age_months
+        )
+        result["module_kind"] = "adl2_prerequisite"
+        return result
+
+    result = score_developmental_module(
+        package, module_slug, answers, patient_age_months=patient_age_months
+    )
+    items = package.get_module_items(module_slug)
+    admin_rules = package.scoring.get("administration_rules", {})
+    raw = _compute_adl2_raw_score(items, answers, admin_rules)
+    result["module_kind"] = "adl2"
+    result["raw_score"] = raw
+    result["summary"] = (
+        f"{mod.get('title', module_slug)}: bruto {raw}, "
+        f"{result.get('passes', 0)} acerto(s), {result.get('delay_count', 0)} atraso(s)"
+    )
+    return result
+
+
 def _developmental_level(delay_count: int, interpretations: list[dict[str, Any]]) -> str:
     sorted_bands = sorted(interpretations, key=lambda b: int(b.get("max_delays", 999)))
     for band in sorted_bands:
@@ -716,6 +812,10 @@ def score_battery_subform(
     if not handler:
         total = len(answers)
         return {"module_kind": kind, "module_slug": module_slug, "total_items": total, "summary": "Concluído"}
+    if package.scoring.get("engine") == "adl2" and kind == "developmental":
+        return score_adl2_module(
+            package, module_slug, answers, patient_age_months=patient_age_months
+        )
     if kind in ("phonology", "vocabulary"):
         return handler(package, module_slug, answers, patient_age_months=patient_age_months)
     if kind in ("observational", "qualitative", "developmental"):
@@ -726,6 +826,8 @@ def score_battery_subform(
 def synthesize_battery_scores(
     package: InstrumentContentPackage,
     subform_scores: list[dict[str, Any]],
+    *,
+    patient_age_months: int | None = None,
 ) -> dict[str, Any]:
     domains: dict[str, Any] = {}
     percentages: list[float] = []
@@ -798,7 +900,7 @@ def synthesize_battery_scores(
                             "detail": f"{proc.get('count')} ocorrências — persistente para idade",
                         }
                     )
-        if score.get("module_kind") == "developmental":
+        if score.get("module_kind") in ("developmental", "adl2"):
             for delay in score.get("delays") or []:
                 critical_items.append(
                     {
@@ -840,7 +942,86 @@ def synthesize_battery_scores(
         }
 
     developmental_meta: dict[str, Any] = {}
-    if engine == "developmental_screening":
+    if engine == "adl2":
+        norms = package.get_norms()
+        age_band = _resolve_age_band_id(norms, patient_age_months)
+        norms_applied = False
+        lr_std: int | None = None
+        le_std: int | None = None
+        for domain_id, entry in domains.items():
+            if not isinstance(entry, dict) or domain_id == "PRE":
+                continue
+            raw = entry.get("raw_score")
+            if raw is None:
+                continue
+            norm_fields = _apply_adl2_domain_norms(package, domain_id, int(raw), age_band)
+            if norm_fields.get("standard_score") is not None:
+                norms_applied = True
+            entry.update(norm_fields)
+            if domain_id == "LR":
+                lr_std = norm_fields.get("standard_score")
+            elif domain_id == "LE":
+                le_std = norm_fields.get("standard_score")
+
+        total_delays = 0
+        delay_domains: list[dict[str, Any]] = []
+        domain_levels: dict[str, str] = {}
+        for score in subform_scores:
+            if score.get("module_kind") not in ("adl2", "developmental"):
+                continue
+            mod = package.get_module_config(score["module_slug"])
+            if mod.get("scoring_role") == "prerequisite":
+                continue
+            delay_count = int(score.get("delay_count") or 0)
+            total_delays += delay_count
+            domain_id = str(score.get("domain") or score["module_slug"])
+            domain_levels[domain_id] = str(
+                domains.get(domain_id, {}).get("level") or score.get("level", "unknown")
+            )
+            if delay_count > 0:
+                delay_domains.append(
+                    {
+                        "domain": domain_id,
+                        "title": score.get("title", domain_id),
+                        "delay_count": delay_count,
+                        "level": domain_levels[domain_id],
+                    }
+                )
+
+        developmental_meta = {
+            "total_delays": total_delays,
+            "delay_domains": delay_domains,
+            "domain_levels": domain_levels,
+            "age_band": age_band,
+            "patient_age_months": patient_age_months,
+        }
+        if norms_applied:
+            developmental_meta["norms_applied"] = True
+        if lr_std is not None and le_std is not None and age_band:
+            global_band = norms.get("global_language", {}).get("by_age_band", {}).get(age_band, {})
+            global_ep = _lookup_norm_table(
+                global_band.get("sum_to_standard", []),
+                lr_std + le_std,
+                "sum",
+                "standard",
+            )
+            if global_ep is not None:
+                developmental_meta["global_standard_score"] = global_ep
+                developmental_meta["composite_standard_score"] = global_ep
+                cls = _classify_standard_score(
+                    int(global_ep), package.scoring.get("interpretations", [])
+                )
+                developmental_meta["global_level"] = cls["level"]
+                developmental_meta["global_classification_label"] = cls["label"]
+        if domain_levels:
+            interpretation = (
+                f"ADL 2: EP global {developmental_meta.get('global_standard_score', '—')} "
+                f"({developmental_meta.get('global_classification_label', 'sem norma')}). "
+                f"{total_delays} atraso(s) por idade nos itens aplicados."
+            )
+        else:
+            interpretation = default_interpretation
+    elif engine == "developmental_screening":
         standard_scores: list[int] = []
         percentiles: list[int] = []
         norms_applied = False

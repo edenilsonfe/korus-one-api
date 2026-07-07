@@ -373,7 +373,10 @@ class BatteryService:
             )
 
         subform_scores = [sf.scores for sf in record.battery_subforms if sf.scores]
-        synthesized = synthesize_battery_scores(package, subform_scores)
+        age = _patient_age_months(record.patient.birth_date if record.patient else None)
+        synthesized = synthesize_battery_scores(
+            package, subform_scores, patient_age_months=age
+        )
         derived = build_assessment_from_scores(synthesized)
 
         meta = record.assessment_metadata or {}

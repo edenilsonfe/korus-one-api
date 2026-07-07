@@ -1,0 +1,20 @@
+[
+  {
+    "id": "pre_01",
+    "item_number": 1,
+    "domain": "PRE",
+    "text": "Atenção visual.",
+    "age_start_months": 12,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "pre_02",
+    "item_number": 2,
+    "domain": "PRE",
+    "text": "Atenção auditiva.",
+    "age_start_months": 12,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  }
+]

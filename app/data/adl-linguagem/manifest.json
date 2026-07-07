@@ -1,85 +1,75 @@
 {
-  "version": 1,
-  "package_id": "adl-linguagem-br-v1",
+  "version": 2,
+  "package_id": "adl-linguagem-br-v2",
   "instrument_slug": "adl-linguagem",
-  "instrument_title": "ADL — Avaliação do Desenvolvimento da Linguagem",
+  "instrument_title": "ADL 2 — Avaliação do Desenvolvimento da Linguagem",
   "license_ref": "PUBLIC-STRUCTURE",
-  "content_status": "draft-knowledge",
+  "content_status": "partial-norms",
   "norms_region": "BR",
   "norms_file": "norms-br.json",
   "archetype": "observational",
   "supports_multi_session": true,
+  "scale": [
+    { "value": 0, "label": "Incorreta / Ausente" },
+    { "value": 1, "label": "Correta / Presente" }
+  ],
   "domains": [
-    { "id": "COMP", "title": "Compreensão" },
-    { "id": "EXP", "title": "Expressão" },
-    { "id": "VOC", "title": "Vocabulário" },
-    { "id": "FON", "title": "Fonologia" },
-    { "id": "PRA", "title": "Pragmática" }
+    { "id": "LR", "title": "Linguagem Receptiva (Compreensiva)" },
+    { "id": "LE", "title": "Linguagem Expressiva" },
+    { "id": "PRE", "title": "Pré-requisitos" }
   ],
   "modules": {
-    "compreensao": {
-      "id": "compreensao",
-      "title": "Compreensão",
-      "domain": "COMP",
+    "pre-requisitos": {
+      "id": "pre-requisitos",
+      "title": "Pré-requisitos (atenção)",
+      "domain": "PRE",
       "module_kind": "developmental",
-      "items_file": "items/compreensao.json",
-      "item_count": 4,
+      "scoring_role": "prerequisite",
+      "required": false,
+      "items_file": "items/pre-requisitos.json",
+      "item_count": 2,
       "filler": "clinician"
     },
-    "expressao": {
-      "id": "expressao",
-      "title": "Expressão",
-      "domain": "EXP",
+    "linguagem-compreensiva": {
+      "id": "linguagem-compreensiva",
+      "title": "Linguagem Compreensiva (LR)",
+      "domain": "LR",
       "module_kind": "developmental",
-      "items_file": "items/expressao.json",
-      "item_count": 4,
+      "items_file": "items/linguagem-compreensiva.json",
+      "item_count": 50,
       "filler": "clinician"
     },
-    "vocabulario": {
-      "id": "vocabulario",
-      "title": "Vocabulário",
-      "domain": "VOC",
+    "linguagem-expressiva": {
+      "id": "linguagem-expressiva",
+      "title": "Linguagem Expressiva (LE)",
+      "domain": "LE",
       "module_kind": "developmental",
-      "items_file": "items/vocabulario.json",
-      "item_count": 4,
-      "filler": "clinician"
-    },
-    "fonologia": {
-      "id": "fonologia",
-      "title": "Fonologia",
-      "domain": "FON",
-      "module_kind": "developmental",
-      "items_file": "items/fonologia.json",
-      "item_count": 4,
-      "filler": "clinician"
-    },
-    "pragmatica": {
-      "id": "pragmatica",
-      "title": "Pragmática",
-      "domain": "PRA",
-      "module_kind": "developmental",
-      "items_file": "items/pragmatica.json",
-      "item_count": 4,
+      "items_file": "items/linguagem-expressiva.json",
+      "item_count": 58,
       "filler": "clinician"
     }
   },
   "subtests": [
-    { "id": "compreensao", "title": "Compreensão", "item_count": 4 },
-    { "id": "expressao", "title": "Expressão", "item_count": 4 },
-    { "id": "vocabulario", "title": "Vocabulário", "item_count": 4 },
-    { "id": "fonologia", "title": "Fonologia", "item_count": 4 },
-    { "id": "pragmatica", "title": "Pragmática", "item_count": 4 }
+    { "id": "pre-requisitos", "title": "Pré-requisitos", "item_count": 2, "required": false },
+    { "id": "linguagem-compreensiva", "title": "Linguagem Compreensiva", "item_count": 50 },
+    { "id": "linguagem-expressiva", "title": "Linguagem Expressiva", "item_count": 58 }
   ],
   "scoring": {
-    "engine": "developmental_screening",
+    "engine": "adl2",
+    "raw_formula": "last_pass_minus_fails",
+    "administration_rules": {
+      "basal_rule": 4,
+      "ceiling_rule": 4
+    },
     "interpretations": [
-      { "level": "expected", "max_delays": 0, "label": "Desenvolvimento esperado" },
-      { "level": "caution", "max_delays": 2, "label": "Atenção — possível atraso" },
-      { "level": "delay", "max_delays": 999, "label": "Atraso significativo" }
+      { "level": "expected", "min_standard": 85, "max_standard": 115, "label": "Desenvolvimento esperado" },
+      { "level": "mild", "min_standard": 77, "max_standard": 84, "label": "Distúrbio leve" },
+      { "level": "moderate", "min_standard": 70, "max_standard": 76, "label": "Distúrbio moderado" },
+      { "level": "severe", "min_standard": 40, "max_standard": 69, "label": "Distúrbio severo" }
     ]
   },
   "report": {
-    "template_id": "adl-linguagem-br-v1",
+    "template_id": "adl-linguagem-br-v2",
     "sections": ["identificacao", "condicoes", "resultados", "observacoes", "interpretacao", "conclusao", "assinatura"]
   },
   "informant_forms": []

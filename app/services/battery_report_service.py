@@ -40,7 +40,7 @@ def export_battery_pdf(battery: BatteryResponse, package: InstrumentContentPacka
 
     scores = battery.scores or {}
 
-    if package.scoring.get("engine") == "developmental_screening":
+    if package.scoring.get("engine") in ("developmental_screening", "adl2"):
         story.append(Paragraph("Condições da aplicação", styles["Heading2"]))
         setup = scores.get("setup") or {}
         if setup.get("assessment_date"):

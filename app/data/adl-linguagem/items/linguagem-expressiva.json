@@ -1,0 +1,524 @@
+[
+  {
+    "id": "le_01",
+    "item_number": 1,
+    "domain": "LE",
+    "text": "Participa de brincadeiras com outra pessoa pelo período de 1 a 2 minutos.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_02",
+    "item_number": 2,
+    "domain": "LE",
+    "text": "Comunica-se de forma gestual.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_03",
+    "item_number": 3,
+    "domain": "LE",
+    "text": "A criança vocaliza sem que movimentos de pernas e de braços acompanhem a emissão dos sons.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_04",
+    "item_number": 4,
+    "domain": "LE",
+    "text": "Emite sequências de duas sílabas.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_05",
+    "item_number": 5,
+    "domain": "LE",
+    "text": "Tem vocabulário de pelo menos uma palavra.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_06",
+    "item_number": 6,
+    "domain": "LE",
+    "text": "Faz turnos durante uma brincadeira.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_07",
+    "item_number": 7,
+    "domain": "LE",
+    "text": "Imita uma variedade de sons (fonemas).",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_08",
+    "item_number": 8,
+    "domain": "LE",
+    "text": "Comunicação da criança através de vocalizações e de gestos para obter um objeto.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_09",
+    "item_number": 9,
+    "domain": "LE",
+    "text": "Imita uma palavra.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_10",
+    "item_number": 10,
+    "domain": "LE",
+    "text": "Produz sequências de palavras.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_11",
+    "item_number": 11,
+    "domain": "LE",
+    "text": "Tem vocabulário expressivo (espontâneo) de cinco a dez palavras.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_12",
+    "item_number": 12,
+    "domain": "LE",
+    "text": "A criança fala sequência de palavras sem significado com entonação semelhante a do adulto (jargão).",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_13",
+    "item_number": 13,
+    "domain": "LE",
+    "text": "A criança usa palavras com intenção de se comunicar.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_14",
+    "item_number": 14,
+    "domain": "LE",
+    "text": "Combina duas ou mais palavras com significado.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_15",
+    "item_number": 15,
+    "domain": "LE",
+    "text": "Nomeia figuras.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_16",
+    "item_number": 16,
+    "domain": "LE",
+    "text": "Comunica-se mais por palavras do que por gestos.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_17",
+    "item_number": 17,
+    "domain": "LE",
+    "text": "Combina três ou quatro palavras na fala espontânea.",
+    "age_start_months": 30,
+    "age_end_months": 35,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_18",
+    "item_number": 18,
+    "domain": "LE",
+    "text": "Responde com substantivo indicando posse.",
+    "age_start_months": 30,
+    "age_end_months": 35,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_19",
+    "item_number": 19,
+    "domain": "LE",
+    "text": "Vocabulário expressivo.",
+    "age_start_months": 30,
+    "age_end_months": 35,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_20",
+    "item_number": 20,
+    "domain": "LE",
+    "text": "Usa a forma de verbo no gerúndio.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_21",
+    "item_number": 21,
+    "domain": "LE",
+    "text": "Compreende e responde a questões com: \"o que\" substantivo; advérbio interrogativo \"onde\" e de negação \"não\".",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_22",
+    "item_number": 22,
+    "domain": "LE",
+    "text": "Nomeia cores.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_23",
+    "item_number": 23,
+    "domain": "LE",
+    "text": "Usa diferentes combinações de palavras para se expressar.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_24",
+    "item_number": 24,
+    "domain": "LE",
+    "text": "Usa palavras que expressam relação espacial.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_25",
+    "item_number": 25,
+    "domain": "LE",
+    "text": "Conceito de quantidade.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_26",
+    "item_number": 26,
+    "domain": "LE",
+    "text": "Habilidade para solucionar e responder a questões sobre situações do cotidiano.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_27",
+    "item_number": 27,
+    "domain": "LE",
+    "text": "Descreve ações em uma sequência de figuras.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_28",
+    "item_number": 28,
+    "domain": "LE",
+    "text": "Responde a perguntas sobre as suas atividades na escola (no colégio).",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_29",
+    "item_number": 29,
+    "domain": "LE",
+    "text": "Habilidade para descrever o uso de objetos.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_30",
+    "item_number": 30,
+    "domain": "LE",
+    "text": "Responde a questões com o advérbio de lugar \"onde\".",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_31",
+    "item_number": 31,
+    "domain": "LE",
+    "text": "Usa pronome possessivo.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_32",
+    "item_number": 32,
+    "domain": "LE",
+    "text": "Expressa quantidade.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_33",
+    "item_number": 33,
+    "domain": "LE",
+    "text": "Produz orações semanticamente corretas.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_34",
+    "item_number": 34,
+    "domain": "LE",
+    "text": "Plural regular.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_35",
+    "item_number": 35,
+    "domain": "LE",
+    "text": "Usa verbo no tempo passado.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_36",
+    "item_number": 36,
+    "domain": "LE",
+    "text": "Expressa quantidade.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_37",
+    "item_number": 37,
+    "domain": "LE",
+    "text": "Completa analogias.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_38",
+    "item_number": 38,
+    "domain": "LE",
+    "text": "Categorização de nomes.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_39",
+    "item_number": 39,
+    "domain": "LE",
+    "text": "Responde a questões sobre os motivos das ações realizadas em sua rotina diária.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_40",
+    "item_number": 40,
+    "domain": "LE",
+    "text": "Utiliza adjetivos para descrever pessoas e objetos.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_41",
+    "item_number": 41,
+    "domain": "LE",
+    "text": "Compreende e descreve similaridade entre objetos.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_42",
+    "item_number": 42,
+    "domain": "LE",
+    "text": "Memória para repetir sentenças.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_43",
+    "item_number": 43,
+    "domain": "LE",
+    "text": "Descreve ações em uma sequência de figuras.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_44",
+    "item_number": 44,
+    "domain": "LE",
+    "text": "Responde a perguntas diante de uma sequência de figuras.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_45",
+    "item_number": 45,
+    "domain": "LE",
+    "text": "Expressa quantidade.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_46",
+    "item_number": 46,
+    "domain": "LE",
+    "text": "Habilidade para buscar palavras dentro de uma categoria semântica.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_47",
+    "item_number": 47,
+    "domain": "LE",
+    "text": "Produz uma história diante de uma gravura.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_48",
+    "item_number": 48,
+    "domain": "LE",
+    "text": "Relembra sentenças em um contexto.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_49",
+    "item_number": 49,
+    "domain": "LE",
+    "text": "Produz uma história diante a uma sequência de figuras.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_50",
+    "item_number": 50,
+    "domain": "LE",
+    "text": "Habilidade para definir palavras.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_51",
+    "item_number": 51,
+    "domain": "LE",
+    "text": "Relembrando sentenças em um contexto.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_52",
+    "item_number": 52,
+    "domain": "LE",
+    "text": "Produz uma história diante de uma sequência de gravuras.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_53",
+    "item_number": 53,
+    "domain": "LE",
+    "text": "Reconta uma história com apoio visual.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_54",
+    "item_number": 54,
+    "domain": "LE",
+    "text": "Relembra e descreve situações da sua rotina diária.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_55",
+    "item_number": 55,
+    "domain": "LE",
+    "text": "Relembra sentenças em um contexto.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_56",
+    "item_number": 56,
+    "domain": "LE",
+    "text": "Produz uma história diante de uma sequência de gravuras.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_57",
+    "item_number": 57,
+    "domain": "LE",
+    "text": "Faz cálculo de soma e subtração até 5.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "le_58",
+    "item_number": 58,
+    "domain": "LE",
+    "text": "Identifica e nomeia letras.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  }
+]

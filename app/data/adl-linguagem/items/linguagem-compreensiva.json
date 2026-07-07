@@ -1,0 +1,452 @@
+[
+  {
+    "id": "lr_03",
+    "item_number": 3,
+    "domain": "LR",
+    "text": "Vocabulário compreensivo. Identifica objetos familiares.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_04",
+    "item_number": 4,
+    "domain": "LR",
+    "text": "Compreende pedidos verbais simples com pistas gestuais.",
+    "age_start_months": 12,
+    "age_end_months": 17,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_05",
+    "item_number": 5,
+    "domain": "LR",
+    "text": "Vocabulário receptivo. Identifica figuras de objetos.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_06",
+    "item_number": 6,
+    "domain": "LR",
+    "text": "Compreende ordens simples com dois pedidos.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_07",
+    "item_number": 7,
+    "domain": "LR",
+    "text": "Compreende palavras inibitórias.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_08",
+    "item_number": 8,
+    "domain": "LR",
+    "text": "Compreende verbos dentro de um contexto.",
+    "age_start_months": 18,
+    "age_end_months": 23,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_09",
+    "item_number": 9,
+    "domain": "LR",
+    "text": "Usa apropriadamente objetos familiares enquanto brinca.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_10",
+    "item_number": 10,
+    "domain": "LR",
+    "text": "Identifica partes do corpo em si ou na boneca.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_11",
+    "item_number": 11,
+    "domain": "LR",
+    "text": "Compreende relação espacial.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_12",
+    "item_number": 12,
+    "domain": "LR",
+    "text": "Compreende alguns pronomes.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_13",
+    "item_number": 13,
+    "domain": "LR",
+    "text": "Reconhece a ação nas figuras.",
+    "age_start_months": 24,
+    "age_end_months": 29,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_14",
+    "item_number": 14,
+    "domain": "LR",
+    "text": "Compreende os pronomes \"mim\", \"seu\", \"minha\".",
+    "age_start_months": 30,
+    "age_end_months": 35,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_15",
+    "item_number": 15,
+    "domain": "LR",
+    "text": "Compreende o uso dos objetos.",
+    "age_start_months": 30,
+    "age_end_months": 35,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_16",
+    "item_number": 16,
+    "domain": "LR",
+    "text": "Compreende os conceitos dos adjetivos.",
+    "age_start_months": 30,
+    "age_end_months": 35,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_17",
+    "item_number": 17,
+    "domain": "LR",
+    "text": "Compreende relações parte/todo.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_18",
+    "item_number": 18,
+    "domain": "LR",
+    "text": "Compreende conceitos de quantidade.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_19",
+    "item_number": 19,
+    "domain": "LR",
+    "text": "Identifica cores.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_20",
+    "item_number": 20,
+    "domain": "LR",
+    "text": "Identifica categorias de objetos em figuras.",
+    "age_start_months": 36,
+    "age_end_months": 41,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_21",
+    "item_number": 21,
+    "domain": "LR",
+    "text": "Compreende conceito de quantidade.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_22",
+    "item_number": 22,
+    "domain": "LR",
+    "text": "Compreende pronomes pessoais.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_23",
+    "item_number": 23,
+    "domain": "LR",
+    "text": "Faz deduções.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_24",
+    "item_number": 24,
+    "domain": "LR",
+    "text": "Compreende o conceito de subir.",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_25",
+    "item_number": 25,
+    "domain": "LR",
+    "text": "Compreende questões com o pronome interrogativo \"que\".",
+    "age_start_months": 42,
+    "age_end_months": 47,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_26",
+    "item_number": 26,
+    "domain": "LR",
+    "text": "Compreende perguntas negativas.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_27",
+    "item_number": 27,
+    "domain": "LR",
+    "text": "Conceito de exclusão e inclusão.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_28",
+    "item_number": 28,
+    "domain": "LR",
+    "text": "Compreende conceitos de tempo.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_29",
+    "item_number": 29,
+    "domain": "LR",
+    "text": "Compreende conceitos de adjetivos.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_30",
+    "item_number": 30,
+    "domain": "LR",
+    "text": "Compreende conceitos espaciais.",
+    "age_start_months": 48,
+    "age_end_months": 53,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_31",
+    "item_number": 31,
+    "domain": "LR",
+    "text": "Compreende conceitos de adjetivos.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_32",
+    "item_number": 32,
+    "domain": "LR",
+    "text": "Compreende analogias.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_33",
+    "item_number": 33,
+    "domain": "LR",
+    "text": "Compreende orações com o pronome relativo \"que\".",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_34",
+    "item_number": 34,
+    "domain": "LR",
+    "text": "Compreende conceito de velocidade.",
+    "age_start_months": 54,
+    "age_end_months": 59,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_35",
+    "item_number": 35,
+    "domain": "LR",
+    "text": "Compreende conceitos de adjetivos comparativos.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_36",
+    "item_number": 36,
+    "domain": "LR",
+    "text": "Compreende orações com adjetivos.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_37",
+    "item_number": 37,
+    "domain": "LR",
+    "text": "Compreende os sufixos de gênero.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_38",
+    "item_number": 38,
+    "domain": "LR",
+    "text": "Compreende conceito de quantidade.",
+    "age_start_months": 60,
+    "age_end_months": 65,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_39",
+    "item_number": 39,
+    "domain": "LR",
+    "text": "Compreende conceitos de adjetivos.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_40",
+    "item_number": 40,
+    "domain": "LR",
+    "text": "Compreende palavras que indicam relação espacial.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_41",
+    "item_number": 41,
+    "domain": "LR",
+    "text": "Compreende classificação semântica.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_42",
+    "item_number": 42,
+    "domain": "LR",
+    "text": "Compreende conceitos de quantidade.",
+    "age_start_months": 66,
+    "age_end_months": 71,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_43",
+    "item_number": 43,
+    "domain": "LR",
+    "text": "Relação temporal/sequência.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_44",
+    "item_number": 44,
+    "domain": "LR",
+    "text": "Relação espacial.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_45",
+    "item_number": 45,
+    "domain": "LR",
+    "text": "Identifica sons iniciais das palavras.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_46",
+    "item_number": 46,
+    "domain": "LR",
+    "text": "Relação temporal.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_47",
+    "item_number": 47,
+    "domain": "LR",
+    "text": "Relação temporal/sequência.",
+    "age_start_months": 72,
+    "age_end_months": 77,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_48",
+    "item_number": 48,
+    "domain": "LR",
+    "text": "Compreende conceitos de quantidade.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_49",
+    "item_number": 49,
+    "domain": "LR",
+    "text": "Compreende sentenças na voz passiva.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_50",
+    "item_number": 50,
+    "domain": "LR",
+    "text": "Aliteração.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_51",
+    "item_number": 51,
+    "domain": "LR",
+    "text": "Rima.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  },
+  {
+    "id": "lr_52",
+    "item_number": 52,
+    "domain": "LR",
+    "text": "Combinação de sons.",
+    "age_start_months": 78,
+    "age_end_months": 83,
+    "response_type": "developmental"
+  }
+]
