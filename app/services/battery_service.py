@@ -7,6 +7,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.instrument_aliases import instrument_slug_for_protocol, resolve_protocol_id
 from app.constants.battery import (
     BATTERY_METADATA_KEY,
     BATTERY_STATUS_CANCELLED,
@@ -110,7 +111,7 @@ class BatteryService:
         record = (await self.db.execute(query)).scalar_one_or_none()
         if not record:
             raise HTTPException(status_code=404, detail="Bateria não encontrada")
-        if instrument_slug and record.protocol_id != instrument_slug:
+        if instrument_slug and record.protocol_id != resolve_protocol_id(instrument_slug):
             raise HTTPException(status_code=404, detail="Bateria não encontrada")
         return record
 
@@ -155,7 +156,7 @@ class BatteryService:
             patient_id=str(record.patient_id),
             patient_name=record.patient.name if record.patient else None,
             professional_id=str(record.professional_id),
-            instrument_slug=record.protocol_id,
+            instrument_slug=instrument_slug_for_protocol(record.protocol_id),
             instrument_title=package.instrument_title,
             status=record.status,
             scores=record.scores,
@@ -212,7 +213,7 @@ class BatteryService:
         record = Assessment(
             patient_id=data.patient_id,
             professional_id=professional_id,
-            protocol_id=data.instrument_slug,
+            protocol_id=resolve_protocol_id(data.instrument_slug),
             date=today,
             result="Rascunho",
             percentage=0,
@@ -244,7 +245,7 @@ class BatteryService:
 
     async def get_battery(self, battery_id: UUID, *, professional_id: UUID) -> BatteryResponse:
         record = await self._load_battery(battery_id, professional_id=professional_id)
-        package = self._get_package(record.protocol_id)
+        package = self._get_package(instrument_slug_for_protocol(record.protocol_id))
         return self._to_battery_response(record, package)
 
     async def list_batteries(
@@ -259,7 +260,7 @@ class BatteryService:
     ) -> tuple[list[BatterySummary], int]:
         query = select(Assessment).where(Assessment.professional_id == professional_id)
         if instrument_slug:
-            query = query.where(Assessment.protocol_id == instrument_slug)
+            query = query.where(Assessment.protocol_id == resolve_protocol_id(instrument_slug))
         if patient_id:
             query = query.where(Assessment.patient_id == patient_id)
         if status_filter:
@@ -284,7 +285,7 @@ class BatteryService:
                     id=str(record.id),
                     patient_id=str(record.patient_id),
                     patient_name=record.patient.name if record.patient else None,
-                    instrument_slug=record.protocol_id,
+                    instrument_slug=instrument_slug_for_protocol(record.protocol_id),
                     status=record.status,
                     subforms_completed=completed,
                     subforms_total=len(record.battery_subforms),
@@ -303,7 +304,7 @@ class BatteryService:
         professional_id: UUID,
     ) -> BatterySubformFormResponse:
         record = await self._load_battery(battery_id, professional_id=professional_id)
-        package = self._get_package(record.protocol_id)
+        package = self._get_package(instrument_slug_for_protocol(record.protocol_id))
         payload = package.public_module_form(subform_slug)
         return BatterySubformFormResponse(**payload)
 
@@ -320,7 +321,7 @@ class BatteryService:
         if record.status != BATTERY_STATUS_DRAFT:
             raise HTTPException(status_code=400, detail="Bateria não está em rascunho")
 
-        package = self._get_package(record.protocol_id)
+        package = self._get_package(instrument_slug_for_protocol(record.protocol_id))
         subform = next((sf for sf in record.battery_subforms if sf.subform_slug == subform_slug), None)
         if not subform:
             raise HTTPException(status_code=404, detail="Subforma não encontrada")
@@ -359,7 +360,7 @@ class BatteryService:
         if record.status != BATTERY_STATUS_DRAFT:
             raise HTTPException(status_code=400, detail="Bateria já finalizada ou cancelada")
 
-        package = self._get_package(record.protocol_id)
+        package = self._get_package(instrument_slug_for_protocol(record.protocol_id))
         pending_required = [
             sf.subform_slug
             for sf in record.battery_subforms
@@ -432,7 +433,7 @@ class BatteryService:
         if record.status != BATTERY_STATUS_DRAFT:
             raise HTTPException(status_code=400, detail="Somente rascunhos podem ser cancelados")
         record.status = BATTERY_STATUS_CANCELLED
-        package = self._get_package(record.protocol_id)
+        package = self._get_package(instrument_slug_for_protocol(record.protocol_id))
         await self.db.commit()
         await self.db.refresh(record, ["battery_subforms", "patient"])
         return self._to_battery_response(record, package)

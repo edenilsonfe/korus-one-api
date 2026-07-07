@@ -5,12 +5,14 @@ import pytest
 from app.core.instrument_aliases import (
     CLIENT_SCORED_PROTOCOLS,
     SPM_PROTOCOL,
-    get_protocol_scoring_mode,
     has_manifest_package,
+    instrument_slug_for_protocol,
     resolve_instrument_slug,
+    resolve_protocol_id,
 )
 from app.services.assessment_scoring import (
     build_assessment_from_scores,
+    get_protocol_scoring_mode,
     score_manifest_protocol,
     scores_to_percentage,
 )
@@ -32,6 +34,14 @@ def test_get_protocol_scoring_mode(protocol_id: str, expected_mode: str):
 def test_resolve_instrument_slug_aliases():
     assert resolve_instrument_slug("ados2") == "ados-2"
     assert resolve_instrument_slug("vb-mapp") == "vb-mapp"
+
+
+def test_resolve_protocol_id_aliases():
+    assert resolve_protocol_id("ados-2") == "ados2"
+    assert resolve_protocol_id("denver-ii") == "denver2"
+    assert resolve_protocol_id("abfw") == "abfw"
+    assert instrument_slug_for_protocol("ados2") == "ados-2"
+    assert instrument_slug_for_protocol("denver2") == "denver-ii"
 
 
 def test_has_manifest_package():

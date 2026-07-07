@@ -57,9 +57,9 @@ PROTOCOLS = [
     },
     {
         "id": "mchat",
-        "name": "M-CHAT",
-        "full_name": "Modified Checklist for Autism in Toddlers",
-        "description": "Rastreamento de risco para o espectro autista.",
+        "name": "M-CHAT-R/F",
+        "full_name": "Modified Checklist for Autism in Toddlers — Revised with Follow-Up",
+        "description": "Rastreamento de risco para TEA em crianças de 16 a 30 meses (M-CHAT-R + consulta de seguimento).",
         "age_range": "16 a 30 meses",
         "field_templates": [
             {"key": "itens_criticos", "label": "Itens críticos falhados"},

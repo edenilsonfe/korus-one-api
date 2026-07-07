@@ -55,6 +55,20 @@ def resolve_instrument_slug(protocol_id: str) -> str | None:
     return PROTOCOL_TO_INSTRUMENT_SLUG.get(protocol_id.lower())
 
 
+def resolve_protocol_id(instrument_slug: str) -> str:
+    """Map instrument package slug to protocol_catalog.id (FK on assessments)."""
+    slug = instrument_slug.lower()
+    for protocol_id, mapped_slug in PROTOCOL_TO_INSTRUMENT_SLUG.items():
+        if mapped_slug == slug:
+            return protocol_id
+    return slug
+
+
+def instrument_slug_for_protocol(protocol_id: str) -> str:
+    """Map protocol_catalog.id (or slug) to instrument package slug."""
+    return resolve_instrument_slug(protocol_id) or protocol_id.lower()
+
+
 def has_manifest_package(protocol_id: str) -> bool:
     slug = resolve_instrument_slug(protocol_id)
     return slug is not None and slug in MANIFEST_INSTRUMENT_SLUGS
