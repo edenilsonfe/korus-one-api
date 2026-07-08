@@ -3,8 +3,8 @@
 Standalone setup: creates only the tables needed on an in-memory SQLite DB.
 The LLM client is mocked so we never call OpenCode (and never get billed).
 Validates: direct tool-call path, no-tool → retry → tool, no-tool → retry →
-no-tool → fallback, leaked-markup sanitization, patient ownership guard, and
-search_patient_by_name scoping.
+no-tool → fallback, leaked-markup sanitization, patient ownership guard,
+search_patient_by_name scoping, and rate limiting (429).
 """
 
 from datetime import date, datetime, timedelta, timezone
@@ -12,8 +12,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 import pytest_asyncio
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
+from app.core.config import get_settings
 from app.db.base import Base
 from app.models.ai import ChatMessage, Conversation
 from app.models.appointment import Appointment
@@ -29,9 +31,9 @@ from app.models.session import Session
 # before any Assessment query).
 from app.schemas.assistant import ChatResponse
 from app.services.assistant.assistant_service import AssistantService
+from app.services.assistant import rate_limit as rate_limit_module
+from app.services.assistant.rate_limit import enforce_assistant_rate_limit
 from app.services.assistant.tools import ToolExecutor
-
-pytestmark = pytest.mark.asyncio
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -324,3 +326,60 @@ async def test_get_inactive_patients_excludes_recent(db):
     names = [p["name"] for p in result["patients"]]
     assert "Parado" in names
     assert "Recente" not in names
+
+
+def _force_memory_rate_limit_fallback(*_args, **_kwargs):
+    raise ConnectionError("Redis unavailable in tests")
+
+
+@pytest.fixture
+def assistant_rate_limit_env(monkeypatch):
+    """Force in-memory rate limiting with a low hourly cap."""
+    rate_limit_module._in_memory_buckets.clear()
+    monkeypatch.setattr(rate_limit_module, "_redis_check", _force_memory_rate_limit_fallback)
+    settings = get_settings()
+    monkeypatch.setattr(settings, "assistant_rate_limit_per_hour", 2)
+    yield
+    rate_limit_module._in_memory_buckets.clear()
+
+
+def test_rate_limit_allows_requests_under_limit(assistant_rate_limit_env):
+    pro_id = "prof-rate-limit-ok"
+    enforce_assistant_rate_limit(pro_id)
+    enforce_assistant_rate_limit(pro_id)
+
+
+def test_rate_limit_raises_429_when_exceeded(assistant_rate_limit_env):
+    pro_id = "prof-rate-limit-blocked"
+    enforce_assistant_rate_limit(pro_id)
+    enforce_assistant_rate_limit(pro_id)
+
+    with pytest.raises(HTTPException) as exc_info:
+        enforce_assistant_rate_limit(pro_id)
+
+    assert exc_info.value.status_code == 429
+    assert exc_info.value.headers.get("Retry-After") == "3600"
+    assert "Limite de mensagens" in exc_info.value.detail
+
+
+def test_rate_limit_redis_counter(monkeypatch):
+    """When Redis is available, enforce uses the shared counter result."""
+    calls = {"n": 0}
+
+    def fake_redis_check(_key, max_requests, _window_seconds):
+        calls["n"] += 1
+        return calls["n"] <= max_requests
+
+    monkeypatch.setattr(rate_limit_module, "_redis_check", fake_redis_check)
+    settings = get_settings()
+    monkeypatch.setattr(settings, "assistant_rate_limit_per_hour", 2)
+
+    pro_id = "prof-rate-limit-redis"
+    enforce_assistant_rate_limit(pro_id)
+    enforce_assistant_rate_limit(pro_id)
+
+    with pytest.raises(HTTPException) as exc_info:
+        enforce_assistant_rate_limit(pro_id)
+
+    assert exc_info.value.status_code == 429
+    assert calls["n"] == 3

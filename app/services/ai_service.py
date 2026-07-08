@@ -91,7 +91,11 @@ async def run_llm(prompt: str, system: str = "") -> str:
         return "[Resposta simulada — configure OPENCODE_API_KEY para respostas reais]\n\n" + prompt[:500]
     from openai import AsyncOpenAI
 
-    client = AsyncOpenAI(api_key=settings.opencode_api_key, base_url=settings.opencode_base_url)
+    client = AsyncOpenAI(
+        api_key=settings.opencode_api_key,
+        base_url=settings.opencode_base_url,
+        timeout=settings.assistant_llm_timeout_seconds,
+    )
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
