@@ -14,6 +14,7 @@ class ProfessionalResponse(CamelModel):
     phone: str
     cpf: str = ""
     avatar_color: str
+    is_staff: bool = False
 
 
 class ProfessionalUpdate(CamelModel):

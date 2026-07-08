@@ -52,6 +52,18 @@ async def get_optional_professional(
     return result.scalar_one_or_none()
 
 
+async def require_staff(
+    professional: Professional = Depends(get_current_professional),
+) -> Professional:
+    """Gate for platform-staff endpoints (announcements admin)."""
+    if not professional.is_staff:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso restrito a administradores da plataforma",
+        )
+    return professional
+
+
 async def get_patient_for_professional(
     patient_id: UUID,
     professional: Professional = Depends(get_current_professional),

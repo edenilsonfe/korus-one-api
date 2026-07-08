@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, String, Text
+from sqlalchemy import Boolean, DateTime, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -21,6 +21,7 @@ class Professional(Base, TimestampMixin):
     phone: Mapped[str] = mapped_column(String(50), default="", nullable=False)
     cpf: Mapped[str] = mapped_column(String(14), default="", nullable=False)
     avatar_color: Mapped[str] = mapped_column(String(64), default="oklch(0.58 0.12 205)", nullable=False)
+    is_staff: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     subscription_status: Mapped[str] = mapped_column(String(32), nullable=False, default="trialing")
     trial_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     trial_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

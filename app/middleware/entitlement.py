@@ -19,6 +19,10 @@ EXEMPT_PATH_PREFIXES: tuple[str, ...] = (
     "/api/v1/billing/reconcile",
     "/api/v1/billing/webhooks",
     "/api/v1/webhooks",
+    # Notifications (seen/read) and announcements admin (staff) are not
+    # clinical data mutations — exempt from entitlement gating.
+    "/api/v1/notifications",
+    "/api/v1/announcements",
 )
 EXEMPT_PATHS = frozenset({"/health", "/docs", "/redoc", "/openapi.json"})
 

@@ -21,6 +21,7 @@ def _to_response(p: Professional) -> ProfessionalResponse:
         phone=p.phone,
         cpf=p.cpf or "",
         avatar_color=p.avatar_color,
+        is_staff=p.is_staff,
     )
 
 

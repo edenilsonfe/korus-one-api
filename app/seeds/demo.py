@@ -8,6 +8,7 @@ from sqlalchemy import select
 from app.core.constants import AVATAR_COLORS, CLINICAL_DOMAIN_CATALOG
 from app.core.security import hash_password
 from app.db.session import AsyncSessionLocal, engine
+from app.models.app_notification import AppNotification
 from app.models.assessment import Assessment, ProtocolCatalog
 from app.models.caregiver import Caregiver
 from app.models.goal import ClinicalDomainSnapshot, Goal
@@ -57,6 +58,7 @@ async def seed_demo(session) -> None:
         council="CRFa 2-12345",
         phone="(11) 98888-1010",
         avatar_color="oklch(0.58 0.12 205)",
+        is_staff=True,
         subscription_status="active",
     )
     session.add(professional)
@@ -123,6 +125,58 @@ async def seed_demo(session) -> None:
         )
 
 
+async def seed_demo_announcements(session) -> None:
+    """Seed 3 demo broadcast announcements (dev only)."""
+    existing = await session.execute(
+        select(AppNotification).where(AppNotification.kind == "broadcast").limit(1)
+    )
+    if existing.scalar_one_or_none():
+        return
+
+    demos = [
+        AppNotification(
+            kind="broadcast",
+            type="feature",
+            title="Novo módulo de relatórios com IA",
+            body=(
+                "Agora você pode gerar relatórios clínicos, escolares e evolutivos "
+                "direto do prontuário com um clique.\n\nAcesse em Relatórios IA."
+            ),
+            deep_link="/relatorios",
+            severity="info",
+            audience="all",
+            status="published",
+        ),
+        AppNotification(
+            kind="broadcast",
+            type="notice",
+            title="Manutenção programada",
+            body=(
+                "No sábado 03/08 das 02h às 04h a plataforma passará por uma "
+                "manutenção e ficará indisponível por breve período."
+            ),
+            severity="warning",
+            audience="all",
+            status="published",
+        ),
+        AppNotification(
+            kind="broadcast",
+            type="tutorial",
+            title="Conecte seu WhatsApp",
+            body=(
+                "Envie lembretes e confirmações de consulta automaticamente. "
+                "Conecte seu número em poucos cliques."
+            ),
+            deep_link="/whatsapp",
+            severity="info",
+            audience="all",
+            status="published",
+        ),
+    ]
+    for ann in demos:
+        session.add(ann)
+
+
 async def run_seed() -> None:
     async with AsyncSessionLocal() as session:
         from app.services.plan_catalog_seed import seed_plan_catalog
@@ -130,6 +184,7 @@ async def run_seed() -> None:
         await seed_protocols(session)
         await seed_plan_catalog(session)
         await seed_demo(session)
+        await seed_demo_announcements(session)
         await session.commit()
     await engine.dispose()
     print("Seed concluído.")

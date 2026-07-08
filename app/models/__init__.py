@@ -1,5 +1,6 @@
 from app.models.billing import BillingCustomer, BillingEvent, Plan, Subscription
 from app.models.ai import AIJob, AIReport, ChatMessage, Conversation
+from app.models.app_notification import AppNotification, AppNotificationRead
 from app.models.anamnese import AnamneseEntry
 from app.models.appointment import Appointment
 from app.models.assessment import Assessment, ProtocolCatalog
@@ -48,4 +49,6 @@ __all__ = [
     "WhatsAppConnection",
     "NotificationSettings",
     "NotificationMessageLog",
+    "AppNotification",
+    "AppNotificationRead",
 ]
