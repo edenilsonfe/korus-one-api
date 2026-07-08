@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from uuid import UUID
 
 from sqlalchemy import func, select
@@ -13,6 +13,13 @@ from app.models.caregiver import Caregiver
 from app.models.goal import ClinicalDomainSnapshot, Goal
 from app.models.patient import Patient
 from app.models.session import Session
+
+ANALYTICS_PERIOD_DAYS = {
+    "30d": 30,
+    "90d": 90,
+    "6m": 182,
+    "1y": 365,
+}
 
 
 async def get_patient_aggregates(db: AsyncSession, patient_id: UUID) -> dict:
@@ -43,7 +50,22 @@ async def get_patient_aggregates(db: AsyncSession, patient_id: UUID) -> dict:
     }
 
 
+def resolve_analytics_period_start(
+    period: str | None,
+    *,
+    today: date | None = None,
+) -> date | None:
+    """Return inclusive lower bound for analytics period, or None for all history."""
+    if period is None or period == "all":
+        return None
+    if period not in ANALYTICS_PERIOD_DAYS:
+        raise ValueError(f"Invalid period: {period}")
+    ref = today or date.today()
+    return ref - timedelta(days=ANALYTICS_PERIOD_DAYS[period])
+
+
 async def build_clinical_domains(db: AsyncSession, patient_id: UUID) -> list[dict]:
+    """Legacy shape for PatientDetail / clinical-domains: history as int[]."""
     snapshots_result = await db.execute(
         select(ClinicalDomainSnapshot)
         .where(ClinicalDomainSnapshot.patient_id == patient_id)
@@ -60,6 +82,47 @@ async def build_clinical_domains(db: AsyncSession, patient_id: UUID) -> list[dic
         history = [s.score for s in series]
         score = history[-1] if history else 0
         delta = score - history[-2] if len(history) >= 2 else 0
+        domains.append({
+            "key": key,
+            "label": catalog.get(key, series[-1].label if series else key),
+            "score": score,
+            "delta": delta,
+            "history": history,
+        })
+    return domains
+
+
+async def build_development_analytics(
+    db: AsyncSession,
+    patient_id: UUID,
+    period: str = "6m",
+    *,
+    today: date | None = None,
+) -> list[dict]:
+    """Analytics shape: history as {date, score}[], filtered by period."""
+    start = resolve_analytics_period_start(period, today=today)
+    stmt = (
+        select(ClinicalDomainSnapshot)
+        .where(ClinicalDomainSnapshot.patient_id == patient_id)
+        .order_by(ClinicalDomainSnapshot.recorded_at.asc())
+    )
+    if start is not None:
+        stmt = stmt.where(ClinicalDomainSnapshot.recorded_at >= start)
+    snapshots_result = await db.execute(stmt)
+    snapshots = snapshots_result.scalars().all()
+    by_key: dict[str, list] = {}
+    for snap in snapshots:
+        by_key.setdefault(snap.key, []).append(snap)
+
+    domains = []
+    catalog = {d["key"]: d["label"] for d in CLINICAL_DOMAIN_CATALOG}
+    for key, series in by_key.items():
+        history = [
+            {"date": s.recorded_at.isoformat(), "score": s.score}
+            for s in series
+        ]
+        score = history[-1]["score"] if history else 0
+        delta = (history[-1]["score"] - history[0]["score"]) if len(history) >= 2 else 0
         domains.append({
             "key": key,
             "label": catalog.get(key, series[-1].label if series else key),

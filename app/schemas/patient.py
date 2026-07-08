@@ -81,6 +81,21 @@ class ClinicalDomainResponse(CamelModel):
     history: list[int]
 
 
+class ClinicalDomainHistoryPoint(CamelModel):
+    date: str
+    score: int
+
+
+class DevelopmentAnalyticsAreaResponse(CamelModel):
+    """Shape for GET /analytics/development — history includes dates."""
+
+    key: str
+    label: str
+    score: int
+    delta: int
+    history: list[ClinicalDomainHistoryPoint]
+
+
 class AssessmentField(CamelModel):
     label: str
     value: str

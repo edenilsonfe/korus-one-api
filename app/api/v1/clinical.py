@@ -14,14 +14,21 @@ from app.models.patient import Patient
 from app.models.professional import Professional
 from app.schemas.clinical import AssessmentCreate, GoalCreate, GoalUpdate, ProtocolResponse
 from app.schemas.common import PaginatedResponse
-from app.schemas.patient import AssessmentResponse, GoalResponse
+from app.schemas.patient import (
+    AssessmentResponse,
+    DevelopmentAnalyticsAreaResponse,
+    GoalResponse,
+)
 from app.services.assessment_scoring import (
     build_assessment_from_scores,
     get_protocol_scoring_mode,
     score_manifest_protocol,
 )
-from app.services.patient import build_clinical_domains
+from app.services.patient import build_clinical_domains, build_development_analytics
 from app.services.timeline import create_timeline_event
+
+ANALYTICS_PERIODS = frozenset({"30d", "90d", "6m", "1y"})
+
 
 def _assessment_response(
     assessment: Assessment,
@@ -333,11 +340,19 @@ async def get_clinical_domains(
 @router.get("/analytics/development")
 async def analytics_development(
     patient_id: UUID | None = Query(None),
+    period: str = Query("6m"),
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
-    if patient_id:
-        await get_patient_for_professional(patient_id, professional, db)
-        domains = await build_clinical_domains(db, patient_id)
-        return {"areas": domains}
-    return {"areas": []}
+    if period not in ANALYTICS_PERIODS:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"period must be one of: {', '.join(sorted(ANALYTICS_PERIODS))}",
+        )
+    if not patient_id:
+        return {"areas": []}
+    await get_patient_for_professional(patient_id, professional, db)
+    domains = await build_development_analytics(db, patient_id, period)
+    return {
+        "areas": [DevelopmentAnalyticsAreaResponse.model_validate(d) for d in domains]
+    }
