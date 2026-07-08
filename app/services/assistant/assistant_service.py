@@ -27,7 +27,7 @@ from app.models.professional import Professional
 from app.schemas.assistant import ChatMetadata, ChatResponse
 from app.services.assistant.format_reply import (
     is_leaked_tool_markup,
-    sanitize_assistant_reply,
+    sanitize_llm_plain_text,
 )
 from app.services.assistant.llm_client import create_opencode_client
 from app.services.assistant.prompts import (
@@ -211,7 +211,7 @@ class AssistantService:
                 executor.tools_used,
             )
             raw_reply = FALLBACK_REPLY
-        reply = sanitize_assistant_reply(raw_reply) or sanitize_assistant_reply(FALLBACK_REPLY)
+        reply = sanitize_llm_plain_text(raw_reply) or sanitize_llm_plain_text(FALLBACK_REPLY)
 
         logger.info(
             "Assistant query prof=%s pipeline=%s heuristic=%s tools=%s",
@@ -233,7 +233,7 @@ class AssistantService:
 
     def _fallback_response(self, *, queried_at: datetime, executor: ToolExecutor) -> ChatResponse:
         return ChatResponse(
-            reply=sanitize_assistant_reply(FALLBACK_REPLY),
+            reply=sanitize_llm_plain_text(FALLBACK_REPLY),
             metadata=ChatMetadata(
                 tools_used=[],
                 date_from=executor.date_from,

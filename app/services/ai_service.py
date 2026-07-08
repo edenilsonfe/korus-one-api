@@ -101,4 +101,7 @@ async def run_llm(prompt: str, system: str = "") -> str:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": prompt})
     response = await client.chat.completions.create(model=settings.opencode_model, messages=messages)
-    return response.choices[0].message.content or ""
+    content = response.choices[0].message.content or ""
+    from app.services.assistant.format_reply import sanitize_llm_plain_text
+
+    return sanitize_llm_plain_text(content)
