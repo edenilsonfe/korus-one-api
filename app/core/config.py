@@ -38,6 +38,10 @@ class Settings(BaseSettings):
     opencode_base_url: str = "https://opencode.ai/zen/v1"
     opencode_model: str = "deepseek-v4-flash"
 
+    # Assistente de IA unificado (clínico + gestão) com tool-calling.
+    assistant_rate_limit_per_hour: int = 30
+    assistant_llm_timeout_seconds: int = 120
+
     whatsapp_provider: str = "evolution"
     whatsapp_credential_encryption_key: str = ""
     app_public_url: str = ""

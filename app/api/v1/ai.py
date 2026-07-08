@@ -24,8 +24,11 @@ from app.schemas.ai import (
     MessageCreate,
 )
 from app.services.ai_service import build_patient_context, create_ai_job, get_job, run_llm
+from app.services.assistant.assistant_service import AssistantService
+from app.services.assistant.rate_limit import enforce_assistant_rate_limit
 from app.services.report_export import export_report
 from app.services.timeline import create_timeline_event
+from app.schemas.assistant import ChatResponse
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -259,13 +262,18 @@ async def create_conversation(
     )
 
 
-@router.post("/conversations/{conversation_id}/messages")
+@router.post("/conversations/{conversation_id}/messages", response_model=ChatResponse)
 async def send_message(
     conversation_id: UUID,
     body: MessageCreate,
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
+    """Unified AI assistant (clínico + gestão) with tool-calling.
+
+    Returns a single ChatResponse (JSON) after orchestrating read-only tools.
+    Rate-limited per professional; 503 if OpenCode is not configured.
+    """
     result = await db.execute(
         select(Conversation)
         .where(Conversation.id == conversation_id, Conversation.professional_id == professional.id)
@@ -275,26 +283,24 @@ async def send_message(
     if not conv:
         raise HTTPException(status_code=404, detail="Conversa não encontrada")
 
+    enforce_assistant_rate_limit(str(professional.id))
+
     user_msg = ChatMessage(conversation_id=conv.id, role="user", content=body.content)
     db.add(user_msg)
     await db.flush()
+    # Make the new user message visible to the service's history view.
+    conv.messages = list(conv.messages or []) + [user_msg]
 
-    context = ""
-    if conv.patient_id:
-        context = await build_patient_context(db, conv.patient_id)
-    system = "Você é um assistente clínico para fonoaudiologia pediátrica. Responda em português (Brasil)."
-    if context:
-        system += f"\n\nContexto do paciente:\n{context}"
-    reply = await run_llm(body.content, system=system)
-    assistant_msg = ChatMessage(conversation_id=conv.id, role="assistant", content=reply)
+    service = AssistantService(db, professional, conv)
+    response = await service.chat(body.content)
+
+    assistant_msg = ChatMessage(
+        conversation_id=conv.id, role="assistant", content=response.reply
+    )
     db.add(assistant_msg)
     await db.flush()
 
-    async def stream():
-        yield f"data: {json.dumps({'role': 'assistant', 'content': reply})}\n\n"
-        yield "data: [DONE]\n\n"
-
-    return StreamingResponse(stream(), media_type="text/event-stream")
+    return response
 
 
 async def _run_tool_job(
