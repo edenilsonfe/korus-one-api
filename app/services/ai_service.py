@@ -85,7 +85,7 @@ async def build_patient_context(db: AsyncSession, patient_id: UUID) -> str:
     return "\n".join(lines)
 
 
-async def run_llm(prompt: str, system: str = "") -> str:
+async def run_llm(prompt: str, system: str = "", output: str = "plain") -> str:
     settings = get_settings()
     if not settings.opencode_api_key:
         return "[Resposta simulada — configure OPENCODE_API_KEY para respostas reais]\n\n" + prompt[:500]
@@ -102,6 +102,8 @@ async def run_llm(prompt: str, system: str = "") -> str:
     messages.append({"role": "user", "content": prompt})
     response = await client.chat.completions.create(model=settings.opencode_model, messages=messages)
     content = response.choices[0].message.content or ""
-    from app.services.assistant.format_reply import sanitize_llm_plain_text
+    from app.services.assistant.format_reply import sanitize_llm_markdown, sanitize_llm_plain_text
 
+    if output == "markdown":
+        return sanitize_llm_markdown(content)
     return sanitize_llm_plain_text(content)

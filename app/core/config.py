@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     # Assistente de IA unificado (clínico + gestão) com tool-calling.
     assistant_rate_limit_per_hour: int = 30
     assistant_llm_timeout_seconds: int = 120
+    ai_context_max_chars: int = 12000
 
     whatsapp_provider: str = "evolution"
     whatsapp_credential_encryption_key: str = ""

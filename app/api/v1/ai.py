@@ -24,6 +24,8 @@ from app.schemas.ai import (
     MessageCreate,
 )
 from app.services.ai_service import build_patient_context, create_ai_job, get_job, run_llm
+from app.services.ai_context import build_context
+from app.services.ai_prompts import AI_TOOL_SPECS, build_request_prompt, build_tool_prompt
 from app.services.assistant.assistant_service import AssistantService
 from app.services.assistant.rate_limit import enforce_assistant_rate_limit
 from app.services.report_export import export_report
@@ -31,13 +33,6 @@ from app.services.timeline import create_timeline_event
 from app.schemas.assistant import ChatResponse
 
 router = APIRouter(prefix="/ai", tags=["ai"])
-
-REPORT_PROMPTS = {
-    "clinico": "Gere um relatório clínico detalhado em português (Brasil) para o profissional de saúde.",
-    "escolar": "Gere um relatório escolar com orientações pedagógicas em português (Brasil).",
-    "pais": "Gere um relatório acessível para os pais/responsáveis em português (Brasil).",
-    "evolutivo": "Gere um relatório evolutivo comparando progresso ao longo do tempo em português (Brasil).",
-}
 
 
 @router.get("/jobs/{job_id}", response_model=AIJobResponse)
@@ -168,7 +163,12 @@ async def create_report(
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
+    enforce_assistant_rate_limit(str(professional.id))
     patient = await get_patient_for_professional(UUID(body.patient_id), professional, db)
+    spec_key = f"report:{body.type}"
+    if spec_key not in AI_TOOL_SPECS:
+        raise HTTPException(status_code=400, detail="Tipo de relatório inválido")
+    spec = AI_TOOL_SPECS[spec_key]
     job = await create_ai_job(
         db,
         professional_id=professional.id,
@@ -176,11 +176,9 @@ async def create_report(
         job_type="report",
         input_data=body.model_dump(),
     )
-    context = await build_patient_context(db, patient.id)
-    prompt = REPORT_PROMPTS.get(body.type, REPORT_PROMPTS["clinico"])
-    if body.prompt:
-        prompt += f"\n\nInstruções adicionais: {body.prompt}"
-    content = await run_llm(f"{prompt}\n\nContexto clínico:\n{context}")
+    context = await build_context(db, patient.id, spec.sections, limits=spec.limits)
+    prompt = build_tool_prompt(spec, context=context, extra_prompt=body.prompt)
+    content = await run_llm(prompt, spec.system, output=spec.output)
     preview = content[:200] + "..." if len(content) > 200 else content
     report = AIReport(
         professional_id=professional.id,
@@ -308,8 +306,11 @@ async def _run_tool_job(
     professional: Professional,
     job_type: str,
     body: AIToolRequest,
-    prompt_builder,
+    *,
+    spec_key: str | None = None,
+    prompt_builder=None,
 ) -> dict:
+    enforce_assistant_rate_limit(str(professional.id))
     patient_id = UUID(body.patient_id) if body.patient_id else None
     if patient_id:
         await get_patient_for_professional(patient_id, professional, db)
@@ -320,9 +321,19 @@ async def _run_tool_job(
         job_type=job_type,
         input_data=body.model_dump(),
     )
-    context = await build_patient_context(db, patient_id) if patient_id else ""
-    prompt = prompt_builder(body, context)
-    result = await run_llm(prompt)
+    if spec_key:
+        spec, prompt = build_request_prompt(
+            spec_key,
+            body,
+            context=await build_context(db, patient_id, AI_TOOL_SPECS[spec_key].sections, limits=AI_TOOL_SPECS[spec_key].limits)
+            if patient_id and AI_TOOL_SPECS[spec_key].sections
+            else "",
+        )
+        result = await run_llm(prompt, spec.system, output=spec.output)
+    else:
+        context = ""
+        prompt = prompt_builder(body, context)
+        result = await run_llm(prompt)
     job.status = "completed"
     job.result = result
     job.completed_at = utcnow()
@@ -332,28 +343,42 @@ async def _run_tool_job(
 
 @router.post("/transcribe", status_code=status.HTTP_202_ACCEPTED)
 async def transcribe(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "transcribe", body, lambda b, c: f"Transcreva o seguinte áudio (simulado):\n{b.text or ''}")
+    return await _run_tool_job(
+        db,
+        professional,
+        "transcribe",
+        body,
+        prompt_builder=lambda b, c: f"Transcreva o seguinte áudio (simulado):\n{b.text or ''}",
+    )
 
 @router.post("/speech-analysis", status_code=status.HTTP_202_ACCEPTED)
 async def speech_analysis(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "speech-analysis", body, lambda b, c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{c}")
+    patient_id = UUID(body.patient_id) if body.patient_id else None
+    context = await build_patient_context(db, patient_id) if patient_id else ""
+    return await _run_tool_job(
+        db,
+        professional,
+        "speech-analysis",
+        body,
+        prompt_builder=lambda b, _c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{context}",
+    )
 
 @router.post("/clinical-trends", status_code=status.HTTP_202_ACCEPTED)
 async def clinical_trends(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "clinical-trends", body, lambda b, c: f"Identifique tendências clínicas:\n{c}")
+    return await _run_tool_job(db, professional, "clinical-trends", body, spec_key="clinical-trends")
 
 @router.post("/suggest-goals", status_code=status.HTTP_202_ACCEPTED)
 async def suggest_goals(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "suggest-goals", body, lambda b, c: f"Sugira metas terapêuticas:\n{c}")
+    return await _run_tool_job(db, professional, "suggest-goals", body, spec_key="suggest-goals")
 
 @router.post("/therapy-plan", status_code=status.HTTP_202_ACCEPTED)
 async def therapy_plan(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "therapy-plan", body, lambda b, c: f"Monte plano terapêutico trimestral:\n{c}")
+    return await _run_tool_job(db, professional, "therapy-plan", body, spec_key="therapy-plan")
 
 @router.post("/session-summary", status_code=status.HTTP_202_ACCEPTED)
 async def session_summary(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "session-summary", body, lambda b, c: f"Resuma a sessão:\n{b.session_notes or b.text or ''}")
+    return await _run_tool_job(db, professional, "session-summary", body, spec_key="session-summary")
 
 @router.post("/proofread", status_code=status.HTTP_202_ACCEPTED)
 async def proofread(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    return await _run_tool_job(db, professional, "proofread", body, lambda b, c: f"Revise o texto clínico:\n{b.text or ''}")
+    return await _run_tool_job(db, professional, "proofread", body, spec_key="proofread")

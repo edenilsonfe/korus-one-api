@@ -64,6 +64,42 @@ def sanitize_llm_plain_text(text: str) -> str:
     return sanitize_assistant_reply(cleaned)
 
 
+_CODE_FENCE_WRAPPER = re.compile(
+    r"^\s*```(?:markdown|md)?\s*\n([\s\S]*?)\n```\s*$",
+    re.IGNORECASE,
+)
+
+
+def sanitize_llm_markdown(text: str) -> str:
+    """Clean leaked tool markup and document-level code fences; preserve markdown structure."""
+    if not text:
+        return text
+
+    if is_leaked_tool_markup(text):
+        return ""
+
+    cleaned = _DSML_ARTIFACT.sub("", text)
+    cleaned = _TOOL_INVOKE_ARTIFACT.sub("", cleaned)
+    cleaned = _METADATA_LINE.sub("", cleaned)
+
+    match = _CODE_FENCE_WRAPPER.match(cleaned.strip())
+    if match:
+        cleaned = match.group(1)
+
+    lines = [line.rstrip() for line in cleaned.splitlines()]
+    normalized: list[str] = []
+    blank_pending = False
+    for line in lines:
+        if not line.strip():
+            if normalized and not blank_pending:
+                blank_pending = True
+            continue
+        blank_pending = False
+        normalized.append(line)
+
+    return "\n\n".join(normalized).strip()
+
+
 def sanitize_assistant_reply(text: str) -> str:
     """Strip markdown, tool markup and metadata footer; UI renders metadata separately."""
     if not text:
