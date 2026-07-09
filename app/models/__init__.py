@@ -2,6 +2,7 @@ from app.models.billing import BillingCustomer, BillingEvent, Plan, Subscription
 from app.models.ai import AIJob, AIReport, ChatMessage, Conversation
 from app.models.admin_audit_log import AdminAuditLog
 from app.models.app_notification import AppNotification, AppNotificationRead
+from app.models.feature_flag import FeatureFlag, FeatureFlagOverride
 from app.models.anamnese import AnamneseEntry
 from app.models.appointment import Appointment
 from app.models.assessment import Assessment, ProtocolCatalog
@@ -53,4 +54,6 @@ __all__ = [
     "AppNotification",
     "AppNotificationRead",
     "AdminAuditLog",
+    "FeatureFlag",
+    "FeatureFlagOverride",
 ]

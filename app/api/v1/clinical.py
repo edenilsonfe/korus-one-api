@@ -65,7 +65,11 @@ async def list_protocols(
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
-    result = await db.execute(select(ProtocolCatalog).order_by(ProtocolCatalog.name.asc()))
+    result = await db.execute(
+        select(ProtocolCatalog)
+        .where(ProtocolCatalog.is_active.is_(True))
+        .order_by(ProtocolCatalog.sort_order.asc(), ProtocolCatalog.name.asc())
+    )
     protocols = result.scalars().all()
     responses = []
     for p in protocols:
@@ -98,7 +102,12 @@ async def list_protocols(
 
 @router.get("/protocols/{protocol_id}", response_model=ProtocolResponse)
 async def get_protocol(protocol_id: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(ProtocolCatalog).where(ProtocolCatalog.id == protocol_id))
+    result = await db.execute(
+        select(ProtocolCatalog).where(
+            ProtocolCatalog.id == protocol_id,
+            ProtocolCatalog.is_active.is_(True),
+        )
+    )
     p = result.scalar_one_or_none()
     if not p:
         raise HTTPException(status_code=404, detail="Protocolo não encontrado")
@@ -172,7 +181,7 @@ async def create_assessment(
 ):
     await get_patient_for_professional(patient_id, professional, db)
     proto = await db.get(ProtocolCatalog, body.protocol_id.lower())
-    if not proto:
+    if not proto or not proto.is_active:
         raise HTTPException(status_code=404, detail="Protocolo não encontrado")
 
     answers = body.answers or {}

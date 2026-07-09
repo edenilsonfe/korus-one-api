@@ -1,13 +1,17 @@
 import uuid
 from datetime import date
 
-from sqlalchemy import Date, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Date, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, new_uuid
 
 ASSESSMENT_STATUS_COMPLETED = "completed"
+
+FIDELITY_BADGES = frozenset(
+    {"official-structure", "partial-norms", "draft-knowledge", "DEV-SAMPLE"}
+)
 
 
 class ProtocolCatalog(Base, TimestampMixin):
@@ -19,6 +23,9 @@ class ProtocolCatalog(Base, TimestampMixin):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     age_range: Mapped[str] = mapped_column(String(64), nullable=False)
     field_templates: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default="true")
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    fidelity_badge: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
 
 class Assessment(Base, TimestampMixin):
