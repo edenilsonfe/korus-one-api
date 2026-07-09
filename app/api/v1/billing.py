@@ -37,6 +37,7 @@ from app.schemas.billing import (
 from app.services.billing_checkout_service import BillingCheckoutService
 from app.services.billing_customer_service import BillingCustomerService
 from app.services.billing_reconciliation_service import BillingReconciliationService
+from app.services.coupon_service import CouponError, CouponService
 from app.services.entitlement_service import EntitlementService
 from app.services.plan_change_service import PlanChangeService
 from app.services.saas_billing_service import SaasBillingService
@@ -276,19 +277,46 @@ async def create_billing_checkout(
     await _ensure_subscription(db, professional_id=professional.id, plan=plan, provider=provider)
     existing_sub = await _latest_subscription(db, professional.id)
 
+    charge_cents = plan.price_cents
+    coupon_code_applied = None
+    if payload.coupon_code:
+        coupon_svc = CouponService(db)
+        try:
+            coupon = await coupon_svc.get_by_code(payload.coupon_code)
+            await coupon_svc.validate_for_professional(coupon, professional.id, plan.slug)
+            charge_cents = coupon_svc.discounted_price_cents(coupon, plan.price_cents)
+            await coupon_svc.redeem(
+                coupon=coupon, professional_id=professional.id, context="checkout"
+            )
+            if coupon.trial_bonus_days > 0:
+                from datetime import UTC, datetime, timedelta
+
+                base = professional.trial_ends_at or datetime.now(UTC)
+                if base.tzinfo is None:
+                    base = base.replace(tzinfo=UTC)
+                if base < datetime.now(UTC):
+                    base = datetime.now(UTC)
+                professional.trial_ends_at = base + timedelta(days=coupon.trial_bonus_days)
+            coupon_code_applied = coupon.code
+            await db.commit()
+        except CouponError as exc:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=exc.detail) from exc
+
     metadata: dict = {
         "professional_id": professional_id,
         "plan_id": str(plan.id),
         "plan_slug": plan.slug,
         "plan_name": plan.name,
         "price_cents": plan.price_cents,
-        "charge_cents": plan.price_cents,
+        "charge_cents": charge_cents,
         "currency": plan.currency,
         "billing_interval": plan.billing_interval,
         "provider": provider,
         "customer_email": professional.email,
         "customer_name": professional.name,
     }
+    if coupon_code_applied:
+        metadata["coupon_code"] = coupon_code_applied
 
     if provider != "stub":
         if document:

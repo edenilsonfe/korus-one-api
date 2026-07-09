@@ -26,6 +26,7 @@ class PlanPublicResponse(CamelModel):
 class CheckoutRequest(CamelModel):
     plan_slug: str
     cpf: str | None = None
+    coupon_code: str | None = None
 
 
 class CheckoutResponse(CamelModel):
