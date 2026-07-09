@@ -31,6 +31,8 @@ async def get_current_professional(
     professional = result.scalar_one_or_none()
     if professional is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Profissional não encontrado")
+    if professional.is_disabled:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
     return professional
 
 
@@ -49,7 +51,10 @@ async def get_optional_professional(
         return None
 
     result = await db.execute(select(Professional).where(Professional.id == professional_id))
-    return result.scalar_one_or_none()
+    professional = result.scalar_one_or_none()
+    if professional is None or professional.is_disabled:
+        return None
+    return professional
 
 
 async def require_staff(

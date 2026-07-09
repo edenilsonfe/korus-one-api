@@ -21,12 +21,17 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 
-def create_access_token(subject: UUID, extra: dict | None = None) -> str:
+def create_access_token(
+    subject: UUID,
+    token_version: int = 0,
+    extra: dict | None = None,
+) -> str:
     settings = get_settings()
     now = datetime.now(UTC)
     payload = {
         "sub": str(subject),
         "type": "access",
+        "tv": token_version,
         "iat": now,
         "exp": now + timedelta(minutes=settings.access_token_expire_minutes),
     }
@@ -35,12 +40,13 @@ def create_access_token(subject: UUID, extra: dict | None = None) -> str:
     return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
-def create_refresh_token(subject: UUID) -> str:
+def create_refresh_token(subject: UUID, token_version: int = 0) -> str:
     settings = get_settings()
     now = datetime.now(UTC)
     payload = {
         "sub": str(subject),
         "type": "refresh",
+        "tv": token_version,
         "iat": now,
         "exp": now + timedelta(days=settings.refresh_token_expire_days),
     }

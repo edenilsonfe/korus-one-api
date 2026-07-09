@@ -22,6 +22,13 @@ from app.schemas.auth import LoginRequest, RefreshRequest, RegisterRequest, Toke
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+def _tokens_for(professional: Professional) -> TokenResponse:
+    return TokenResponse(
+        access_token=create_access_token(professional.id, professional.token_version),
+        refresh_token=create_refresh_token(professional.id, professional.token_version),
+    )
+
+
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
     existing = await db.execute(select(Professional).where(Professional.email == body.email))
@@ -45,10 +52,7 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
     )
     db.add(professional)
     await db.flush()
-    return TokenResponse(
-        access_token=create_access_token(professional.id),
-        refresh_token=create_refresh_token(professional.id),
-    )
+    return _tokens_for(professional)
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -57,10 +61,9 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     professional = result.scalar_one_or_none()
     if not professional or not verify_password(body.password, professional.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciais inválidas")
-    return TokenResponse(
-        access_token=create_access_token(professional.id),
-        refresh_token=create_refresh_token(professional.id),
-    )
+    if professional.is_disabled:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
+    return _tokens_for(professional)
 
 
 @router.post("/refresh", response_model=TokenResponse)
@@ -70,13 +73,17 @@ async def refresh(body: RefreshRequest, db: AsyncSession = Depends(get_db)):
         if payload.get("type") != "refresh":
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
         professional_id = UUID(payload["sub"])
+        token_version = int(payload.get("tv", 0))
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido") from exc
     result = await db.execute(select(Professional).where(Professional.id == professional_id))
     professional = result.scalar_one_or_none()
     if not professional:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Profissional não encontrado")
-    return TokenResponse(
-        access_token=create_access_token(professional.id),
-        refresh_token=create_refresh_token(professional.id),
-    )
+    if professional.is_disabled:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
+    if token_version != professional.token_version:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sessão invalidada")
+    return _tokens_for(professional)
