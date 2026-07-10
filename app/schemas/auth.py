@@ -48,3 +48,21 @@ class TokenResponse(CamelModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+
+class ForgotPasswordRequest(CamelModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(CamelModel):
+    token: str
+    new_password: str = Field(min_length=8)
+
+
+class ChangePasswordRequest(CamelModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
+
+
+class MessageResponse(CamelModel):
+    message: str

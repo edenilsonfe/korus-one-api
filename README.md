@@ -55,6 +55,17 @@ uv run uvicorn app.main:app --reload --port 8000
 
 > **Nota Windows:** conexões do host ao Postgres Docker podem exigir `scram-sha-256`. Use o serviço `api` via `docker compose --profile app up -d` ou `docker compose run --rm migrate` para bootstrap.
 
+## Env de e-mail (Resend)
+
+Para o fluxo de recuperação de senha (`/auth/forgot-password` → `/auth/reset-password`), configure no `.env`:
+
+- `RESEND_API_KEY`: chave da conta Resend.
+- `EMAIL_FROM`: remetente aprovado no Resend.
+- `EMAIL_SENDING_ENABLED=true`: habilita envio real (em dev pode ficar `false`).
+- `FRONTEND_URL`: base usada no link `.../reset-password?token=...`.
+- `PASSWORD_TOKEN_EXPIRE_MINUTES`: validade do token de reset.
+- `PASSWORD_RESET_COOLDOWN_SECONDS`: cooldown entre solicitações por usuário.
+
 ## Endpoints
 
 - Health: `GET /health`
