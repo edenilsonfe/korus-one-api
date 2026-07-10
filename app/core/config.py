@@ -28,6 +28,12 @@ class Settings(BaseSettings):
 
     redis_url: str = "redis://localhost:6380"
 
+    resend_api_key: str = ""
+    email_from: str = "Korus One <noreply@korusone.com.br>"
+    email_sending_enabled: bool = False
+    password_token_expire_minutes: int = 60
+    password_reset_cooldown_seconds: int = 60
+
     s3_endpoint: str = "http://localhost:9000"
     s3_access_key: str = "minioadmin"
     s3_secret_key: str = "minioadmin"
