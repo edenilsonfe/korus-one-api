@@ -4,9 +4,11 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy import select
 
+from app.api.v1 import auth as auth_router
 from app.core.security import verify_password
 from app.models.password_reset_token import PasswordResetToken
 from app.services.password_reset import (
+    GENERIC_FORGOT_MESSAGE,
     change_password,
     hash_token,
     request_password_reset,
@@ -95,3 +97,60 @@ async def test_change_password_success_increments_token_version(db_session, prof
     assert updated.id == professional.id
     assert verify_password("novaSenha@123", professional.password_hash) is True
     assert professional.token_version == previous_token_version + 1
+
+
+@pytest.mark.asyncio
+async def test_forgot_password_endpoint_returns_generic_message(api_client, professional, monkeypatch):
+    calls = []
+
+    def _fake_send_password_reset_email_task(to_email: str, user_name: str, raw_token: str) -> None:
+        calls.append((to_email, user_name, raw_token))
+
+    monkeypatch.setattr(auth_router, "send_password_reset_email_task", _fake_send_password_reset_email_task)
+
+    existing_response = await api_client.post(
+        "/api/v1/auth/forgot-password",
+        json={"email": professional.email},
+    )
+    missing_response = await api_client.post(
+        "/api/v1/auth/forgot-password",
+        json={"email": "naoexiste@example.com"},
+    )
+
+    assert existing_response.status_code == 200
+    assert missing_response.status_code == 200
+    assert existing_response.json() == {"message": GENERIC_FORGOT_MESSAGE}
+    assert missing_response.json() == {"message": GENERIC_FORGOT_MESSAGE}
+    assert len(calls) == 1
+    assert calls[0][0] == professional.email
+
+
+@pytest.mark.asyncio
+async def test_reset_password_endpoint_success(api_client, db_session, professional):
+    result = await request_password_reset(db_session, professional.email)
+    assert result is not None
+    _, raw_token = result
+
+    response = await api_client.post(
+        "/api/v1/auth/reset-password",
+        json={"token": raw_token, "newPassword": "novaSenha@123"},
+    )
+    await db_session.refresh(professional)
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "Senha redefinida com sucesso"}
+    assert verify_password("novaSenha@123", professional.password_hash) is True
+
+
+@pytest.mark.asyncio
+async def test_change_password_endpoint_success(api_client, db_session, professional, auth_headers):
+    response = await api_client.post(
+        "/api/v1/auth/change-password",
+        json={"currentPassword": "testpass123", "newPassword": "novaSenha@123"},
+        headers=auth_headers,
+    )
+    await db_session.refresh(professional)
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "Senha alterada com sucesso"}
+    assert verify_password("novaSenha@123", professional.password_hash) is True

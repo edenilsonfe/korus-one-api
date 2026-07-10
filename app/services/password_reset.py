@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import logging
 import secrets
 from datetime import UTC, datetime, timedelta
@@ -18,16 +17,13 @@ from app.models.password_reset_token import PURPOSE_PASSWORD_RESET, PasswordRese
 from app.models.professional import Professional
 from app.services.email.resend_client import send_email
 from app.services.email.templates import password_reset_email
+from app.utils.token_hash import hash_token
 
 logger = logging.getLogger(__name__)
 
 GENERIC_FORGOT_MESSAGE = (
     "Se o e-mail informado estiver cadastrado e ativo, você receberá um link para redefinir sua senha."
 )
-
-
-def hash_token(raw: str) -> str:
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 async def create_password_token(
