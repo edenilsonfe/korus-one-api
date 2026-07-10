@@ -26,6 +26,16 @@ GENERIC_FORGOT_MESSAGE = (
 )
 
 
+def _redis_client() -> Any | None:
+    try:
+        import redis
+
+        return redis.from_url(get_settings().redis_url, decode_responses=True)
+    except Exception as exc:  # pragma: no cover - fail-open when Redis unavailable
+        logger.warning("Password reset Redis unavailable (fail-open): %s", exc)
+        return None
+
+
 async def create_password_token(
     db: AsyncSession,
     professional_id: UUID,
@@ -71,20 +81,21 @@ async def request_password_reset(
     if professional is None or professional.is_disabled:
         return None
 
+    client = redis_client if redis_client is not None else _redis_client()
     cooldown_key = f"pwreset_cooldown:{professional.id}"
-    if redis_client is not None:
+    if client is not None:
         try:
-            if redis_client.get(cooldown_key):
+            if client.get(cooldown_key):
                 return None
         except Exception as exc:  # pragma: no cover - defensive fail-open path
             logger.warning("Password reset cooldown read failed (fail-open): %s", exc)
 
     raw_token = await create_password_token(db, professional.id, PURPOSE_PASSWORD_RESET)
 
-    if redis_client is not None:
+    if client is not None:
         settings = get_settings()
         try:
-            redis_client.set(cooldown_key, "1", ex=settings.password_reset_cooldown_seconds)
+            client.set(cooldown_key, "1", ex=settings.password_reset_cooldown_seconds)
         except Exception as exc:  # pragma: no cover - defensive fail-open path
             logger.warning("Password reset cooldown write failed (fail-open): %s", exc)
 
@@ -109,12 +120,15 @@ def send_password_reset_email_sync(to_email: str, user_name: str, raw_token: str
         reset_url=reset_url,
         expires_minutes=settings.password_token_expire_minutes,
     )
-    send_email(
-        to_email=to_email,
-        subject=rendered.subject,
-        html=rendered.html,
-        text=rendered.text,
-    )
+    try:
+        send_email(
+            to_email=to_email,
+            subject=rendered.subject,
+            html=rendered.html,
+            text=rendered.text,
+        )
+    except Exception as exc:
+        logger.exception("Failed to send password reset email to %s: %s", to_email, exc)
 
 
 async def reset_password_with_token(

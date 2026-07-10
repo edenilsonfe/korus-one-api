@@ -55,6 +55,27 @@ async def test_request_password_reset_creates_token_for_valid_email(db_session, 
     assert token.used_at is None
 
 
+class _FakeRedis:
+    def __init__(self) -> None:
+        self._data: dict[str, str] = {}
+
+    def get(self, key: str) -> str | None:
+        return self._data.get(key)
+
+    def set(self, key: str, value: str, ex: int | None = None) -> None:
+        self._data[key] = value
+
+
+@pytest.mark.asyncio
+async def test_request_password_reset_cooldown_blocks_second_request(db_session, professional):
+    fake_redis = _FakeRedis()
+    first = await request_password_reset(db_session, professional.email, redis_client=fake_redis)
+    second = await request_password_reset(db_session, professional.email, redis_client=fake_redis)
+
+    assert first is not None
+    assert second is None
+
+
 @pytest.mark.asyncio
 async def test_reset_password_with_token_updates_hash_and_token_version(db_session, professional):
     result = await request_password_reset(db_session, professional.email)
