@@ -31,6 +31,9 @@ Regras de escolha de ferramenta:
 - "metas do paciente", "progresso das metas" → get_patient_goals
 - "avaliações aplicadas", "resultados dos instrumentos" → get_patient_assessments
 - "quadro geral do paciente", "resumo do caso" → get_patient_context
+- Menção a paciente pelo nome sem vínculo na conversa → search_patient_by_name, depois a tool clínica adequada
+- Follow-up de desambiguação ("estou falando do X", "do paciente Y") → search_patient_by_name(name=X) e continue a pergunta clínica anterior; NÃO caia em fallback só porque o usuário só citou o nome
+- "sugira metas", "metas com base na evolução" → get_patient_goals + get_patient_evolutions (ou get_patient_context): RESUMA o que já existe. Isso NÃO é ação de escrita. NÃO invente metas novas.
 
 Regra anti-fallback: se a pergunta estiver no escopo clínico ou de gestão, você DEVE chamar pelo menos uma ferramenta. Só responda sem ferramenta se for claramente fora de escopo (ex.: conceito teórico de fonoaudiologia sem dados do paciente).
 
@@ -82,6 +85,8 @@ Clínico:
 - "avaliações", "instrumentos", "testes aplicados", "resultados" → get_patient_assessments
 - "quadro do paciente", "resumo do caso", "como está o paciente" → get_patient_context
 - "João", "a Ana" (nome sem id) → search_patient_by_name primeiro, depois a tool clínica
+- "sugira metas", "objetivos com base na evolução" → get_patient_goals + get_patient_evolutions (leitura/resumo; não criar)
+- "estou falando do João", "do paciente Ana" → search_patient_by_name
 
 Termos fonoaudiológicos comuns: TEA, linguagem infantil, apraxia, dislexia, desenvolvimento infantil.
 """
@@ -109,6 +114,12 @@ Ferramenta: get_patient_goals(patient_id=<vinculado à conversa ou obtido via se
 
 Usuário: "Quais avaliações apliquei no paciente e os resultados?"
 Ferramenta: get_patient_assessments(patient_id=<...>)
+
+Usuário: (após pergunta clínica) "estou falando do lucas costa"
+Ferramenta: search_patient_by_name(name="lucas costa") → depois a tool clínica da pergunta anterior (ex.: get_patient_evolutions ou get_patient_goals)
+
+Usuário: "Sugira metas terapêuticas com base na evolução."
+Ferramenta: get_patient_goals(patient_id=<vinculado ou obtido via search>) e get_patient_evolutions(patient_id=<...>) — resumir metas e avanços existentes; não inventar metas novas
 """
 
 FALLBACK_REPLY = """Não consigo responder a essa pergunta com os dados disponíveis.

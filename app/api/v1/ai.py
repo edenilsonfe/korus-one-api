@@ -27,6 +27,7 @@ from app.services.ai_service import build_patient_context, create_ai_job, get_jo
 from app.services.ai_context import build_context
 from app.services.ai_prompts import AI_TOOL_SPECS, build_request_prompt, build_tool_prompt
 from app.services.assistant.assistant_service import AssistantService
+from app.services.assistant.conversation_patient import bind_conversation_patient
 from app.services.assistant.rate_limit import enforce_assistant_rate_limit
 from app.services.report_export import export_report
 from app.services.timeline import create_timeline_event
@@ -291,6 +292,8 @@ async def send_message(
     conv = result.scalar_one_or_none()
     if not conv:
         raise HTTPException(status_code=404, detail="Conversa não encontrada")
+
+    await bind_conversation_patient(db, professional, conv, body.patient_id)
 
     enforce_assistant_rate_limit(str(professional.id))
 

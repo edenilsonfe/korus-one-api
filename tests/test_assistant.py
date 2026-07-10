@@ -32,6 +32,8 @@ from app.models.session import Session
 from app.schemas.assistant import ChatResponse
 from app.services.assistant.assistant_service import AssistantService
 from app.services.assistant import rate_limit as rate_limit_module
+from app.services.assistant import prompts as assistant_prompts
+from app.services.assistant.conversation_patient import bind_conversation_patient
 from app.services.assistant.rate_limit import enforce_assistant_rate_limit
 from app.services.assistant.tools import ToolExecutor
 
@@ -383,3 +385,58 @@ def test_rate_limit_redis_counter(monkeypatch):
 
     assert exc_info.value.status_code == 429
     assert calls["n"] == 3
+
+
+async def test_bind_conversation_patient_sets_when_empty(db):
+    pro = await _make_professional(db)
+    p = await _make_patient(db, pro, name="Lucas Costa")
+    conv = await _make_conversation(db, pro, patient=None)
+    assert conv.patient_id is None
+    await bind_conversation_patient(db, pro, conv, str(p.id))
+    await db.commit()
+    await db.refresh(conv)
+    assert conv.patient_id == p.id
+
+
+async def test_bind_conversation_patient_keeps_existing(db):
+    pro = await _make_professional(db)
+    p1 = await _make_patient(db, pro, name="Lucas")
+    p2 = await _make_patient(db, pro, name="Ana")
+    conv = await _make_conversation(db, pro, patient=p1)
+    await bind_conversation_patient(db, pro, conv, str(p2.id))
+    await db.commit()
+    await db.refresh(conv)
+    assert conv.patient_id == p1.id
+
+
+async def test_bind_conversation_patient_rejects_foreign(db):
+    pro = await _make_professional(db, email="a@x.com")
+    other = await _make_professional(db, email="b@x.com")
+    foreign = await _make_patient(db, other, name="Outro")
+    conv = await _make_conversation(db, pro, patient=None)
+    with pytest.raises(HTTPException) as exc:
+        await bind_conversation_patient(db, pro, conv, str(foreign.id))
+    assert exc.value.status_code in (403, 404)
+    assert conv.patient_id is None
+
+
+async def test_bind_conversation_patient_noop_when_none(db):
+    pro = await _make_professional(db)
+    conv = await _make_conversation(db, pro, patient=None)
+    await bind_conversation_patient(db, pro, conv, None)
+    assert conv.patient_id is None
+
+
+def test_prompts_cover_name_followup_and_goals_read():
+    blob = "\n".join(
+        [
+            assistant_prompts.SYSTEM_PROMPT,
+            assistant_prompts.DOMAIN_GLOSSARY,
+            assistant_prompts.FEW_SHOT_EXAMPLES,
+        ]
+    )
+    assert "search_patient_by_name" in blob
+    assert "estou falando do lucas costa" in blob.lower()
+    assert "não invente metas novas" in blob.lower()
+    assert "get_patient_goals" in blob
+    assert "get_patient_evolutions" in blob

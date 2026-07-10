@@ -40,6 +40,7 @@ class ConversationCreate(CamelModel):
 
 class MessageCreate(CamelModel):
     content: str
+    patient_id: str | None = None
 
 
 class ChatMessageResponse(CamelModel):
