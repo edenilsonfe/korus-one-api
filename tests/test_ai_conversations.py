@@ -20,6 +20,19 @@ async def conversation(db_session: AsyncSession, professional: Professional):
     return conv
 
 
+async def test_create_conversation(api_client: AsyncClient, auth_headers: dict):
+    resp = await api_client.post(
+        "/api/v1/ai/conversations",
+        headers=auth_headers,
+        json={"title": "Nova conversa"},
+    )
+    assert resp.status_code == 201
+    data = resp.json()
+    assert data["title"] == "Nova conversa"
+    assert data["messages"] == []
+    assert data["id"]
+
+
 async def test_update_conversation_title(
     api_client: AsyncClient,
     auth_headers: dict,

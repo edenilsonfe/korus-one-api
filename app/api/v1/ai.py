@@ -7,6 +7,7 @@ from fastapi.responses import Response, StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.attributes import set_committed_value
 
 from app.core.deps import get_current_professional, get_patient_for_professional
 from app.core.utils import utcnow
@@ -288,6 +289,8 @@ async def create_conversation(
     )
     db.add(conv)
     await db.flush()
+    # New row has no messages; mark collection loaded without async lazy-load.
+    set_committed_value(conv, "messages", [])
     return _conversation_response(conv)
 
 
