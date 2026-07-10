@@ -21,6 +21,7 @@ from app.schemas.ai import (
     AIToolRequest,
     ConversationCreate,
     ConversationResponse,
+    ConversationUpdate,
     MessageCreate,
 )
 from app.services.ai_service import build_patient_context, create_ai_job, get_job, run_llm
@@ -34,6 +35,44 @@ from app.services.timeline import create_timeline_event
 from app.schemas.assistant import ChatResponse
 
 router = APIRouter(prefix="/ai", tags=["ai"])
+
+
+def _conversation_response(conv: Conversation) -> ConversationResponse:
+    return ConversationResponse(
+        id=str(conv.id),
+        title=conv.title,
+        patient_id=str(conv.patient_id) if conv.patient_id else None,
+        created_at=conv.created_at.isoformat(),
+        updated_at=conv.updated_at.isoformat(),
+        messages=[
+            {
+                "id": str(m.id),
+                "role": m.role,
+                "content": m.content,
+                "createdAt": m.created_at.isoformat(),
+            }
+            for m in conv.messages
+        ],
+    )
+
+
+async def _get_owned_conversation(
+    db: AsyncSession,
+    conversation_id: UUID,
+    professional: Professional,
+) -> Conversation:
+    result = await db.execute(
+        select(Conversation)
+        .where(
+            Conversation.id == conversation_id,
+            Conversation.professional_id == professional.id,
+        )
+        .options(selectinload(Conversation.messages))
+    )
+    conv = result.scalar_one_or_none()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversa não encontrada")
+    return conv
 
 
 @router.get("/jobs/{job_id}", response_model=AIJobResponse)
@@ -230,20 +269,7 @@ async def list_conversations(
         .order_by(Conversation.updated_at.desc())
     )
     convs = result.scalars().all()
-    return [
-        ConversationResponse(
-            id=str(c.id),
-            title=c.title,
-            patient_id=str(c.patient_id) if c.patient_id else None,
-            created_at=c.created_at.isoformat(),
-            updated_at=c.updated_at.isoformat(),
-            messages=[
-                {"id": str(m.id), "role": m.role, "content": m.content, "createdAt": m.created_at.isoformat()}
-                for m in c.messages
-            ],
-        )
-        for c in convs
-    ]
+    return [_conversation_response(c) for c in convs]
 
 
 @router.post("/conversations", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
@@ -262,14 +288,35 @@ async def create_conversation(
     )
     db.add(conv)
     await db.flush()
-    return ConversationResponse(
-        id=str(conv.id),
-        title=conv.title,
-        patient_id=str(conv.patient_id) if conv.patient_id else None,
-        created_at=conv.created_at.isoformat(),
-        updated_at=conv.updated_at.isoformat(),
-        messages=[],
-    )
+    return _conversation_response(conv)
+
+
+@router.patch("/conversations/{conversation_id}", response_model=ConversationResponse)
+async def update_conversation(
+    conversation_id: UUID,
+    body: ConversationUpdate,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    conv = await _get_owned_conversation(db, conversation_id, professional)
+    title = body.title.strip()
+    if not title:
+        raise HTTPException(status_code=400, detail="Título não pode ser vazio")
+    conv.title = title[:255]
+    await db.flush()
+    return _conversation_response(conv)
+
+
+@router.delete("/conversations/{conversation_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_conversation(
+    conversation_id: UUID,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    conv = await _get_owned_conversation(db, conversation_id, professional)
+    await db.delete(conv)
+    await db.flush()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post("/conversations/{conversation_id}/messages", response_model=ChatResponse)
@@ -284,14 +331,7 @@ async def send_message(
     Returns a single ChatResponse (JSON) after orchestrating read-only tools.
     Rate-limited per professional; 503 if OpenCode is not configured.
     """
-    result = await db.execute(
-        select(Conversation)
-        .where(Conversation.id == conversation_id, Conversation.professional_id == professional.id)
-        .options(selectinload(Conversation.messages))
-    )
-    conv = result.scalar_one_or_none()
-    if not conv:
-        raise HTTPException(status_code=404, detail="Conversa não encontrada")
+    conv = await _get_owned_conversation(db, conversation_id, professional)
 
     await bind_conversation_patient(db, professional, conv, body.patient_id)
 

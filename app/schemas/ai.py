@@ -38,6 +38,10 @@ class ConversationCreate(CamelModel):
     patient_id: str | None = None
 
 
+class ConversationUpdate(CamelModel):
+    title: str
+
+
 class MessageCreate(CamelModel):
     content: str
     patient_id: str | None = None
