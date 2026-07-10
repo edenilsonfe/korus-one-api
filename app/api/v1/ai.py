@@ -157,7 +157,7 @@ async def export_report_file(
     )
 
 
-@router.post("/reports", status_code=status.HTTP_202_ACCEPTED)
+@router.post("/reports", response_model=AIReportResponse, status_code=status.HTTP_201_CREATED)
 async def create_report(
     body: AIReportCreate,
     professional: Professional = Depends(get_current_professional),
@@ -203,7 +203,18 @@ async def create_report(
         description=preview,
         source_id=report.id,
     )
-    return {"jobId": str(job.id), "reportId": str(report.id), "status": "completed"}
+    # ponytail: commit before response — get_db commits after send, so a follow-up GET can miss the row
+    await db.commit()
+    return AIReportResponse(
+        id=str(report.id),
+        type=report.type,
+        patient_id=str(report.patient_id),
+        patient=patient.name,
+        date=report.date.isoformat(),
+        preview=report.preview,
+        content=report.content,
+        status=report.status,
+    )
 
 
 @router.get("/conversations", response_model=list[ConversationResponse])
