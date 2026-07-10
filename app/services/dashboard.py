@@ -3,7 +3,6 @@ from datetime import date, datetime, time, timedelta
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.constants import GOAL_ACHIEVED_THRESHOLD
 from app.models.appointment import Appointment
 from app.models.assessment import Assessment
 from app.models.patient import Patient
@@ -11,8 +10,103 @@ from app.models.session import Session
 from app.models.ai import AIReport
 
 
+def is_appointment_past(appt_date: date, appt_time: time, now: datetime | None = None) -> bool:
+    now = now or datetime.now()
+    appt_dt = datetime.combine(appt_date, appt_time)
+    now_naive = now.replace(tzinfo=None) if now.tzinfo else now
+    return appt_dt < now_naive
+
+
+def derive_agenda_status(
+    appt_status: str,
+    appt_date: date,
+    appt_time: time,
+    has_session_on_date: bool,
+    now: datetime | None = None,
+) -> str:
+    """Deriva status exibido na agenda de hoje.
+
+    ponytail: badge de pagamento atrasado omitido — sem modelo de pagamento por paciente.
+    """
+    if appt_status not in ("pendente", "confirmado"):
+        return appt_status
+    if is_appointment_past(appt_date, appt_time, now) and not has_session_on_date:
+        return "evolucao_pendente"
+    return appt_status
+
+
+def build_suggestions(pending: dict) -> list[dict]:
+    suggestions: list[dict] = []
+    evolutions = pending.get("evolutions", 0)
+    reports = pending.get("reports", 0)
+    sessions = pending.get("sessions", 0)
+
+    if evolutions > 0:
+        suggestions.append({
+            "id": "pending-evolutions",
+            "title": "Evoluções pendentes",
+            "text": (
+                f"Você tem {evolutions} evolução pendente de registrar."
+                if evolutions == 1
+                else f"Você tem {evolutions} evoluções pendentes de registrar."
+            ),
+            "ctaLabel": "Ver sessões",
+            "ctaTo": "/sessoes",
+        })
+    if reports > 0:
+        suggestions.append({
+            "id": "pending-reports",
+            "title": "Relatórios em rascunho",
+            "text": (
+                f"Você tem {reports} relatório em rascunho aguardando finalização."
+                if reports == 1
+                else f"Você tem {reports} relatórios em rascunho aguardando finalização."
+            ),
+            "ctaLabel": "Ver relatórios",
+            "ctaTo": "/relatorios",
+        })
+    if sessions > 0:
+        suggestions.append({
+            "id": "pending-sessions",
+            "title": "Sessões agendadas",
+            "text": (
+                f"Você tem {sessions} sessão agendada nos próximos dias."
+                if sessions == 1
+                else f"Você tem {sessions} sessões agendadas nos próximos dias."
+            ),
+            "ctaLabel": "Ver agenda",
+            "ctaTo": "/agenda",
+        })
+    return suggestions
+
+
+async def _patients_with_session_on_dates(
+    db: AsyncSession,
+    professional_id,
+    pairs: set[tuple],
+) -> set[tuple]:
+    if not pairs:
+        return set()
+    patient_ids = {p for p, _ in pairs}
+    dates = {d for _, d in pairs}
+    result = await db.execute(
+        select(Session.patient_id, func.date(Session.date))
+        .where(
+            Session.professional_id == professional_id,
+            Session.patient_id.in_(patient_ids),
+            func.date(Session.date).in_(dates),
+        )
+    )
+    # func.date() devolve str no SQLite (testes) e date no Postgres — normalizar
+    return {
+        (row[0], row[1] if isinstance(row[1], date) else date.fromisoformat(str(row[1])))
+        for row in result.all()
+    }
+
+
 async def build_dashboard(db: AsyncSession, professional_id) -> dict:
     today = date.today()
+    now = datetime.now()
     month_start = today.replace(day=1)
 
     active_patients = await db.scalar(
@@ -40,6 +134,12 @@ async def build_dashboard(db: AsyncSession, professional_id) -> dict:
     )
     ai_reports = await db.scalar(
         select(func.count()).select_from(AIReport).where(AIReport.professional_id == professional_id)
+    )
+    reports_draft = await db.scalar(
+        select(func.count()).select_from(AIReport).where(
+            AIReport.professional_id == professional_id,
+            AIReport.status == "draft",
+        )
     )
 
     # Monthly growth - last 6 months
@@ -72,27 +172,69 @@ async def build_dashboard(db: AsyncSession, professional_id) -> dict:
     )
     protocols_applied = [{"name": row[0].upper(), "value": row[1]} for row in protocols_result.all()]
 
-    # Upcoming appointments today
-    appts_result = await db.execute(
+    # Today's agenda (all statuses)
+    today_appts_result = await db.execute(
         select(Appointment, Patient)
         .join(Patient, Appointment.patient_id == Patient.id)
         .where(
             Appointment.professional_id == professional_id,
             Appointment.date == today,
-            Appointment.status.in_(["pendente", "confirmado"]),
         )
         .order_by(Appointment.time.asc())
-        .limit(10)
     )
+    today_rows = today_appts_result.all()
+    today_pairs = {(appt.patient_id, today) for appt, _ in today_rows}
+    sessions_today = await _patients_with_session_on_dates(db, professional_id, today_pairs)
+
+    today_agenda = []
     upcoming = []
-    for appt, patient in appts_result.all():
-        upcoming.append({
+    for appt, patient in today_rows:
+        has_session = (appt.patient_id, today) in sessions_today
+        status = derive_agenda_status(appt.status, appt.date, appt.time, has_session, now)
+        item = {
             "id": str(appt.id),
             "time": appt.time.strftime("%H:%M"),
+            "patientId": str(appt.patient_id),
             "patientName": patient.name,
             "type": appt.type,
-            "therapist": "",
-        })
+            "status": status,
+        }
+        today_agenda.append(item)
+        if appt.status in ("pendente", "confirmado"):
+            upcoming.append({
+                "id": str(appt.id),
+                "time": appt.time.strftime("%H:%M"),
+                "patientName": patient.name,
+                "type": appt.type,
+                "therapist": "",
+            })
+
+    # Pending evolutions: past appointments without session on that date
+    past_appts_result = await db.execute(
+        select(Appointment)
+        .where(
+            Appointment.professional_id == professional_id,
+            Appointment.status.in_(["pendente", "confirmado"]),
+            Appointment.date <= today,
+        )
+    )
+    past_appts = [
+        appt
+        for appt in past_appts_result.scalars().all()
+        if appt.date < today or is_appointment_past(appt.date, appt.time, now)
+    ]
+    past_pairs = {(appt.patient_id, appt.date) for appt in past_appts}
+    sessions_past = await _patients_with_session_on_dates(db, professional_id, past_pairs)
+    evolutions_pending = sum(
+        1 for appt in past_appts if (appt.patient_id, appt.date) not in sessions_past
+    )
+
+    pending = {
+        "evolutions": evolutions_pending,
+        "reports": reports_draft or 0,
+        "sessions": sessions_pending or 0,
+    }
+    suggestions = build_suggestions(pending)
 
     # Patient evolution placeholder from domain snapshots avg
     patient_evolution = [
@@ -116,4 +258,7 @@ async def build_dashboard(db: AsyncSession, professional_id) -> dict:
         "monthlyGrowth": monthly_growth,
         "upcomingAppointments": upcoming,
         "protocolsApplied": protocols_applied,
+        "todayAgenda": today_agenda,
+        "pending": pending,
+        "suggestions": suggestions,
     }
