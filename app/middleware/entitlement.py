@@ -65,6 +65,13 @@ class EntitlementMiddleware(BaseHTTPMiddleware):
             if not professional:
                 return await call_next(request)
 
+            token_version = int(payload.get("tv", 0))
+            if token_version != professional.token_version:
+                return JSONResponse(
+                    status_code=401,
+                    content={"detail": "Sessão invalidada. Faça login novamente."},
+                )
+
             ent = EntitlementService(db)
             if not await ent.can_write(professional):
                 return JSONResponse(
