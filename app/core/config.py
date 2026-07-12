@@ -72,6 +72,8 @@ class Settings(BaseSettings):
     spm_content_package_path: str = ""
     spm_informant_link_expire_days: int = 14
 
+    max_upload_bytes: int = 26214400
+
     @field_validator("evolution_api_base_url", mode="before")
     @classmethod
     def normalize_evolution_api_base_url(cls, value: object) -> str:

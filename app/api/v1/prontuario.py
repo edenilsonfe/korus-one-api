@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.mappers import format_size_bytes
+from app.core.config import get_settings
 from app.core.deps import get_current_professional, get_patient_for_professional
 from app.core.utils import utcnow
 from app.db.session import get_db
@@ -118,6 +119,8 @@ async def upsert_anamnese(
     return AnamneseResponse(id=str(entry.id), patient_id=str(patient_id), section=entry.section, value=entry.value)
 
 
+UPLOAD_READ_CHUNK_SIZE = 1024 * 1024
+
 CATEGORY_TIMELINE_MAP = {
     "video": "video",
     "audio": "audio",
@@ -158,7 +161,23 @@ async def upload_attachment(
     db: AsyncSession = Depends(get_db),
 ):
     await get_patient_for_professional(patient_id, professional, db)
-    body = await file.read()
+    max_bytes = get_settings().max_upload_bytes
+    chunks: list[bytes] = []
+    total_read = 0
+    while True:
+        chunk = await file.read(UPLOAD_READ_CHUNK_SIZE)
+        if not chunk:
+            break
+        total_read += len(chunk)
+        if total_read > max_bytes:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail=(
+                    f"Arquivo excede o tamanho máximo permitido de {format_size_bytes(max_bytes)}."
+                ),
+            )
+        chunks.append(chunk)
+    body = b"".join(chunks)
     key = storage_service.make_key(patient_id, file.filename or "upload")
     await storage_service.upload(key, body, file.content_type or "application/octet-stream")
     attachment = Attachment(
