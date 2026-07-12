@@ -388,7 +388,7 @@ async def _run_tool_job(
         )
         result = await run_llm(prompt, spec.system, output=spec.output)
     else:
-        context = ""
+        context = await build_patient_context(db, patient_id) if patient_id else ""
         prompt = prompt_builder(body, context)
         result = await run_llm(prompt)
     job.status = "completed"
@@ -410,14 +410,12 @@ async def transcribe(body: AIToolRequest, professional: Professional = Depends(g
 
 @router.post("/speech-analysis", status_code=status.HTTP_202_ACCEPTED)
 async def speech_analysis(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    patient_id = UUID(body.patient_id) if body.patient_id else None
-    context = await build_patient_context(db, patient_id) if patient_id else ""
     return await _run_tool_job(
         db,
         professional,
         "speech-analysis",
         body,
-        prompt_builder=lambda b, _c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{context}",
+        prompt_builder=lambda b, c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{c}",
     )
 
 @router.post("/clinical-trends", status_code=status.HTTP_202_ACCEPTED)
