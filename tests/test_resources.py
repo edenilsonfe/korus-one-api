@@ -165,6 +165,32 @@ async def test_download_url_forbidden_for_other_personal(resources_env):
 
 
 @pytest.mark.asyncio
+async def test_shared_personal_visible_to_others(resources_env):
+    client = resources_env["client"]
+    session = resources_env["session"]
+    owner = resources_env["owner"]
+    other_item = resources_env["other_item"]
+
+    other_item.shared_with_platform = True
+    await session.commit()
+
+    all_res = await client.get("/api/v1/resources", headers=_headers(owner))
+    assert all_res.status_code == 200
+    assert "Outro" in {item["title"] for item in all_res.json()}
+
+    global_res = await client.get(
+        "/api/v1/resources?scope=global", headers=_headers(owner)
+    )
+    assert "Outro" in {item["title"] for item in global_res.json()}
+
+    dl = await client.get(
+        f"/api/v1/resources/{other_item.id}/download-url",
+        headers=_headers(owner),
+    )
+    assert dl.status_code == 200
+
+
+@pytest.mark.asyncio
 async def test_create_personal_resource_pdf(resources_env):
     client = resources_env["client"]
     owner = resources_env["owner"]
@@ -174,6 +200,7 @@ async def test_create_personal_resource_pdf(resources_env):
         "title": "Meu PDF",
         "description": "Teste",
         "categories": '["Linguagem"]',
+        "shared_with_platform": "true",
     }
     res = await client.post(
         "/api/v1/resources",
@@ -185,6 +212,7 @@ async def test_create_personal_resource_pdf(resources_env):
     body = res.json()
     assert body["title"] == "Meu PDF"
     assert body["isMine"] is True
+    assert body["sharedWithPlatform"] is True
     assert body["format"] == "PDF"
 
 

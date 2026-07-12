@@ -82,6 +82,7 @@ async def create_personal_resource(
     skill: str | None = Form(None),
     related_protocol: str | None = Form(None),
     difficulty: str | None = Form(None),
+    shared_with_platform: bool = Form(False),
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
@@ -97,6 +98,7 @@ async def create_personal_resource(
         skill=skill,
         related_protocol=related_protocol,
         difficulty=difficulty,  # type: ignore[arg-type]
+        shared_with_platform=shared_with_platform,
     )
     service = ResourceService(db)
     resource = await service.create_personal(professional, file=file, body=body)
@@ -120,6 +122,7 @@ async def update_personal_resource(
     skill: str | None = Form(None),
     related_protocol: str | None = Form(None),
     difficulty: str | None = Form(None),
+    shared_with_platform: bool | None = Form(None),
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
@@ -135,6 +138,7 @@ async def update_personal_resource(
         "skill": skill,
         "related_protocol": related_protocol,
         "difficulty": difficulty,
+        "shared_with_platform": shared_with_platform,
     }.items():
         if value is not None:
             payload_data[key] = value

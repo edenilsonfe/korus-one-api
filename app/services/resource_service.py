@@ -110,6 +110,7 @@ def to_resource_response(resource: Resource, professional_id: uuid.UUID) -> Reso
         related_protocol=resource.related_protocol,
         difficulty=resource.difficulty,  # type: ignore[arg-type]
         is_mine=resource.owner_professional_id == professional_id,
+        shared_with_platform=resource.shared_with_platform,
     )
 
 
@@ -133,7 +134,12 @@ class ResourceService:
     ) -> list[Resource]:
         stmt = select(Resource)
         if scope == "global":
-            stmt = stmt.where(Resource.owner_professional_id.is_(None))
+            stmt = stmt.where(
+                or_(
+                    Resource.owner_professional_id.is_(None),
+                    Resource.shared_with_platform.is_(True),
+                )
+            )
         elif scope == "mine":
             stmt = stmt.where(Resource.owner_professional_id == professional.id)
         else:
@@ -141,6 +147,7 @@ class ResourceService:
                 or_(
                     Resource.owner_professional_id.is_(None),
                     Resource.owner_professional_id == professional.id,
+                    Resource.shared_with_platform.is_(True),
                 )
             )
 
@@ -180,9 +187,11 @@ class ResourceService:
         resource = await self.get_by_id(resource_id)
         if resource is None:
             raise ResourceNotFoundError()
-        if resource.owner_professional_id not in (None, professional.id):
-            raise ResourceForbiddenError()
-        return resource
+        if resource.owner_professional_id in (None, professional.id):
+            return resource
+        if resource.shared_with_platform:
+            return resource
+        raise ResourceForbiddenError()
 
     async def create_personal(
         self,
@@ -217,6 +226,7 @@ class ResourceService:
             related_protocol=body.related_protocol,
             difficulty=body.difficulty,
             featured=False,
+            shared_with_platform=body.shared_with_platform,
         )
         self.db.add(resource)
         await self.db.flush()

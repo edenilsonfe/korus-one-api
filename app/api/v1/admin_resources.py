@@ -43,6 +43,7 @@ def _to_admin_response(resource) -> ResourceResponse:
         related_protocol=resource.related_protocol,
         difficulty=resource.difficulty,  # type: ignore[arg-type]
         is_mine=False,
+        shared_with_platform=resource.shared_with_platform,
     )
 
 

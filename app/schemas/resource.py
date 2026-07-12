@@ -43,6 +43,7 @@ class ResourceResponse(CamelModel):
     related_protocol: str | None = None
     difficulty: ResourceDifficulty | None = None
     is_mine: bool = False
+    shared_with_platform: bool = False
 
 
 class ResourceDownloadUrl(CamelModel):
@@ -61,6 +62,7 @@ class ResourceCreateBody(CamelModel):
     skill: str | None = None
     related_protocol: str | None = None
     difficulty: ResourceDifficulty | None = None
+    shared_with_platform: bool = False
 
     @field_validator("categories")
     @classmethod
@@ -80,6 +82,7 @@ class ResourceUpdateBody(CamelModel):
     skill: str | None = None
     related_protocol: str | None = None
     difficulty: ResourceDifficulty | None = None
+    shared_with_platform: bool | None = None
 
     @field_validator("categories")
     @classmethod

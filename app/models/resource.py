@@ -29,6 +29,7 @@ class Resource(Base, TimestampMixin):
     content_type: Mapped[str] = mapped_column(String(128), nullable=False)
     downloads: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     featured: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    shared_with_platform: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     accent: Mapped[str] = mapped_column(String(32), nullable=False, default="primary")
     objective: Mapped[str | None] = mapped_column(String(500), nullable=True)
     age_range: Mapped[str | None] = mapped_column(String(120), nullable=True)
