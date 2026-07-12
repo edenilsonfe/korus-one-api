@@ -38,7 +38,9 @@ from app.schemas.assistant import ChatResponse
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
-def _conversation_response(conv: Conversation) -> ConversationResponse:
+def _conversation_response(
+    conv: Conversation, messages: list[ChatMessage] | None = None
+) -> ConversationResponse:
     return ConversationResponse(
         id=str(conv.id),
         title=conv.title,
@@ -52,7 +54,7 @@ def _conversation_response(conv: Conversation) -> ConversationResponse:
                 "content": m.content,
                 "createdAt": m.created_at.isoformat(),
             }
-            for m in conv.messages
+            for m in (conv.messages if messages is None else messages)
         ],
     )
 
@@ -266,11 +268,20 @@ async def list_conversations(
     result = await db.execute(
         select(Conversation)
         .where(Conversation.professional_id == professional.id)
-        .options(selectinload(Conversation.messages))
         .order_by(Conversation.updated_at.desc())
     )
     convs = result.scalars().all()
-    return [_conversation_response(c) for c in convs]
+    return [_conversation_response(c, messages=[]) for c in convs]
+
+
+@router.get("/conversations/{conversation_id}", response_model=ConversationResponse)
+async def get_conversation(
+    conversation_id: UUID,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    conv = await _get_owned_conversation(db, conversation_id, professional)
+    return _conversation_response(conv)
 
 
 @router.post("/conversations", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
