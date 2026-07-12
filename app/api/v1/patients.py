@@ -28,7 +28,11 @@ from app.schemas.patient import (
     PatientUpdate,
     TherapyPlanUpdate,
 )
-from app.services.patient import build_clinical_domains, get_patient_aggregates
+from app.services.patient import (
+    build_clinical_domains,
+    get_patient_aggregates,
+    get_patient_aggregates_batch,
+)
 from app.services.timeline import create_timeline_event
 
 router = APIRouter(prefix="/patients", tags=["patients"])
@@ -71,10 +75,12 @@ async def _set_primary_caregiver(db: AsyncSession, patient_id: UUID, caregiver_i
         item.is_primary = item.id == caregiver_id
 
 
-async def _build_summary(db: AsyncSession, patient: Patient, professional: Professional) -> PatientSummary:
-    aggregates = await get_patient_aggregates(db, patient.id)
-    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id == patient.id))
-    caregivers = caregivers_result.scalars().all()
+def _summary_from_aggregates(
+    patient: Patient,
+    professional: Professional,
+    aggregates: dict,
+    caregivers: list[Caregiver],
+) -> PatientSummary:
     gl = guardian_label(caregivers)
     last = aggregates["last_session"]
     keys = patient.diagnosis_keys or []
@@ -102,6 +108,13 @@ async def _build_summary(db: AsyncSession, patient: Patient, professional: Profe
         if patient.therapy_plan_updated_at
         else None,
     )
+
+
+async def _build_summary(db: AsyncSession, patient: Patient, professional: Professional) -> PatientSummary:
+    aggregates = await get_patient_aggregates(db, patient.id)
+    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id == patient.id))
+    caregivers = caregivers_result.scalars().all()
+    return _summary_from_aggregates(patient, professional, aggregates, caregivers)
 
 
 async def _build_detail(
@@ -250,7 +263,18 @@ async def list_patients(
     total = await db.scalar(select(func.count()).select_from(query.subquery()))
     result = await db.execute(query.order_by(Patient.name.asc()).offset((page - 1) * limit).limit(limit))
     patients = result.scalars().all()
-    items = [await _build_summary(db, p, professional) for p in patients]
+
+    patient_ids = [p.id for p in patients]
+    aggregates_map = await get_patient_aggregates_batch(db, patient_ids)
+    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id.in_(patient_ids)))
+    caregivers_by_patient: dict[UUID, list[Caregiver]] = {}
+    for caregiver in caregivers_result.scalars().all():
+        caregivers_by_patient.setdefault(caregiver.patient_id, []).append(caregiver)
+
+    items = [
+        _summary_from_aggregates(p, professional, aggregates_map[p.id], caregivers_by_patient.get(p.id, []))
+        for p in patients
+    ]
     return PaginatedResponse(items=items, total=total or 0, page=page, limit=limit)
 
 
