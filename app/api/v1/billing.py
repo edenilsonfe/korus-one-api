@@ -443,14 +443,18 @@ async def billing_webhook(
     db: AsyncSession = Depends(get_db),
 ):
     settings = get_settings()
-    provider_key = (provider or "stub").lower().strip()
+    provider_key = (provider or "").lower().strip()
 
     if provider_key == "asaas":
         webhook_token = (settings.asaas_webhook_token or "").strip()
-        if webhook_token:
-            token = (request.headers.get("asaas-access-token") or "").strip()
-            if not token or token != webhook_token:
-                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Asaas webhook token")
+        token = (request.headers.get("asaas-access-token") or "").strip()
+        if not webhook_token or not token or token != webhook_token:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Asaas webhook token")
+    elif provider_key == "stub":
+        if not settings.debug:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
     body_bytes = await request.body()
     try:
