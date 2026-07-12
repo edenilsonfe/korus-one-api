@@ -109,9 +109,7 @@ def send_password_reset_email_sync(to_email: str, user_name: str, raw_token: str
 
     if not settings.email_sending_enabled:
         logger.info(
-            "Email sending disabled; password reset link for %s: %s",
-            to_email,
-            reset_url,
+            "Email sending disabled; password reset token created for professional (email omitted from logs)"
         )
         return
 
