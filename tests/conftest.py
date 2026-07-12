@@ -1,5 +1,8 @@
+import os
 import uuid
 from datetime import date, timedelta
+
+os.environ.setdefault("JWT_SECRET", "test-secret-for-pytest-only-not-for-prod")
 
 import pytest
 from httpx import ASGITransport, AsyncClient

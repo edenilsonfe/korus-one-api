@@ -118,6 +118,19 @@ class Settings(BaseSettings):
         return f"{base.rstrip('/')}/api/v1/webhooks/evolution/whatsapp"
 
 
+INSECURE_JWT_SECRETS = frozenset({"change-me-in-production", ""})
+
+
+def validate_settings(settings: Settings) -> None:
+    if settings.debug:
+        return
+    secret = (settings.jwt_secret or "").strip()
+    if secret in INSECURE_JWT_SECRETS or len(secret) < 32:
+        raise RuntimeError(
+            "JWT_SECRET inseguro ou ausente: defina um segredo forte com debug=False"
+        )
+
+
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
