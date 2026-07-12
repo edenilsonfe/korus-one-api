@@ -13,6 +13,15 @@ from app.models.professional import Professional
 bearer_scheme = HTTPBearer(auto_error=False)
 
 
+def _assert_token_version(payload: dict, professional: Professional) -> None:
+    token_version = int(payload.get("tv", 0))
+    if token_version != professional.token_version:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sessão invalidada. Faça login novamente.",
+        )
+
+
 async def get_current_professional(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db),
@@ -33,6 +42,7 @@ async def get_current_professional(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Profissional não encontrado")
     if professional.is_disabled:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
+    _assert_token_version(payload, professional)
     return professional
 
 
@@ -53,6 +63,10 @@ async def get_optional_professional(
     result = await db.execute(select(Professional).where(Professional.id == professional_id))
     professional = result.scalar_one_or_none()
     if professional is None or professional.is_disabled:
+        return None
+    try:
+        _assert_token_version(payload, professional)
+    except HTTPException:
         return None
     return professional
 

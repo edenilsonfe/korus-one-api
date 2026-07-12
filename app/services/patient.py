@@ -23,31 +23,53 @@ ANALYTICS_PERIOD_DAYS = {
 
 
 async def get_patient_aggregates(db: AsyncSession, patient_id: UUID) -> dict:
-    sessions_count = await db.scalar(
-        select(func.count()).select_from(Session).where(Session.patient_id == patient_id)
+    batch = await get_patient_aggregates_batch(db, [patient_id])
+    return batch[patient_id]
+
+
+async def get_patient_aggregates_batch(db: AsyncSession, patient_ids: list[UUID]) -> dict[UUID, dict]:
+    """Same keys/semantics as get_patient_aggregates, batched across patient_ids."""
+    aggregates: dict[UUID, dict] = {
+        pid: {
+            "sessions_count": 0,
+            "protocols_done": 0,
+            "total_goals": 0,
+            "goals_achieved": 0,
+            "last_session": None,
+        }
+        for pid in patient_ids
+    }
+    if not patient_ids:
+        return aggregates
+
+    sessions_rows = await db.execute(
+        select(Session.patient_id, func.count(), func.max(Session.date))
+        .where(Session.patient_id.in_(patient_ids))
+        .group_by(Session.patient_id)
     )
-    protocols_done = await db.scalar(
-        select(func.count())
-        .select_from(Assessment)
+    for patient_id, count, last_date in sessions_rows.all():
+        aggregates[patient_id]["sessions_count"] = count
+        aggregates[patient_id]["last_session"] = last_date
+
+    protocols_rows = await db.execute(
+        select(Assessment.patient_id, func.count())
         .where(
-            Assessment.patient_id == patient_id,
+            Assessment.patient_id.in_(patient_ids),
             Assessment.status == ASSESSMENT_STATUS_COMPLETED,
         )
+        .group_by(Assessment.patient_id)
     )
-    goals_result = await db.execute(select(Goal).where(Goal.patient_id == patient_id))
-    goals = goals_result.scalars().all()
-    total_goals = len(goals)
-    goals_achieved = sum(1 for g in goals if g.progress >= GOAL_ACHIEVED_THRESHOLD)
-    last_session = await db.scalar(
-        select(func.max(Session.date)).where(Session.patient_id == patient_id)
-    )
-    return {
-        "sessions_count": sessions_count or 0,
-        "protocols_done": protocols_done or 0,
-        "total_goals": total_goals,
-        "goals_achieved": goals_achieved,
-        "last_session": last_session,
-    }
+    for patient_id, count in protocols_rows.all():
+        aggregates[patient_id]["protocols_done"] = count
+
+    goals_result = await db.execute(select(Goal).where(Goal.patient_id.in_(patient_ids)))
+    for goal in goals_result.scalars().all():
+        agg = aggregates[goal.patient_id]
+        agg["total_goals"] += 1
+        if goal.progress >= GOAL_ACHIEVED_THRESHOLD:
+            agg["goals_achieved"] += 1
+
+    return aggregates
 
 
 def resolve_analytics_period_start(

@@ -13,6 +13,7 @@ from app.services.password_reset import (
     hash_token,
     request_password_reset,
     reset_password_with_token,
+    send_password_reset_email_sync,
 )
 
 
@@ -53,6 +54,20 @@ async def test_request_password_reset_creates_token_for_valid_email(db_session, 
     assert token is not None
     assert token.token_hash == hash_token(raw_token)
     assert token.used_at is None
+
+
+def test_send_password_reset_email_sync_never_logs_token_when_email_disabled(caplog, monkeypatch):
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "email_sending_enabled", False)
+    raw_token = "super-secret-raw-token"
+
+    with caplog.at_level("DEBUG"):
+        send_password_reset_email_sync("user@example.com", "Usuário", raw_token)
+
+    log_text = caplog.text
+    assert raw_token not in log_text
+    assert "token=" not in log_text
 
 
 class _FakeRedis:

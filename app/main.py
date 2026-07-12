@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
-from app.core.config import get_settings
+from app.core.config import get_settings, validate_settings
 from app.db.session import AsyncSessionLocal
 from app.middleware.entitlement import EntitlementMiddleware
 from app.services.plan_catalog_seed import seed_plan_catalog
@@ -24,6 +24,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    validate_settings(settings)
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
     cors_kwargs: dict = {
         "allow_credentials": True,

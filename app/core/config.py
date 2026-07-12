@@ -72,6 +72,8 @@ class Settings(BaseSettings):
     spm_content_package_path: str = ""
     spm_informant_link_expire_days: int = 14
 
+    max_upload_bytes: int = 26214400
+
     @field_validator("evolution_api_base_url", mode="before")
     @classmethod
     def normalize_evolution_api_base_url(cls, value: object) -> str:
@@ -116,6 +118,19 @@ class Settings(BaseSettings):
         if not base:
             return None
         return f"{base.rstrip('/')}/api/v1/webhooks/evolution/whatsapp"
+
+
+INSECURE_JWT_SECRETS = frozenset({"change-me-in-production", ""})
+
+
+def validate_settings(settings: Settings) -> None:
+    if settings.debug:
+        return
+    secret = (settings.jwt_secret or "").strip()
+    if secret in INSECURE_JWT_SECRETS or len(secret) < 32:
+        raise RuntimeError(
+            "JWT_SECRET inseguro ou ausente: defina um segredo forte com debug=False"
+        )
 
 
 @lru_cache
