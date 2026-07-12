@@ -11,6 +11,7 @@ from app.models.battery import BatterySubformAssessment
 from app.models.battery_evidence import BatteryItemEvidence, BatterySessionEvent
 from app.models.spm import SpmInformantLink, SpmSubformAssessment
 from app.models.attachment import Attachment
+from app.models.resource import Resource
 from app.models.caregiver import Caregiver
 from app.models.evolution import Evolution
 from app.models.goal import ClinicalDomainSnapshot, Goal
@@ -37,6 +38,7 @@ __all__ = [
     "Evolution",
     "AnamneseEntry",
     "Attachment",
+    "Resource",
     "TimelineEvent",
     "ProtocolCatalog",
     "Assessment",

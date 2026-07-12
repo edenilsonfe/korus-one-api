@@ -1,0 +1,249 @@
+"""Resources library — ownership, mime validation, admin gate."""
+
+from unittest.mock import AsyncMock, patch
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
+from app.core.security import create_access_token, hash_password
+from app.db.base import Base
+from app.db.session import get_db
+from app.main import app
+from app.models.professional import Professional
+from app.models.resource import Resource
+
+TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+
+
+async def _engine():
+    eng = create_async_engine(TEST_DATABASE_URL, echo=False)
+    async with eng.begin() as conn:
+        await conn.run_sync(
+            lambda sync_conn: Base.metadata.create_all(
+                bind=sync_conn,
+                tables=[Professional.__table__, Resource.__table__],
+            )
+        )
+    return eng
+
+
+async def _pro(
+    db: AsyncSession,
+    email: str,
+    *,
+    is_staff: bool = False,
+    name: str = "Profissional",
+) -> Professional:
+    pro = Professional(
+        email=email,
+        password_hash=hash_password("testpass123"),
+        name=name,
+        specialty_key="fono",
+        specialty="Fonoaudiologia",
+        council="CRFa",
+        phone="11999990000",
+        is_staff=is_staff,
+    )
+    db.add(pro)
+    await db.commit()
+    await db.refresh(pro)
+    return pro
+
+
+async def _resource(
+    db: AsyncSession,
+    *,
+    owner: Professional | None,
+    title: str = "Material",
+) -> Resource:
+    resource = Resource(
+        owner_professional_id=owner.id if owner else None,
+        title=title,
+        description="Descrição",
+        categories=["Linguagem"],
+        format="PDF",
+        file_size_bytes=128,
+        author=owner.name if owner else "Equipe KorusOne",
+        storage_key=f"resources/test/{title}.pdf",
+        content_type="application/pdf",
+    )
+    db.add(resource)
+    await db.commit()
+    await db.refresh(resource)
+    return resource
+
+
+@pytest.fixture
+async def resources_env():
+    engine = await _engine()
+    session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with session_factory() as session:
+        owner = await _pro(session, "owner@x.com")
+        other = await _pro(session, "other@x.com")
+        staff = await _pro(session, "staff@x.com", is_staff=True)
+        global_item = await _resource(session, owner=None, title="Global")
+        personal_item = await _resource(session, owner=owner, title="Pessoal")
+        other_item = await _resource(session, owner=other, title="Outro")
+
+        async def override_get_db():
+            yield session
+
+        app.dependency_overrides[get_db] = override_get_db
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            with (
+                patch(
+                    "app.services.resource_service.storage_service.upload",
+                    new_callable=AsyncMock,
+                    return_value="resources/mock/file.pdf",
+                ),
+                patch(
+                    "app.services.resource_service.storage_service.presigned_url",
+                    new_callable=AsyncMock,
+                    return_value="https://signed.example/file.pdf",
+                ),
+            ):
+                yield {
+                    "client": client,
+                    "session": session,
+                    "owner": owner,
+                    "other": other,
+                    "staff": staff,
+                    "global_item": global_item,
+                    "personal_item": personal_item,
+                    "other_item": other_item,
+                }
+        app.dependency_overrides.clear()
+    await engine.dispose()
+
+
+def _headers(pro: Professional) -> dict[str, str]:
+    token = create_access_token(pro.id)
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.mark.asyncio
+async def test_list_resources_scope(resources_env):
+    client = resources_env["client"]
+    owner = resources_env["owner"]
+
+    all_res = await client.get("/api/v1/resources", headers=_headers(owner))
+    assert all_res.status_code == 200
+    titles = {item["title"] for item in all_res.json()}
+    assert titles == {"Global", "Pessoal"}
+
+    global_res = await client.get(
+        "/api/v1/resources?scope=global", headers=_headers(owner)
+    )
+    assert {item["title"] for item in global_res.json()} == {"Global"}
+
+    mine_res = await client.get(
+        "/api/v1/resources?scope=mine", headers=_headers(owner)
+    )
+    assert {item["title"] for item in mine_res.json()} == {"Pessoal"}
+
+
+@pytest.mark.asyncio
+async def test_download_url_forbidden_for_other_personal(resources_env):
+    client = resources_env["client"]
+    other = resources_env["other"]
+    other_item = resources_env["other_item"]
+
+    res = await client.get(
+        f"/api/v1/resources/{other_item.id}/download-url",
+        headers=_headers(other),
+    )
+    assert res.status_code == 200
+
+    owner = resources_env["owner"]
+    blocked = await client.get(
+        f"/api/v1/resources/{other_item.id}/download-url",
+        headers=_headers(owner),
+    )
+    assert blocked.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_create_personal_resource_pdf(resources_env):
+    client = resources_env["client"]
+    owner = resources_env["owner"]
+
+    files = {"file": ("material.pdf", b"%PDF-1.4 test", "application/pdf")}
+    data = {
+        "title": "Meu PDF",
+        "description": "Teste",
+        "categories": '["Linguagem"]',
+    }
+    res = await client.post(
+        "/api/v1/resources",
+        headers=_headers(owner),
+        data=data,
+        files=files,
+    )
+    assert res.status_code == 201
+    body = res.json()
+    assert body["title"] == "Meu PDF"
+    assert body["isMine"] is True
+    assert body["format"] == "PDF"
+
+
+@pytest.mark.asyncio
+async def test_create_rejects_unsupported_mime(resources_env):
+    client = resources_env["client"]
+    owner = resources_env["owner"]
+
+    files = {"file": ("bad.docx", b"data", "application/vnd.openxmlformats")}
+    data = {"title": "DOCX", "categories": "[]"}
+    res = await client.post(
+        "/api/v1/resources",
+        headers=_headers(owner),
+        data=data,
+        files=files,
+    )
+    assert res.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_delete_personal_forbidden_on_global(resources_env):
+    client = resources_env["client"]
+    owner = resources_env["owner"]
+    global_item = resources_env["global_item"]
+
+    res = await client.delete(
+        f"/api/v1/resources/{global_item.id}",
+        headers=_headers(owner),
+    )
+    assert res.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_admin_create_global_resource(resources_env):
+    client = resources_env["client"]
+    staff = resources_env["staff"]
+
+    files = {"file": ("catalog.pdf", b"%PDF-1.4 admin", "application/pdf")}
+    data = {
+        "title": "Novo global",
+        "description": "Staff",
+        "categories": '["TEA"]',
+        "featured": "true",
+    }
+    res = await client.post(
+        "/api/v1/admin/resources",
+        headers=_headers(staff),
+        data=data,
+        files=files,
+    )
+    assert res.status_code == 201
+    assert res.json()["title"] == "Novo global"
+    assert res.json()["featured"] is True
+
+
+@pytest.mark.asyncio
+async def test_admin_gate_blocks_non_staff(resources_env):
+    client = resources_env["client"]
+    owner = resources_env["owner"]
+
+    res = await client.get("/api/v1/admin/resources", headers=_headers(owner))
+    assert res.status_code == 403

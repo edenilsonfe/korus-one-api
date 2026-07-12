@@ -54,5 +54,9 @@ class StorageService:
     def make_key(patient_id: uuid.UUID, filename: str) -> str:
         return f"patients/{patient_id}/{uuid.uuid4()}/{filename}"
 
+    @staticmethod
+    def make_resource_key(resource_id: uuid.UUID, filename: str) -> str:
+        return f"resources/{resource_id}/{filename}"
+
 
 storage_service = StorageService()
