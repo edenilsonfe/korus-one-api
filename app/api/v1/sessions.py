@@ -147,8 +147,13 @@ async def list_session_evolutions(
     db: AsyncSession = Depends(get_db),
 ):
     await get_patient_for_professional(patient_id, professional, db)
+    session_result = await db.execute(select(Session).where(Session.id == session_id, Session.patient_id == patient_id))
+    if session_result.scalar_one_or_none() is None:
+        raise HTTPException(status_code=404, detail="Sessão não encontrada")
     result = await db.execute(
-        select(Evolution).where(Evolution.session_id == session_id).order_by(Evolution.date.desc())
+        select(Evolution)
+        .where(Evolution.session_id == session_id, Evolution.patient_id == patient_id)
+        .order_by(Evolution.date.desc())
     )
     return [
         {
