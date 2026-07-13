@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.notification_message_log import NotificationMessageLog
 from app.models.patient import Patient
+from app.services.evolution_whatsapp_service import mask_phone
 
 EVENT_LABELS: dict[str, str] = {
     "appointment_reminder_24h": "Lembrete 24h",
@@ -162,7 +163,7 @@ class WhatsAppMessageLogService:
                     "notification_type": log.notification_type,
                     "event_label": _event_label(log.notification_type),
                     "recipient_name": patient_name,
-                    "recipient_phone": log.to_phone,
+                    "recipient_phone": mask_phone(log.to_phone) if log.to_phone else log.to_phone,
                     "template_name": None,
                     "status": log.status,
                     "status_label": _status_label(log.status, no_phone=no_phone),

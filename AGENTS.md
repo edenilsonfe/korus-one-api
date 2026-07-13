@@ -1,3 +1,8 @@
+---
+description: 
+alwaysApply: false
+---
+
 # AGENTS.md — Korus One API
 
 Instruções para agentes de IA que trabalham neste repositório. Leia este arquivo e o `README.md` antes de implementar mudanças. O contrato com o frontend vive aqui — o web espelha schemas e rotas **manualmente**.

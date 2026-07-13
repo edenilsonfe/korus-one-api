@@ -44,9 +44,23 @@ async def run_whatsapp_scheduler(ctx) -> None:
         await service.run_all()
 
 
+async def dispatch_whatsapp_appointment_event(
+    ctx, appointment_id: str, notification_type: str
+) -> None:
+    from app.services.whatsapp_notification_service import WhatsAppNotificationService
+
+    await WhatsAppNotificationService.dispatch_appointment_event(
+        UUID(appointment_id), notification_type
+    )
+
+
 class WorkerSettings:
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)
-    functions = [process_ai_job, run_whatsapp_scheduler]
+    functions = [
+        process_ai_job,
+        run_whatsapp_scheduler,
+        dispatch_whatsapp_appointment_event,
+    ]
     cron_jobs = [
         cron(
             run_whatsapp_scheduler,

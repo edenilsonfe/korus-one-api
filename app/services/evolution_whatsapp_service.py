@@ -26,6 +26,10 @@ from app.models.whatsapp_connection import (
     WhatsAppConnection,
 )
 from app.services.evolution_api_client import EvolutionApiClient, EvolutionApiError
+from app.services.evolution_webhook_auth import (
+    map_evolution_message_status,
+    normalize_evolution_event,
+)
 from app.services.whatsapp_types import WhatsAppSendResult
 from app.utils.credential_encryption import decrypt_secret, encrypt_secret
 
@@ -152,6 +156,20 @@ class EvolutionWhatsAppService:
         )
         return result.scalars().first()
 
+    async def _latest_connection_for_instance(
+        self, professional_id: UUID, instance_name: str
+    ) -> WhatsAppConnection | None:
+        result = await self.db.execute(
+            select(WhatsAppConnection)
+            .where(
+                WhatsAppConnection.professional_id == professional_id,
+                WhatsAppConnection.provider == "evolution",
+                WhatsAppConnection.evolution_instance_name == instance_name,
+            )
+            .order_by(WhatsAppConnection.created_at.desc())
+        )
+        return result.scalars().first()
+
     async def can_send(self, professional_id: UUID) -> bool:
         settings = get_settings()
         if settings.whatsapp_provider != "evolution":
@@ -177,6 +195,26 @@ class EvolutionWhatsAppService:
             )
         return name
 
+    async def _remote_cleanup(self, connection: WhatsAppConnection) -> None:
+        if not connection.evolution_instance_name:
+            return
+        try:
+            api_key = self._instance_api_key(connection)
+        except HTTPException:
+            settings = get_settings()
+            api_key = settings.evolution_global_api_key
+            if not api_key:
+                return
+        name = connection.evolution_instance_name
+        try:
+            await self.client.logout_instance(name, api_key=api_key)
+        except EvolutionApiError as exc:
+            logger.info("Evolution logout failed for %s: %s", name, exc.message)
+        try:
+            await self.client.delete_instance(name, api_key=api_key)
+        except EvolutionApiError as exc:
+            logger.info("Evolution delete failed for %s: %s", name, exc.message)
+
     async def _soft_disconnect_existing(self, professional_id: UUID) -> None:
         result = await self.db.execute(
             select(WhatsAppConnection).where(
@@ -186,6 +224,7 @@ class EvolutionWhatsAppService:
             )
         )
         for connection in result.scalars().all():
+            await self._remote_cleanup(connection)
             connection.status = CONNECTION_STATUS_DISCONNECTED
             connection.disconnected_at = datetime.now(UTC)
         await self.db.flush()
@@ -194,8 +233,14 @@ class EvolutionWhatsAppService:
         settings = get_settings()
         webhook_url = settings.evolution_webhook_url
         if not webhook_url:
-            logger.warning("APP_PUBLIC_URL not set; skipping Evolution webhook registration.")
-            return
+            message = "APP_PUBLIC_URL not set; Evolution webhook cannot be registered."
+            if settings.debug:
+                logger.warning(message)
+                return
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="APP_PUBLIC_URL é obrigatório para registrar o webhook Evolution.",
+            )
         try:
             await self.client.set_webhook(
                 instance_name,
@@ -204,7 +249,13 @@ class EvolutionWhatsAppService:
                 secret=settings.evolution_webhook_secret,
             )
         except EvolutionApiError as exc:
-            logger.warning("Failed to set Evolution webhook: %s", exc.message)
+            if settings.debug:
+                logger.warning("Failed to set Evolution webhook: %s", exc.message)
+                return
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=f"Falha ao registrar webhook Evolution: {exc.message}",
+            ) from exc
 
     async def _sync_phone_from_instances(self, connection: WhatsAppConnection, api_key: str) -> None:
         try:
@@ -238,6 +289,37 @@ class EvolutionWhatsAppService:
             connection.connected_at = connection.connected_at or datetime.now(UTC)
         return mapped
 
+    async def _resolve_api_key_for_new_instance(
+        self, professional_id: UUID, instance_name: str, created: dict[str, Any]
+    ) -> str:
+        extracted = EvolutionApiClient.extract_instance_api_key(created)
+        if extracted:
+            return extracted
+
+        previous = await self._latest_connection_for_instance(professional_id, instance_name)
+        if previous and (previous.encrypted_instance_api_key or previous.encrypted_access_token):
+            try:
+                return self._instance_api_key(previous)
+            except Exception:
+                logger.warning(
+                    "Could not reuse previous Evolution instance token for %s", instance_name
+                )
+
+        settings = get_settings()
+        if settings.evolution_global_api_key:
+            # Last resort only for admin-key Evolution installs that don't return per-instance hash.
+            logger.warning(
+                "Using EVOLUTION_GLOBAL_API_KEY as instance credential for %s; "
+                "prefer deleting/recreating so Evolution returns a per-instance hash.",
+                instance_name,
+            )
+            return settings.evolution_global_api_key
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Evolution não retornou apikey da instância.",
+        )
+
     async def connect(self, professional_id: UUID) -> EvolutionConnectResult:
         instance_name = evolution_instance_name_for_professional(professional_id)
         existing = await self.get_active_connection(professional_id)
@@ -257,6 +339,7 @@ class EvolutionWhatsAppService:
                         instance_name, api_key=api_key
                     )
                     qrcode_base64 = EvolutionApiClient.extract_qrcode_base64(connect_payload)
+                await self._ensure_webhook(instance_name, api_key)
                 await self._sync_phone_from_instances(existing, api_key)
                 await self.db.commit()
                 await self.db.refresh(existing)
@@ -265,6 +348,8 @@ class EvolutionWhatsAppService:
                     qrcode_base64=qrcode_base64,
                     connection_state=evolution_state,
                 )
+            except HTTPException:
+                raise
             except EvolutionApiError as exc:
                 existing.last_error = exc.message
                 await self.db.commit()
@@ -275,24 +360,65 @@ class EvolutionWhatsAppService:
 
         await self._soft_disconnect_existing(professional_id)
 
+        settings = get_settings()
+        webhook_url = settings.evolution_webhook_url
         try:
-            created = await self.client.create_instance(instance_name, qrcode=True)
+            created = await self.client.create_instance(
+                instance_name,
+                qrcode=True,
+                webhook_url=webhook_url,
+                webhook_secret=settings.evolution_webhook_secret or None,
+            )
         except EvolutionApiError as exc:
             if exc.status_code == 403 or "already" in exc.message.lower():
-                created = {}
+                # Reuse stored token; if missing, delete remote orphan and recreate.
+                previous = await self._latest_connection_for_instance(
+                    professional_id, instance_name
+                )
+                reused_key = None
+                if previous and (
+                    previous.encrypted_instance_api_key or previous.encrypted_access_token
+                ):
+                    try:
+                        reused_key = self._instance_api_key(previous)
+                    except Exception:
+                        reused_key = None
+                if reused_key:
+                    created = {}
+                    # Stash for resolve below via previous row
+                else:
+                    global_key = settings.evolution_global_api_key
+                    if global_key:
+                        try:
+                            await self.client.delete_instance(
+                                instance_name, api_key=global_key
+                            )
+                        except EvolutionApiError:
+                            pass
+                        created = await self.client.create_instance(
+                            instance_name,
+                            qrcode=True,
+                            webhook_url=webhook_url,
+                            webhook_secret=settings.evolution_webhook_secret or None,
+                        )
+                    else:
+                        raise HTTPException(
+                            status_code=status.HTTP_502_BAD_GATEWAY,
+                            detail=(
+                                "Instância Evolution já existe e não há credencial "
+                                "salva para reutilizá-la. Configure EVOLUTION_GLOBAL_API_KEY "
+                                "ou limpe a instância no painel Evolution."
+                            ),
+                        ) from exc
             else:
                 raise HTTPException(
                     status_code=status.HTTP_502_BAD_GATEWAY,
                     detail=f"Falha ao criar instância Evolution: {exc.message}",
                 ) from exc
 
-        settings = get_settings()
-        api_key = EvolutionApiClient.extract_instance_api_key(created) or settings.evolution_global_api_key
-        if not api_key:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Evolution não retornou apikey da instância.",
-            )
+        api_key = await self._resolve_api_key_for_new_instance(
+            professional_id, instance_name, created
+        )
 
         connection = WhatsAppConnection(
             id=uuid.uuid4(),
@@ -350,7 +476,10 @@ class EvolutionWhatsAppService:
                     instance_name, api_key=api_key
                 )
                 _ = EvolutionApiClient.extract_qrcode_base64(connect_payload)
+            await self._ensure_webhook(instance_name, api_key)
             await self._sync_phone_from_instances(connection, api_key)
+        except HTTPException:
+            raise
         except EvolutionApiError as exc:
             connection.last_error = exc.message
             raise HTTPException(
@@ -365,14 +494,7 @@ class EvolutionWhatsAppService:
         connection = await self.get_active_connection(professional_id)
         if not connection:
             return None
-        if connection.evolution_instance_name:
-            try:
-                await self.client.logout_instance(
-                    connection.evolution_instance_name,
-                    api_key=self._instance_api_key(connection),
-                )
-            except EvolutionApiError as exc:
-                logger.info("Evolution logout failed: %s", exc.message)
+        await self._remote_cleanup(connection)
         connection.status = CONNECTION_STATUS_DISCONNECTED
         connection.disconnected_at = datetime.now(UTC)
         await self.db.commit()
@@ -488,12 +610,16 @@ class EvolutionWhatsAppService:
         try:
             state_payload = await self.client.connection_state(instance_name, api_key=api_key)
         except EvolutionApiError as exc:
-            logger.warning(
-                "Evolution connection_state failed for %s: %s",
-                instance_name,
-                exc.message,
-            )
-            return
+            connection.status = CONNECTION_STATUS_NEEDS_RECONNECT
+            connection.last_error = exc.message
+            await self.db.commit()
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=(
+                    "Não foi possível verificar o status do WhatsApp Evolution. "
+                    f"Tente novamente em instantes ({exc.message})."
+                ),
+            ) from exc
 
         evolution_state = EvolutionApiClient.extract_connection_state(state_payload)
         mapped = self._apply_evolution_state(connection, evolution_state)
@@ -568,7 +694,7 @@ class EvolutionWhatsAppService:
         )
 
     async def handle_webhook_event(self, payload: dict[str, Any]) -> None:
-        event = str(payload.get("event") or "").lower()
+        event = normalize_evolution_event(str(payload.get("event") or ""))
         instance_name = payload.get("instance")
         data = payload.get("data") if isinstance(payload.get("data"), dict) else payload
 
@@ -586,7 +712,7 @@ class EvolutionWhatsAppService:
         if not connection:
             return
 
-        if event in ("connection.update", "connection_update", "qrcode.updated"):
+        if event in ("connection.update", "qrcode.updated"):
             state = None
             if isinstance(data, dict):
                 state = data.get("state") or data.get("status")
@@ -600,14 +726,17 @@ class EvolutionWhatsAppService:
                     if data.get("profileName"):
                         connection.verified_name = str(data["profileName"])
 
-        if event in ("send.message", "send_message", "messages.update"):
+        if event in ("send.message", "messages.update"):
             message_id = None
             status_value = None
             if isinstance(data, dict):
                 key = data.get("key") if isinstance(data.get("key"), dict) else {}
                 message_id = key.get("id") or data.get("messageId")
                 status_value = data.get("status")
-            if message_id:
+                if status_value is None and isinstance(data.get("update"), dict):
+                    status_value = data["update"].get("status")
+            mapped_status = map_evolution_message_status(status_value)
+            if message_id and mapped_status:
                 log_result = await self.db.execute(
                     select(NotificationMessageLog).where(
                         NotificationMessageLog.provider == "evolution",
@@ -615,8 +744,15 @@ class EvolutionWhatsAppService:
                     )
                 )
                 log = log_result.scalars().first()
-                if log and status_value:
-                    log.status = str(status_value).lower()
+                if log:
+                    log.status = mapped_status
                     log.payload = data if isinstance(data, dict) else payload
+                    now = datetime.now(UTC)
+                    if mapped_status in ("delivered", "read") and not log.delivered_at:
+                        log.delivered_at = now
+                    if mapped_status == "read" and not log.read_at:
+                        log.read_at = now
+                    if mapped_status == "failed" and not log.failed_at:
+                        log.failed_at = now
 
         await self.db.commit()

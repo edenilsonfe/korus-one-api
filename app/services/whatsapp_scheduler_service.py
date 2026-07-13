@@ -6,15 +6,21 @@ import logging
 from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import select
+from sqlalchemy import and_, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.constants.whatsapp_events import ACTIVE_APPOINTMENT_STATUSES, WHATSAPP_EVENT_REMINDER_24H
 from app.core.config import get_settings
 from app.models.appointment import Appointment
-from app.models.notification_message_log import NotificationMessageLog
-from app.services.whatsapp_notification_service import WhatsAppNotificationService
+from app.models.notification_message_log import (
+    MESSAGE_STATUS_FAILED,
+    NotificationMessageLog,
+)
+from app.services.whatsapp_notification_service import (
+    MAX_SEND_ATTEMPTS,
+    WhatsAppNotificationService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +100,18 @@ class WhatsAppSchedulerService:
                 NotificationMessageLog.notification_type == WHATSAPP_EVENT_REMINDER_24H,
                 NotificationMessageLog.channel == "whatsapp",
                 NotificationMessageLog.is_test.is_(False),
+                or_(
+                    NotificationMessageLog.status.in_(
+                        ("queued", "sent", "delivered", "read")
+                    ),
+                    and_(
+                        NotificationMessageLog.status == MESSAGE_STATUS_FAILED,
+                        NotificationMessageLog.attempt_count >= MAX_SEND_ATTEMPTS,
+                    ),
+                    NotificationMessageLog.error_code.in_(
+                        ("no_phone", "missing_phone", "invalid_phone")
+                    ),
+                ),
             )
         )
         already_sent: set = set()

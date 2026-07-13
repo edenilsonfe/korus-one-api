@@ -131,6 +131,21 @@ def validate_settings(settings: Settings) -> None:
         raise RuntimeError(
             "JWT_SECRET inseguro ou ausente: defina um segredo forte com debug=False"
         )
+    if settings.whatsapp_provider.strip().lower() == "evolution":
+        missing: list[str] = []
+        if not (settings.evolution_global_api_key or "").strip():
+            missing.append("EVOLUTION_GLOBAL_API_KEY")
+        if not (settings.evolution_webhook_secret or "").strip():
+            missing.append("EVOLUTION_WEBHOOK_SECRET")
+        if not (settings.whatsapp_credential_encryption_key or "").strip():
+            missing.append("WHATSAPP_CREDENTIAL_ENCRYPTION_KEY")
+        if not (settings.app_public_url or "").strip():
+            missing.append("APP_PUBLIC_URL")
+        if missing:
+            raise RuntimeError(
+                "Configuração Evolution incompleta com debug=False: "
+                + ", ".join(missing)
+            )
 
 
 @lru_cache

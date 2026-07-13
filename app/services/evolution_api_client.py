@@ -1,5 +1,7 @@
 """Thin async client for Evolution API v2.3 (instances, messages, webhooks)."""
 
+from __future__ import annotations
+
 import logging
 from typing import Any
 
@@ -8,6 +10,13 @@ import httpx
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
+
+_WEBHOOK_EVENTS = [
+    "QRCODE_UPDATED",
+    "CONNECTION_UPDATE",
+    "SEND_MESSAGE",
+    "MESSAGES_UPDATE",
+]
 
 
 class EvolutionApiError(RuntimeError):
@@ -18,8 +27,24 @@ class EvolutionApiError(RuntimeError):
 
 
 class EvolutionApiClient:
+    _shared_client: httpx.AsyncClient | None = None
+
     def __init__(self, timeout: float = 30.0):
         self._timeout = timeout
+
+    @classmethod
+    async def aclose_shared(cls) -> None:
+        client = cls._shared_client
+        cls._shared_client = None
+        if client is not None and not client.is_closed:
+            await client.aclose()
+
+    async def _http(self) -> httpx.AsyncClient:
+        client = EvolutionApiClient._shared_client
+        if client is None or client.is_closed:
+            client = httpx.AsyncClient(timeout=self._timeout)
+            EvolutionApiClient._shared_client = client
+        return client
 
     @property
     def base_url(self) -> str:
@@ -48,13 +73,13 @@ class EvolutionApiClient:
     ) -> dict[str, Any]:
         url = f"{self.base_url}/{path.lstrip('/')}"
         try:
-            async with httpx.AsyncClient(timeout=self._timeout) as client:
-                response = await client.request(
-                    method,
-                    url,
-                    json=json_body,
-                    headers=self._headers(api_key),
-                )
+            client = await self._http()
+            response = await client.request(
+                method,
+                url,
+                json=json_body,
+                headers=self._headers(api_key),
+            )
         except httpx.RequestError as exc:
             raise EvolutionApiError(
                 f"Falha ao contactar Evolution API ({url}): {exc}"
@@ -99,16 +124,36 @@ class EvolutionApiClient:
             return payload
         return {"data": payload}
 
-    async def create_instance(self, instance_name: str, *, qrcode: bool = True) -> dict[str, Any]:
-        return await self._request(
-            "POST",
-            "/instance/create",
-            json_body={
-                "instanceName": instance_name,
-                "qrcode": qrcode,
-                "integration": "WHATSAPP-BAILEYS",
-            },
-        )
+    @staticmethod
+    def webhook_config(webhook_url: str, *, secret: str | None = None) -> dict[str, Any]:
+        headers: dict[str, str] = {"Content-Type": "application/json"}
+        if secret:
+            headers["Authorization"] = f"Bearer {secret}"
+        return {
+            "enabled": True,
+            "url": webhook_url,
+            "headers": headers,
+            "byEvents": False,
+            "base64": False,
+            "events": list(_WEBHOOK_EVENTS),
+        }
+
+    async def create_instance(
+        self,
+        instance_name: str,
+        *,
+        qrcode: bool = True,
+        webhook_url: str | None = None,
+        webhook_secret: str | None = None,
+    ) -> dict[str, Any]:
+        body: dict[str, Any] = {
+            "instanceName": instance_name,
+            "qrcode": qrcode,
+            "integration": "WHATSAPP-BAILEYS",
+        }
+        if webhook_url:
+            body["webhook"] = self.webhook_config(webhook_url, secret=webhook_secret)
+        return await self._request("POST", "/instance/create", json_body=body)
 
     async def connect_instance(self, instance_name: str, *, api_key: str) -> dict[str, Any]:
         return await self._request(
@@ -133,12 +178,18 @@ class EvolutionApiClient:
         return await self._request("GET", path, api_key=api_key)
 
     async def logout_instance(self, instance_name: str, *, api_key: str) -> dict[str, Any]:
-        async with httpx.AsyncClient(timeout=self._timeout) as client:
-            response = await client.delete(
-                f"{self.base_url}/instance/logout/{instance_name}",
-                headers=self._headers(api_key),
-            )
-        return self._parse(response)
+        return await self._request(
+            "DELETE",
+            f"/instance/logout/{instance_name}",
+            api_key=api_key,
+        )
+
+    async def delete_instance(self, instance_name: str, *, api_key: str) -> dict[str, Any]:
+        return await self._request(
+            "DELETE",
+            f"/instance/delete/{instance_name}",
+            api_key=api_key,
+        )
 
     async def check_whatsapp_numbers(
         self,
@@ -176,6 +227,7 @@ class EvolutionApiClient:
         if not message:
             raise EvolutionApiError("Texto da mensagem vazio.")
 
+        # Evolution v2.3 primary shape; legacy textMessage kept as one fallback.
         payload_variants: list[dict[str, Any]] = [
             {"number": number, "text": message, "linkPreview": False, "delay": 1000},
             {"number": number, "textMessage": {"text": message}, "delay": 1000},
@@ -207,24 +259,7 @@ class EvolutionApiClient:
         api_key: str,
         secret: str | None = None,
     ) -> dict[str, Any]:
-        headers: dict[str, str] = {"Content-Type": "application/json"}
-        if secret:
-            headers["Authorization"] = f"Bearer {secret}"
-        body = {
-            "webhook": {
-                "enabled": True,
-                "url": webhook_url,
-                "headers": headers,
-                "byEvents": False,
-                "base64": False,
-                "events": [
-                    "QRCODE_UPDATED",
-                    "CONNECTION_UPDATE",
-                    "SEND_MESSAGE",
-                    "MESSAGES_UPDATE",
-                ],
-            }
-        }
+        body = {"webhook": self.webhook_config(webhook_url, secret=secret)}
         return await self._request(
             "POST",
             f"/webhook/set/{instance_name}",

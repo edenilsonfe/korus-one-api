@@ -167,9 +167,9 @@ async def create_appointment(
     await db.commit()
     await db.refresh(anchor)
 
-    from app.services.whatsapp_notification_service import WhatsAppNotificationService
+    from app.services.whatsapp_queue import enqueue_whatsapp_appointment_event
 
-    await WhatsAppNotificationService.dispatch_appointment_event(anchor.id, "confirmation")
+    await enqueue_whatsapp_appointment_event(anchor.id, "confirmation")
 
     response = _to_response(anchor, patient.name, professional.name)
     return AppointmentCreateResponse(**response.model_dump(by_alias=False), children_created=children_created)
@@ -205,12 +205,12 @@ async def update_appointment(
     await db.commit()
     await db.refresh(appt)
 
-    from app.services.whatsapp_notification_service import WhatsAppNotificationService
+    from app.services.whatsapp_queue import enqueue_whatsapp_appointment_event
 
     if data.get("status") == "cancelado" and old_status != "cancelado":
-        await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "cancelled")
+        await enqueue_whatsapp_appointment_event(appt.id, "cancelled")
     elif (appt.date != old_date or appt.time != old_time) and appt.status != "cancelado":
-        await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "rescheduled")
+        await enqueue_whatsapp_appointment_event(appt.id, "rescheduled")
 
     return _to_response(appt, patient.name, professional.name)
 

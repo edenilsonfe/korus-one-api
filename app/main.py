@@ -19,7 +19,13 @@ async def lifespan(app: FastAPI):
         await seed_plan_catalog(session)
         await session.commit()
     logger.info("Plan catalog seed checked")
-    yield
+    try:
+        yield
+    finally:
+        from app.services.evolution_api_client import EvolutionApiClient
+
+        await EvolutionApiClient.aclose_shared()
+
 
 
 def create_app() -> FastAPI:
