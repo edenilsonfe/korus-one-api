@@ -40,6 +40,7 @@ from app.services.billing_reconciliation_service import BillingReconciliationSer
 from app.services.coupon_service import CouponError, CouponService
 from app.services.entitlement_service import EntitlementService
 from app.services.plan_change_service import PlanChangeService
+from app.services.plan_catalog_seed import CANONICAL_PLAN_SLUGS
 from app.services.saas_billing_service import SaasBillingService
 
 logger = logging.getLogger(__name__)
@@ -146,7 +147,7 @@ async def list_billing_plans(
 ):
     result = await db.execute(
         select(Plan)
-        .where(Plan.is_active.is_(True))
+        .where(Plan.is_active.is_(True), Plan.slug.in_(CANONICAL_PLAN_SLUGS))
         .order_by(Plan.display_order.asc(), Plan.price_cents.asc(), Plan.name.asc())
     )
     return [_plan_public(plan) for plan in result.scalars().all()]

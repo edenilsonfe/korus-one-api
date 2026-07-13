@@ -29,7 +29,7 @@ COMMERCIAL_PLAN_SEEDS: list[dict[str, Any]] = [
     },
     {
         "slug": "korusone_pro_yearly",
-        "name": "korusone Pro",
+        "name": "KorusOne Pro",
         "description": "Pacientes ilimitados, IA clínica e relatórios automáticos — cobrança anual.",
         "limits": {},
         "price_cents": 97000,
@@ -50,9 +50,36 @@ COMMERCIAL_PLAN_SEEDS: list[dict[str, Any]] = [
 ]
 
 
+CANONICAL_PLAN_SLUGS = frozenset(seed["slug"] for seed in COMMERCIAL_PLAN_SEEDS)
+
+_SYNC_KEYS = (
+    "name",
+    "description",
+    "limits",
+    "price_cents",
+    "currency",
+    "billing_interval",
+    "features",
+    "badge",
+    "highlighted",
+    "display_order",
+    "is_active",
+)
+
+
 async def seed_plan_catalog(session: AsyncSession) -> None:
     for seed in COMMERCIAL_PLAN_SEEDS:
-        existing = await session.execute(select(Plan).where(Plan.slug == seed["slug"]))
-        if existing.scalar_one_or_none():
-            continue
-        session.add(Plan(**seed))
+        result = await session.execute(select(Plan).where(Plan.slug == seed["slug"]))
+        row = result.scalar_one_or_none()
+        if row:
+            for key in _SYNC_KEYS:
+                setattr(row, key, seed[key])
+        else:
+            session.add(Plan(**seed))
+
+    # ponytail: single-product catalog — deactivate legacy/duplicate active plans
+    extras = await session.execute(
+        select(Plan).where(Plan.is_active.is_(True), Plan.slug.not_in(CANONICAL_PLAN_SLUGS))
+    )
+    for plan in extras.scalars().all():
+        plan.is_active = False
