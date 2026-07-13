@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import UTC, date, datetime, time
+from datetime import UTC, date, datetime, time, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
@@ -38,7 +38,10 @@ from app.services.whatsapp_provider import get_active_whatsapp_provider
 logger = logging.getLogger(__name__)
 
 MAX_SEND_ATTEMPTS = 3
-_TERMINAL_SUCCESS = frozenset({"sent", "delivered", "read", MESSAGE_STATUS_QUEUED})
+_DONE_STATUSES = frozenset({"sent", "delivered", "read"})
+# ponytail: orphan reclaim if claim stayed queued with no provider id (post-send DB failure).
+# Ceiling: concurrent double-send if two callers hit after 60s; upgrade = SELECT FOR UPDATE skip locked.
+_QUEUED_ORPHAN_AFTER = timedelta(seconds=60)
 
 
 async def _primary_caregiver_contact(
@@ -123,8 +126,27 @@ class WhatsAppNotificationService:
             scheduled_time=scheduled_time,
         )
         if existing:
-            if existing.status in _TERMINAL_SUCCESS:
+            if existing.status in _DONE_STATUSES:
                 return None
+            if existing.status == MESSAGE_STATUS_QUEUED:
+                # In-flight claim: skip. Orphan after timeout (send OK, log commit failed): reclaim.
+                if existing.provider_message_id:
+                    return None
+                stamped = existing.updated_at or existing.created_at
+                if stamped is not None:
+                    if stamped.tzinfo is None:
+                        stamped = stamped.replace(tzinfo=UTC)
+                    if datetime.now(UTC) - stamped < _QUEUED_ORPHAN_AFTER:
+                        return None
+                if existing.attempt_count >= MAX_SEND_ATTEMPTS:
+                    return None
+                existing.attempt_count = int(existing.attempt_count or 0) + 1
+                existing.last_error = None
+                existing.error_code = None
+                existing.to_phone = mask_phone(to_phone) if to_phone else existing.to_phone
+                await self.db.commit()
+                await self.db.refresh(existing)
+                return existing
             if existing.status == MESSAGE_STATUS_FAILED:
                 if existing.error_code in {"no_phone", "missing_phone", "invalid_phone"}:
                     return None
@@ -390,9 +412,20 @@ class WhatsAppNotificationService:
                 event_id,
                 appointment_id,
             )
-            await self._mark_log_failed(
-                claim,
-                last_error=str(getattr(exc, "detail", None) or exc),
-                payload={"error": str(exc)},
-            )
+            try:
+                await self.db.rollback()
+                await self._mark_log_failed(
+                    claim,
+                    last_error=str(getattr(exc, "detail", None) or exc),
+                    payload={"error": str(exc)},
+                )
+            except Exception:
+                logger.exception(
+                    "Failed to persist WhatsApp failure log for appointment %s",
+                    appointment_id,
+                )
+                try:
+                    await self.db.rollback()
+                except Exception:
+                    pass
             return False

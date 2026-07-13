@@ -1,10 +1,7 @@
-"""Dispatch WhatsApp appointment notifications.
+"""Schedule WhatsApp appointment notifications without blocking the HTTP response.
 
-Compose runs Redis but has no ARQ worker service. Enqueue-only would drop
-messages into Redis forever — so we dispatch inline by default.
-
-Set WHATSAPP_USE_ARQ_DISPATCH=true only when `uv run arq worker.WorkerSettings`
-(or an equivalent worker container) is actually running.
+Default path runs after the response via FastAPI BackgroundTasks (see appointments
+router). Optional ARQ path when WHATSAPP_USE_ARQ_DISPATCH=true and a worker is up.
 """
 
 from __future__ import annotations
@@ -26,7 +23,7 @@ def _use_arq_dispatch() -> bool:
 async def enqueue_whatsapp_appointment_event(
     appointment_id: UUID, notification_type: str
 ) -> None:
-    """Dispatch appointment WhatsApp event (inline, or ARQ when explicitly enabled)."""
+    """Run (or ARQ-enqueue) the WhatsApp dispatch. Safe for BackgroundTasks."""
     if _use_arq_dispatch():
         try:
             from arq import create_pool
@@ -53,6 +50,14 @@ async def enqueue_whatsapp_appointment_event(
 
     from app.services.whatsapp_notification_service import WhatsAppNotificationService
 
-    await WhatsAppNotificationService.dispatch_appointment_event(
-        appointment_id, notification_type
-    )
+    try:
+        await WhatsAppNotificationService.dispatch_appointment_event(
+            appointment_id, notification_type
+        )
+    except Exception:
+        # Background task: never let Evolution/DB errors bubble into the ASGI cycle.
+        logger.exception(
+            "Background WhatsApp dispatch failed for %s/%s",
+            appointment_id,
+            notification_type,
+        )
