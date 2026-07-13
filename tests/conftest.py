@@ -6,7 +6,9 @@ os.environ.setdefault("JWT_SECRET", "test-secret-for-pytest-only-not-for-prod")
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.compiler import compiles
 
 from app.core.security import create_access_token, hash_password
 from app.db.base import Base
@@ -20,6 +22,16 @@ from app.models.professional import Professional
 from app.seeds.protocols import PROTOCOLS
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+
+
+@compiles(JSONB, "sqlite")
+def _compile_jsonb_sqlite(_type, _compiler, **_kw):
+    return "JSON"
+
+
+@compiles(ARRAY, "sqlite")
+def _compile_array_sqlite(_type, _compiler, **_kw):
+    return "JSON"
 
 
 @pytest.fixture

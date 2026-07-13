@@ -123,9 +123,9 @@ No api, `instrument_aliases.py` + `get_protocol_scoring_mode` viram a **fonte ú
 
 ```
 src/lib/assessments/protocol-application/   (novo)
-  ├─ descriptor.ts      // tipo Descriptor
-  ├─ registry.ts        // tabela protocolo → Descriptor (legados como entradas)
-  ├─ resolve.ts         // resolve(protocolId, {scoringMode}) → Descriptor | undefined
+  ├─ descriptor.ts      // tipo Descriptor (inclui RenderCtx/Descriptor — importa `type { ReactNode }`)
+  ├─ registry.tsx       // tabela protocolo → Descriptor (legados como entradas) — .tsx porque contém JSX
+  ├─ resolve.ts         // resolve(protocolId, {scoringMode}) → Descriptor | undefined (puro, sem React)
   └─ resolve.test.ts    // matriz (protocolId, mode) → expected.formComponentKey, SEM React
 ```
 
@@ -170,10 +170,10 @@ Substituição de raiz: registry novo + `aplicar.tsx` reescrito. Slugs `portage`
 
 ### 2.9 Pronto (C1)
 
-- [ ] `resolve.test.ts` verde (matriz sem React).
-- [ ] `aplicar.tsx` sem `if` de slug — só `resolve()` + render.
-- [ ] `scoringMode` servido pelo api (via `toProtocolView`), não decidido no web.
-- [ ] Suite de regressão do web verde.
+- [x] `resolve.test.ts` verde (matriz sem React).
+- [x] `aplicar.tsx` sem `if` de slug — só `resolve()` + render.
+- [x] `scoringMode` servido pelo api (via `toProtocolView`), não decidido no web.
+- [x] Suite de regressão do web verde.
 
 ---
 
@@ -181,45 +181,24 @@ Substituição de raiz: registry novo + `aplicar.tsx` reescrito. Slugs `portage`
 
 Per §1.2, cada candidato abaixo ganha seu próprio spec→plano→implementação quando seu cluster chegar. Esta seção registra a interface acordada e o posicionamento de arquivos para que o programa-mãe permaneça coerente.
 
-### 3.1 C2 — ScoringSession (Cluster A, após C1)
+### 3.1 C2 — ScoringSession (Cluster A, após C1) — ✅ fatia manifest (2026-07-12)
 
 - **Confiança:** Strong · **Estilo:** ports & adapters · **Repo:** api (web consome)
-- **Interface:**
-  ```
-  ScoringSession.from_protocol(protocolId, scoringMode)
-    .score(answers) → NormalizedScores {
-      percentage, interpretation, assessmentFields, norms
-    }
-    .toAssessmentFields()
-  ```
-- **Arquivos (api):** `app/services/scoring_session.py` (novo). Engines existentes (`instrument_scoring_service.py`, `battery_scoring_service.py`, `spm_scoring_service.py`) viram implementação atrás de `ScoringEngine`. `assessment_scoring.py` reduz-se a delegates de `ScoringSession`.
-- **Web:** `result-analysis.ts` deixa de re-calcular `%`; consome `NormalizedScores`.
-- **Testes:** `tests/test_scoring_session.py` — engines via fixture adapter; `test_assessment_scoring.py` + `test_battery_scoring.py` continuam verdes (rede de regressão).
+- **Status:** Implementado — `scoring_session.py`; `assessment_scoring` delega; `clinical.py` usa `ScoringSession`; Manifest omite `%` local. Battery/SPM/`result-analysis` adiados.
+- **Interface:** `ScoringSession.from_protocol(...).score(answers) → NormalizedScores` (+ `from_scores` fixture adapter)
+- **Testes:** `tests/test_scoring_session.py` (2 adapters) + `test_assessment_scoring.py`
 
-### 3.2 C3 — PatientRecord (Cluster B, primeiro do cluster)
+### 3.2 C3 — PatientRecord (Cluster B) — ✅ fatia leitura (2026-07-12)
 
 - **Confiança:** Worth exploring · **Estilo:** ports & adapters · **Repo:** api + web
-- **Interface:**
-  ```
-  getSection(patientId, section) → PatientRecordSlice   // summary | sessions | assessments | evolution
-  appendNote(patientId, note) → NoteRef
-  listActivities(patientId, { since }) → Activity[]
-  ```
-- **Arquivos (api):** `app/services/patient_record.py` (novo). Mapper de Assessment unificado (um shape, não dois). `patients.py::_build_detail` vira delegate de `getSection(section="summary")`.
-- **Web:** rotas `pacientes.$id_*` pedem só a seção (`include` real parcial, não "tudo sempre"). Deleta `SessionEvolution` (duplicado — substituído por `getSection("evolution")`).
-- **Testes:** `tests/test_patient_record.py` — slice por seção; suite atual de patients como rede.
+- **Status:** Implementado — `patient_record.build_patient_detail` + `map_assessment`; `fetchPatient(id, include?)`. `appendNote`/`listActivities`/SessionEvolution adiados.
+- **Testes:** `tests/test_patient_record.py`
 
-### 3.3 C4 — ClinicalActivity (Cluster B, após C3)
+### 3.3 C4 — ClinicalActivity (Cluster B) — ✅ fatia 3 recorders (2026-07-12)
 
 - **Confiança:** Worth exploring · **Estilo:** in-process · **Repo:** api
-- **Interface:**
-  ```
-  recordSession(sessionRef) → EventRef
-  recordAssessment(assessmentRef) → EventRef
-  recordEvolution(evolutionRef) → EventRef
-  ```
-- **Arquivos (api):** `app/services/clinical_activity.py` (novo). `timeline.py::create_timeline_event` vira internal do `ClinicalActivity` com `db.add` + commit/flush (corrige o deletion test que hoje falha — só `db.add`). Callers (clinical, prontuario, sessions, patients, ai, battery, spm, seeds) chamam `recordX(...)` sem montar `title`/`description`.
-- **Testes:** `tests/test_clinical_activity.py` — N fixtures por tipo de atividade; teste explícito do deletion test (cria evento, deleta entidade, evento persiste com `source_id`).
+- **Status:** Implementado — `record_session`/`record_assessment`/`record_evolution` + deletion test; sessions/clinical/prontuario migrados. Meta/attachment/report/battery/spm ainda usam `create_timeline_event`.
+- **Testes:** `tests/test_clinical_activity.py`
 
 ### 3.4 C5 — PatientView (Cluster B, último)
 

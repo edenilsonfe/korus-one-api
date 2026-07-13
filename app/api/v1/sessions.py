@@ -13,7 +13,7 @@ from app.models.professional import Professional
 from app.models.session import Session
 from app.schemas.common import PaginatedResponse
 from app.schemas.session import SessionCreate, SessionGlobalResponse, SessionUpdate
-from app.services.timeline import create_timeline_event
+from app.services.clinical_activity import record_session
 
 router = APIRouter(tags=["sessions"])
 
@@ -99,16 +99,7 @@ async def create_session(
     )
     db.add(session)
     await db.flush()
-    await create_timeline_event(
-        db,
-        patient_id=patient.id,
-        professional_id=professional.id,
-        event_type="sessao",
-        title=f"Sessão de {body.type}",
-        description=body.notes[:200] if body.notes else "",
-        source_id=session.id,
-        date=session.date,
-    )
+    await record_session(db, session=session, professional=professional)
     return {
         "id": str(session.id),
         "date": session.date.isoformat(),

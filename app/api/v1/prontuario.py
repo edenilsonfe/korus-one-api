@@ -15,6 +15,7 @@ from app.models.evolution import Evolution
 from app.models.professional import Professional
 from app.schemas.prontuario import AnamneseCreate, AnamneseResponse, EvolutionCreate, EvolutionResponse
 from app.services.storage import storage_service
+from app.services.clinical_activity import record_evolution
 from app.services.timeline import create_timeline_event
 
 router = APIRouter(prefix="/patients/{patient_id}", tags=["prontuario"])
@@ -62,15 +63,7 @@ async def create_evolution(
     )
     db.add(evolution)
     await db.flush()
-    await create_timeline_event(
-        db,
-        patient_id=patient_id,
-        professional_id=professional.id,
-        event_type="evolucao",
-        title=body.title,
-        description=body.content[:200],
-        source_id=evolution.id,
-    )
+    await record_evolution(db, evolution=evolution, professional=professional)
     return EvolutionResponse(
         id=str(evolution.id),
         patient_id=str(patient_id),
