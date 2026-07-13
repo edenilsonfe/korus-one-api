@@ -13,7 +13,7 @@ from app.models.professional import Professional
 from app.models.session import Session
 from app.schemas.common import PaginatedResponse
 from app.schemas.session import SessionCreate, SessionGlobalResponse, SessionUpdate
-from app.services.timeline import create_timeline_event
+from app.services.clinical_activity import record_session
 
 router = APIRouter(tags=["sessions"])
 
@@ -99,16 +99,7 @@ async def create_session(
     )
     db.add(session)
     await db.flush()
-    await create_timeline_event(
-        db,
-        patient_id=patient.id,
-        professional_id=professional.id,
-        event_type="sessao",
-        title=f"Sessão de {body.type}",
-        description=body.notes[:200] if body.notes else "",
-        source_id=session.id,
-        date=session.date,
-    )
+    await record_session(db, session=session, professional=professional)
     return {
         "id": str(session.id),
         "date": session.date.isoformat(),
@@ -147,8 +138,13 @@ async def list_session_evolutions(
     db: AsyncSession = Depends(get_db),
 ):
     await get_patient_for_professional(patient_id, professional, db)
+    session_result = await db.execute(select(Session).where(Session.id == session_id, Session.patient_id == patient_id))
+    if session_result.scalar_one_or_none() is None:
+        raise HTTPException(status_code=404, detail="Sessão não encontrada")
     result = await db.execute(
-        select(Evolution).where(Evolution.session_id == session_id).order_by(Evolution.date.desc())
+        select(Evolution)
+        .where(Evolution.session_id == session_id, Evolution.patient_id == patient_id)
+        .order_by(Evolution.date.desc())
     )
     return [
         {

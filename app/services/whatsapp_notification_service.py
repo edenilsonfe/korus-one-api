@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import UTC, date, datetime, time
+from datetime import UTC, date, datetime, time, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -24,15 +25,23 @@ from app.models.appointment import Appointment
 from app.models.caregiver import Caregiver
 from app.models.notification_message_log import (
     MESSAGE_STATUS_FAILED,
+    MESSAGE_STATUS_QUEUED,
     MESSAGE_STATUS_SENT,
     NotificationMessageLog,
 )
 from app.models.notification_settings import NotificationSettings
 from app.models.patient import Patient
 from app.models.professional import Professional
+from app.services.evolution_whatsapp_service import mask_phone
 from app.services.whatsapp_provider import get_active_whatsapp_provider
 
 logger = logging.getLogger(__name__)
+
+MAX_SEND_ATTEMPTS = 3
+_DONE_STATUSES = frozenset({"sent", "delivered", "read"})
+# ponytail: orphan reclaim if claim stayed queued with no provider id (post-send DB failure).
+# Ceiling: concurrent double-send if two callers hit after 60s; upgrade = SELECT FOR UPDATE skip locked.
+_QUEUED_ORPHAN_AFTER = timedelta(seconds=60)
 
 
 async def _primary_caregiver_contact(
@@ -77,23 +86,83 @@ class WhatsAppNotificationService:
 
         return True, settings
 
-    async def _create_log(
+    async def _find_idempotent_log(
+        self,
+        *,
+        appointment_id: UUID,
+        notification_type: str,
+        scheduled_date: date | None,
+        scheduled_time: time | None,
+    ) -> NotificationMessageLog | None:
+        result = await self.db.execute(
+            select(NotificationMessageLog).where(
+                NotificationMessageLog.appointment_id == appointment_id,
+                NotificationMessageLog.notification_type == notification_type,
+                NotificationMessageLog.channel == "whatsapp",
+                NotificationMessageLog.is_test.is_(False),
+                NotificationMessageLog.scheduled_date == scheduled_date,
+                NotificationMessageLog.scheduled_time == scheduled_time,
+            )
+        )
+        return result.scalars().first()
+
+    async def _claim_send_slot(
         self,
         *,
         professional_id: UUID,
+        appointment_id: UUID,
+        patient_id: UUID,
         notification_type: str,
         to_phone: str | None,
-        status: str,
         provider: str,
-        appointment_id: UUID | None = None,
-        patient_id: UUID | None = None,
-        provider_message_id: str | None = None,
-        error_code: str | None = None,
-        last_error: str | None = None,
-        payload: dict | None = None,
-        scheduled_date: date | None = None,
-        scheduled_time: time | None = None,
-    ) -> NotificationMessageLog:
+        scheduled_date: date | None,
+        scheduled_time: time | None,
+    ) -> NotificationMessageLog | None:
+        """Insert or reclaim a log row before calling the provider. None = skip send."""
+        existing = await self._find_idempotent_log(
+            appointment_id=appointment_id,
+            notification_type=notification_type,
+            scheduled_date=scheduled_date,
+            scheduled_time=scheduled_time,
+        )
+        if existing:
+            if existing.status in _DONE_STATUSES:
+                return None
+            if existing.status == MESSAGE_STATUS_QUEUED:
+                # In-flight claim: skip. Orphan after timeout (send OK, log commit failed): reclaim.
+                if existing.provider_message_id:
+                    return None
+                stamped = existing.updated_at or existing.created_at
+                if stamped is not None:
+                    if stamped.tzinfo is None:
+                        stamped = stamped.replace(tzinfo=UTC)
+                    if datetime.now(UTC) - stamped < _QUEUED_ORPHAN_AFTER:
+                        return None
+                if existing.attempt_count >= MAX_SEND_ATTEMPTS:
+                    return None
+                existing.attempt_count = int(existing.attempt_count or 0) + 1
+                existing.last_error = None
+                existing.error_code = None
+                existing.to_phone = mask_phone(to_phone) if to_phone else existing.to_phone
+                await self.db.commit()
+                await self.db.refresh(existing)
+                return existing
+            if existing.status == MESSAGE_STATUS_FAILED:
+                if existing.error_code in {"no_phone", "missing_phone", "invalid_phone"}:
+                    return None
+                if existing.attempt_count >= MAX_SEND_ATTEMPTS:
+                    return None
+                existing.status = MESSAGE_STATUS_QUEUED
+                existing.attempt_count = int(existing.attempt_count or 0) + 1
+                existing.last_error = None
+                existing.error_code = None
+                existing.failed_at = None
+                existing.to_phone = mask_phone(to_phone) if to_phone else existing.to_phone
+                await self.db.commit()
+                await self.db.refresh(existing)
+                return existing
+            return None
+
         log = NotificationMessageLog(
             id=uuid.uuid4(),
             professional_id=professional_id,
@@ -102,20 +171,110 @@ class WhatsAppNotificationService:
             channel="whatsapp",
             notification_type=notification_type,
             provider=provider,
-            provider_message_id=provider_message_id,
-            to_phone=to_phone,
-            status=status,
-            error_code=error_code,
-            last_error=last_error,
-            payload=payload,
+            to_phone=mask_phone(to_phone) if to_phone else None,
+            status=MESSAGE_STATUS_QUEUED,
             scheduled_date=scheduled_date,
             scheduled_time=scheduled_time,
-            sent_at=datetime.now(UTC) if status == MESSAGE_STATUS_SENT else None,
-            failed_at=datetime.now(UTC) if status == MESSAGE_STATUS_FAILED else None,
+            attempt_count=1,
         )
         self.db.add(log)
+        try:
+            await self.db.commit()
+            await self.db.refresh(log)
+            return log
+        except IntegrityError:
+            await self.db.rollback()
+            raced = await self._find_idempotent_log(
+                appointment_id=appointment_id,
+                notification_type=notification_type,
+                scheduled_date=scheduled_date,
+                scheduled_time=scheduled_time,
+            )
+            if raced and raced.status == MESSAGE_STATUS_FAILED and raced.attempt_count < MAX_SEND_ATTEMPTS:
+                return await self._claim_send_slot(
+                    professional_id=professional_id,
+                    appointment_id=appointment_id,
+                    patient_id=patient_id,
+                    notification_type=notification_type,
+                    to_phone=to_phone,
+                    provider=provider,
+                    scheduled_date=scheduled_date,
+                    scheduled_time=scheduled_time,
+                )
+            return None
+
+    async def _mark_log_sent(
+        self,
+        log: NotificationMessageLog,
+        *,
+        provider: str,
+        provider_message_id: str | None,
+        payload: dict | None,
+    ) -> None:
+        log.status = MESSAGE_STATUS_SENT
+        log.provider = provider
+        log.provider_message_id = provider_message_id
+        log.payload = payload
+        log.sent_at = datetime.now(UTC)
+        log.failed_at = None
+        log.last_error = None
         await self.db.commit()
-        return log
+
+    async def _mark_log_failed(
+        self,
+        log: NotificationMessageLog,
+        *,
+        error_code: str | None = None,
+        last_error: str | None = None,
+        payload: dict | None = None,
+    ) -> None:
+        log.status = MESSAGE_STATUS_FAILED
+        log.error_code = error_code
+        log.last_error = last_error
+        log.payload = payload
+        log.failed_at = datetime.now(UTC)
+        await self.db.commit()
+
+    async def _create_failed_no_phone_log(
+        self,
+        *,
+        professional_id: UUID,
+        appointment_id: UUID,
+        patient_id: UUID,
+        notification_type: str,
+        scheduled_date: date | None,
+        scheduled_time: time | None,
+    ) -> None:
+        existing = await self._find_idempotent_log(
+            appointment_id=appointment_id,
+            notification_type=notification_type,
+            scheduled_date=scheduled_date,
+            scheduled_time=scheduled_time,
+        )
+        if existing:
+            return
+        log = NotificationMessageLog(
+            id=uuid.uuid4(),
+            professional_id=professional_id,
+            appointment_id=appointment_id,
+            patient_id=patient_id,
+            channel="whatsapp",
+            notification_type=notification_type,
+            provider=get_settings().whatsapp_provider,
+            to_phone=None,
+            status=MESSAGE_STATUS_FAILED,
+            error_code="no_phone",
+            last_error="Responsável sem telefone cadastrado.",
+            scheduled_date=scheduled_date,
+            scheduled_time=scheduled_time,
+            attempt_count=1,
+            failed_at=datetime.now(UTC),
+        )
+        self.db.add(log)
+        try:
+            await self.db.commit()
+        except IntegrityError:
+            await self.db.rollback()
 
     @staticmethod
     def _first_name(full_name: str | None) -> str:
@@ -180,19 +339,27 @@ class WhatsAppNotificationService:
             return False
 
         if not phone:
-            await self._create_log(
+            await self._create_failed_no_phone_log(
                 professional_id=appointment.professional_id,
                 appointment_id=appointment.id,
                 patient_id=patient.id,
                 notification_type=event_id,
-                to_phone=None,
-                status=MESSAGE_STATUS_FAILED,
-                provider=get_settings().whatsapp_provider,
-                error_code="no_phone",
-                last_error="Responsável sem telefone cadastrado.",
                 scheduled_date=appointment.date,
                 scheduled_time=appointment.time,
             )
+            return False
+
+        claim = await self._claim_send_slot(
+            professional_id=appointment.professional_id,
+            appointment_id=appointment.id,
+            patient_id=patient.id,
+            notification_type=event_id,
+            to_phone=phone,
+            provider=get_settings().whatsapp_provider,
+            scheduled_date=appointment.date,
+            scheduled_time=appointment.time,
+        )
+        if claim is None:
             return False
 
         context = {
@@ -232,18 +399,11 @@ class WhatsAppNotificationService:
                 )
                 payload = {"text": text, **(send_result.payload or {})}
 
-            await self._create_log(
-                professional_id=appointment.professional_id,
-                appointment_id=appointment.id,
-                patient_id=patient.id,
-                notification_type=event_id,
-                to_phone=phone,
-                status=MESSAGE_STATUS_SENT,
+            await self._mark_log_sent(
+                claim,
                 provider=send_result.provider,
                 provider_message_id=send_result.provider_message_id,
                 payload=payload,
-                scheduled_date=appointment.date,
-                scheduled_time=appointment.time,
             )
             return True
         except Exception as exc:
@@ -252,17 +412,20 @@ class WhatsAppNotificationService:
                 event_id,
                 appointment_id,
             )
-            await self._create_log(
-                professional_id=appointment.professional_id,
-                appointment_id=appointment.id,
-                patient_id=patient.id,
-                notification_type=event_id,
-                to_phone=phone,
-                status=MESSAGE_STATUS_FAILED,
-                provider=get_settings().whatsapp_provider,
-                last_error=str(getattr(exc, "detail", None) or exc),
-                payload={"error": str(exc)},
-                scheduled_date=appointment.date,
-                scheduled_time=appointment.time,
-            )
+            try:
+                await self.db.rollback()
+                await self._mark_log_failed(
+                    claim,
+                    last_error=str(getattr(exc, "detail", None) or exc),
+                    payload={"error": str(exc)},
+                )
+            except Exception:
+                logger.exception(
+                    "Failed to persist WhatsApp failure log for appointment %s",
+                    appointment_id,
+                )
+                try:
+                    await self.db.rollback()
+                except Exception:
+                    pass
             return False

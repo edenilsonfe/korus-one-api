@@ -4,9 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
-from app.api.mappers import format_size_bytes
 from app.core.constants import AVATAR_COLORS
 from app.core.deps import get_current_professional, get_patient_for_professional
 from app.core.diagnosis_catalog import diagnosis_labels, validate_diagnosis_keys
@@ -28,7 +26,10 @@ from app.schemas.patient import (
     PatientUpdate,
     TherapyPlanUpdate,
 )
-from app.services.patient import build_clinical_domains, get_patient_aggregates
+from app.services.patient import (
+    get_patient_aggregates,
+    get_patient_aggregates_batch,
+)
 from app.services.timeline import create_timeline_event
 
 router = APIRouter(prefix="/patients", tags=["patients"])
@@ -71,10 +72,12 @@ async def _set_primary_caregiver(db: AsyncSession, patient_id: UUID, caregiver_i
         item.is_primary = item.id == caregiver_id
 
 
-async def _build_summary(db: AsyncSession, patient: Patient, professional: Professional) -> PatientSummary:
-    aggregates = await get_patient_aggregates(db, patient.id)
-    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id == patient.id))
-    caregivers = caregivers_result.scalars().all()
+def _summary_from_aggregates(
+    patient: Patient,
+    professional: Professional,
+    aggregates: dict,
+    caregivers: list[Caregiver],
+) -> PatientSummary:
     gl = guardian_label(caregivers)
     last = aggregates["last_session"]
     keys = patient.diagnosis_keys or []
@@ -104,129 +107,22 @@ async def _build_summary(db: AsyncSession, patient: Patient, professional: Profe
     )
 
 
+async def _build_summary(db: AsyncSession, patient: Patient, professional: Professional) -> PatientSummary:
+    aggregates = await get_patient_aggregates(db, patient.id)
+    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id == patient.id))
+    caregivers = caregivers_result.scalars().all()
+    return _summary_from_aggregates(patient, professional, aggregates, caregivers)
+
+
 async def _build_detail(
     db: AsyncSession,
     patient: Patient,
     professional: Professional,
     include: set[str],
 ) -> PatientDetail:
-    summary = await _build_summary(db, patient, professional)
-    detail_data = summary.model_dump(by_alias=False)
+    from app.services.patient_record import build_patient_detail
 
-    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id == patient.id))
-    detail_data["caregivers"] = [_caregiver_response(c) for c in caregivers_result.scalars().all()]
-    detail_data["goals"] = []
-    detail_data["clinical_domains"] = []
-    detail_data["assessments"] = []
-    detail_data["sessions"] = []
-    detail_data["timeline"] = []
-    detail_data["files"] = []
-
-    if "goals" in include or not include:
-        from app.models.goal import Goal
-
-        goals = (await db.execute(select(Goal).where(Goal.patient_id == patient.id))).scalars().all()
-        detail_data["goals"] = [
-            {
-                "id": str(g.id),
-                "title": g.title,
-                "progress": g.progress,
-                "area": g.area,
-                "professional": professional.name,
-                "startDate": g.start_date.isoformat(),
-                "status": g.status,
-            }
-            for g in goals
-        ]
-
-    if "clinicalDomains" in include or "clinical_domains" in include or not include:
-        detail_data["clinical_domains"] = await build_clinical_domains(db, patient.id)
-
-    if "assessments" in include or not include:
-        from app.models.assessment import Assessment as AssessmentModel
-
-        assessments = (
-            await db.execute(
-                select(AssessmentModel)
-                .where(AssessmentModel.patient_id == patient.id)
-                .options(selectinload(AssessmentModel.protocol))
-            )
-        ).scalars().all()
-        detail_data["assessments"] = [
-            {
-                "id": str(a.id),
-                "protocol": a.protocol.name if a.protocol else a.protocol_id,
-                "protocolId": a.protocol_id,
-                "date": a.date.isoformat(),
-                "professional": professional.name,
-                "result": a.result,
-                "percentage": a.percentage,
-                "interpretation": a.interpretation,
-                "fields": a.fields or [],
-                "status": a.status,
-            }
-            for a in assessments
-        ]
-
-    if "sessions" in include or not include:
-        sessions = (
-            await db.execute(select(Session).where(Session.patient_id == patient.id).order_by(Session.date.desc()))
-        ).scalars().all()
-        detail_data["sessions"] = [
-            {
-                "id": str(s.id),
-                "date": s.date.isoformat(),
-                "duration": s.duration,
-                "therapist": professional.name,
-                "objectives": s.objectives or [],
-                "notes": s.notes,
-                "type": s.type,
-            }
-            for s in sessions
-        ]
-
-    if "timeline" in include or not include:
-        from app.models.timeline import TimelineEvent
-
-        events = (
-            await db.execute(
-                select(TimelineEvent)
-                .where(TimelineEvent.patient_id == patient.id)
-                .order_by(TimelineEvent.date.desc())
-            )
-        ).scalars().all()
-        detail_data["timeline"] = [
-            {
-                "id": str(e.id),
-                "type": e.type,
-                "title": e.title,
-                "description": e.description,
-                "date": e.date.isoformat(),
-                "patientId": str(patient.id),
-                "sourceId": str(e.source_id) if e.source_id else None,
-            }
-            for e in events
-        ]
-
-    if "files" in include or not include:
-        from app.models.attachment import Attachment
-
-        files = (
-            await db.execute(select(Attachment).where(Attachment.patient_id == patient.id).order_by(Attachment.date.desc()))
-        ).scalars().all()
-        detail_data["files"] = [
-            {
-                "id": str(f.id),
-                "name": f.name,
-                "category": f.category,
-                "date": f.date.isoformat(),
-                "sizeBytes": f.size_bytes,
-                "size": format_size_bytes(f.size_bytes),
-            }
-            for f in files
-        ]
-
-    return PatientDetail(**detail_data)
+    return await build_patient_detail(db, patient, professional, include)
 
 
 @router.get("", response_model=PaginatedResponse[PatientSummary])
@@ -250,7 +146,18 @@ async def list_patients(
     total = await db.scalar(select(func.count()).select_from(query.subquery()))
     result = await db.execute(query.order_by(Patient.name.asc()).offset((page - 1) * limit).limit(limit))
     patients = result.scalars().all()
-    items = [await _build_summary(db, p, professional) for p in patients]
+
+    patient_ids = [p.id for p in patients]
+    aggregates_map = await get_patient_aggregates_batch(db, patient_ids)
+    caregivers_result = await db.execute(select(Caregiver).where(Caregiver.patient_id.in_(patient_ids)))
+    caregivers_by_patient: dict[UUID, list[Caregiver]] = {}
+    for caregiver in caregivers_result.scalars().all():
+        caregivers_by_patient.setdefault(caregiver.patient_id, []).append(caregiver)
+
+    items = [
+        _summary_from_aggregates(p, professional, aggregates_map[p.id], caregivers_by_patient.get(p.id, []))
+        for p in patients
+    ]
     return PaginatedResponse(items=items, total=total or 0, page=page, limit=limit)
 
 

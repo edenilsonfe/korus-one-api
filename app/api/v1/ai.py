@@ -7,6 +7,7 @@ from fastapi.responses import Response, StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.attributes import set_committed_value
 
 from app.core.deps import get_current_professional, get_patient_for_professional
 from app.core.utils import utcnow
@@ -37,7 +38,9 @@ from app.schemas.assistant import ChatResponse
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
-def _conversation_response(conv: Conversation) -> ConversationResponse:
+def _conversation_response(
+    conv: Conversation, messages: list[ChatMessage] | None = None
+) -> ConversationResponse:
     return ConversationResponse(
         id=str(conv.id),
         title=conv.title,
@@ -51,7 +54,7 @@ def _conversation_response(conv: Conversation) -> ConversationResponse:
                 "content": m.content,
                 "createdAt": m.created_at.isoformat(),
             }
-            for m in conv.messages
+            for m in (conv.messages if messages is None else messages)
         ],
     )
 
@@ -265,11 +268,20 @@ async def list_conversations(
     result = await db.execute(
         select(Conversation)
         .where(Conversation.professional_id == professional.id)
-        .options(selectinload(Conversation.messages))
         .order_by(Conversation.updated_at.desc())
     )
     convs = result.scalars().all()
-    return [_conversation_response(c) for c in convs]
+    return [_conversation_response(c, messages=[]) for c in convs]
+
+
+@router.get("/conversations/{conversation_id}", response_model=ConversationResponse)
+async def get_conversation(
+    conversation_id: UUID,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    conv = await _get_owned_conversation(db, conversation_id, professional)
+    return _conversation_response(conv)
 
 
 @router.post("/conversations", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
@@ -288,6 +300,8 @@ async def create_conversation(
     )
     db.add(conv)
     await db.flush()
+    # New row has no messages; mark collection loaded without async lazy-load.
+    set_committed_value(conv, "messages", [])
     return _conversation_response(conv)
 
 
@@ -385,7 +399,7 @@ async def _run_tool_job(
         )
         result = await run_llm(prompt, spec.system, output=spec.output)
     else:
-        context = ""
+        context = await build_patient_context(db, patient_id) if patient_id else ""
         prompt = prompt_builder(body, context)
         result = await run_llm(prompt)
     job.status = "completed"
@@ -407,14 +421,12 @@ async def transcribe(body: AIToolRequest, professional: Professional = Depends(g
 
 @router.post("/speech-analysis", status_code=status.HTTP_202_ACCEPTED)
 async def speech_analysis(body: AIToolRequest, professional: Professional = Depends(get_current_professional), db: AsyncSession = Depends(get_db)):
-    patient_id = UUID(body.patient_id) if body.patient_id else None
-    context = await build_patient_context(db, patient_id) if patient_id else ""
     return await _run_tool_job(
         db,
         professional,
         "speech-analysis",
         body,
-        prompt_builder=lambda b, _c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{context}",
+        prompt_builder=lambda b, c: f"Analise fonologicamente:\n{b.text or ''}\nContexto:\n{c}",
     )
 
 @router.post("/clinical-trends", status_code=status.HTTP_202_ACCEPTED)

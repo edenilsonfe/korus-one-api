@@ -19,12 +19,10 @@ from app.schemas.patient import (
     DevelopmentAnalyticsAreaResponse,
     GoalResponse,
 )
-from app.services.assessment_scoring import (
-    build_assessment_from_scores,
-    get_protocol_scoring_mode,
-    score_manifest_protocol,
-)
+from app.services.assessment_scoring import get_protocol_scoring_mode
 from app.services.patient import build_clinical_domains, build_development_analytics
+from app.services.scoring_session import ScoreError, ScoringSession
+from app.services.clinical_activity import record_assessment
 from app.services.timeline import create_timeline_event
 
 ANALYTICS_PERIODS = frozenset({"30d", "90d", "6m", "1y"})
@@ -191,24 +189,33 @@ async def create_assessment(
     interpretation = body.interpretation
     fields = [f.model_dump() for f in body.fields]
 
-    if answers and get_protocol_scoring_mode(proto.id) == "manifest" and scores is None:
+    mode = get_protocol_scoring_mode(proto.id)
+    if answers and mode == "manifest" and scores is None:
         try:
-            scores = score_manifest_protocol(proto.id, answers)
-        except ValueError as exc:
-            raise HTTPException(status_code=400, detail=str(exc)) from exc
-        except FileNotFoundError as exc:
-            raise HTTPException(status_code=404, detail="Pacote do instrumento não encontrado") from exc
-
-    if scores:
-        derived = build_assessment_from_scores(scores)
+            normalized = ScoringSession.from_protocol(proto.id, "manifest").score(answers)
+            scores = normalized.raw_scores
+            if not result_text:
+                result_text = normalized.result
+            if not percentage:
+                percentage = normalized.percentage
+            if not interpretation:
+                interpretation = normalized.interpretation
+            if not fields:
+                fields = normalized.to_assessment_fields()
+        except ScoreError as exc:
+            detail = str(exc)
+            code = 404 if "não encontrado" in detail.lower() or "não possui pacote" in detail.lower() else 400
+            raise HTTPException(status_code=code, detail=detail) from exc
+    elif scores:
+        normalized = ScoringSession.from_scores(scores).score({})
         if not result_text:
-            result_text = derived["result"]
+            result_text = normalized.result
         if not percentage:
-            percentage = derived["percentage"]
+            percentage = normalized.percentage
         if not interpretation:
-            interpretation = derived["interpretation"]
+            interpretation = normalized.interpretation
         if not fields:
-            fields = derived["fields"]
+            fields = normalized.to_assessment_fields()
 
     if not result_text:
         raise HTTPException(status_code=400, detail="Resultado da avaliação é obrigatório")
@@ -230,14 +237,11 @@ async def create_assessment(
     )
     db.add(assessment)
     await db.flush()
-    await create_timeline_event(
+    await record_assessment(
         db,
-        patient_id=patient_id,
-        professional_id=professional.id,
-        event_type="avaliacao",
-        title=f"Avaliação {proto.name} aplicada",
-        description=result_text,
-        source_id=assessment.id,
+        assessment=assessment,
+        protocol_name=proto.name,
+        professional=professional,
     )
     return _assessment_response(assessment, proto.name, professional.name)
 

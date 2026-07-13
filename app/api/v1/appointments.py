@@ -1,7 +1,7 @@
 from datetime import date, datetime, time, timedelta
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,6 +20,7 @@ from app.services.appointment_series_slots import (
     iter_recurring_child_slots,
     validate_recurrent_range,
 )
+from app.services.whatsapp_queue import enqueue_whatsapp_appointment_event
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
@@ -98,6 +99,7 @@ async def list_appointments(
 @router.post("", response_model=AppointmentCreateResponse, status_code=status.HTTP_201_CREATED)
 async def create_appointment(
     body: AppointmentCreate,
+    background_tasks: BackgroundTasks,
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
@@ -167,9 +169,10 @@ async def create_appointment(
     await db.commit()
     await db.refresh(anchor)
 
-    from app.services.whatsapp_notification_service import WhatsAppNotificationService
-
-    await WhatsAppNotificationService.dispatch_appointment_event(anchor.id, "confirmation")
+    # Após a response — não bloquear o modal da agenda na Evolution.
+    background_tasks.add_task(
+        enqueue_whatsapp_appointment_event, anchor.id, "confirmation"
+    )
 
     response = _to_response(anchor, patient.name, professional.name)
     return AppointmentCreateResponse(**response.model_dump(by_alias=False), children_created=children_created)
@@ -179,6 +182,7 @@ async def create_appointment(
 async def update_appointment(
     appointment_id: UUID,
     body: AppointmentUpdate,
+    background_tasks: BackgroundTasks,
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
@@ -205,12 +209,14 @@ async def update_appointment(
     await db.commit()
     await db.refresh(appt)
 
-    from app.services.whatsapp_notification_service import WhatsAppNotificationService
-
     if data.get("status") == "cancelado" and old_status != "cancelado":
-        await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "cancelled")
+        background_tasks.add_task(
+            enqueue_whatsapp_appointment_event, appt.id, "cancelled"
+        )
     elif (appt.date != old_date or appt.time != old_time) and appt.status != "cancelado":
-        await WhatsAppNotificationService.dispatch_appointment_event(appt.id, "rescheduled")
+        background_tasks.add_task(
+            enqueue_whatsapp_appointment_event, appt.id, "rescheduled"
+        )
 
     return _to_response(appt, patient.name, professional.name)
 

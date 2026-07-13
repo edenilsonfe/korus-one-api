@@ -185,6 +185,9 @@ async def run_seed() -> None:
         await seed_plan_catalog(session)
         await seed_demo(session)
         await seed_demo_announcements(session)
+        from app.seeds.resources import seed_resources
+
+        await seed_resources(session)
         await session.commit()
     await engine.dispose()
     print("Seed concluído.")

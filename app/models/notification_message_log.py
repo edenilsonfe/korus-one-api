@@ -1,7 +1,7 @@
 import uuid
 from datetime import date, datetime, time
 
-from sqlalchemy import Boolean, Date, ForeignKey, Index, Integer, String, Text, Time, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Index, Integer, String, Text, Time, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -62,9 +62,9 @@ class NotificationMessageLog(Base, TimestampMixin):
     scheduled_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     scheduled_time: Mapped[time | None] = mapped_column(Time, nullable=True)
     attempt_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    next_retry_at: Mapped[datetime | None] = mapped_column(nullable=True)
+    next_retry_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     payload: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    sent_at: Mapped[datetime | None] = mapped_column(nullable=True)
-    delivered_at: Mapped[datetime | None] = mapped_column(nullable=True)
-    read_at: Mapped[datetime | None] = mapped_column(nullable=True)
-    failed_at: Mapped[datetime | None] = mapped_column(nullable=True)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    failed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

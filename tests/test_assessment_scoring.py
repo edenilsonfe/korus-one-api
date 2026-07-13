@@ -23,7 +23,7 @@ from app.services.assessment_scoring import (
     [
         ("spm", "spm"),
         ("fois", "manifest"),
-        ("m-chat", "client"),
+        ("mchat", "client"),
     ],
 )
 def test_get_protocol_scoring_mode(protocol_id: str, expected_mode: str):
@@ -32,7 +32,7 @@ def test_get_protocol_scoring_mode(protocol_id: str, expected_mode: str):
 
 def test_resolve_instrument_slug_aliases():
     assert resolve_instrument_slug("ados2") == "ados-2"
-    assert resolve_instrument_slug("vb-mapp") == "vb-mapp"
+    assert resolve_instrument_slug("vbmapp") == "vb-mapp"
 
 
 def test_resolve_protocol_id_aliases():
@@ -49,7 +49,7 @@ def test_has_manifest_package():
 
 
 def test_client_scored_protocols_contains_rastreios():
-    assert "m-chat" in CLIENT_SCORED_PROTOCOLS
+    assert "mchat" in CLIENT_SCORED_PROTOCOLS
     assert "portage" in CLIENT_SCORED_PROTOCOLS
 
 
