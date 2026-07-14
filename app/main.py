@@ -9,6 +9,7 @@ from app.core.config import get_settings, validate_settings
 from app.db.session import AsyncSessionLocal
 from app.middleware.entitlement import EntitlementMiddleware
 from app.services.plan_catalog_seed import seed_plan_catalog
+from app.services.sentry_init import init_sentry
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,8 @@ async def lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     settings = get_settings()
     validate_settings(settings)
+    if init_sentry(settings):
+        logger.info("Sentry initialized")
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
     cors_kwargs: dict = {
         "allow_credentials": True,

@@ -12,7 +12,11 @@ from app.core.utils import utcnow
 from app.db.session import AsyncSessionLocal
 from app.models.ai import AIJob
 from app.services.ai_service import run_llm
+from app.services.sentry_init import init_sentry
 from app.services.whatsapp_scheduler_service import WhatsAppSchedulerService
+
+# Init before ARQ picks up WorkerSettings (same process as worker entry).
+init_sentry(get_settings())
 
 
 async def process_ai_job(ctx, job_id: str) -> None:

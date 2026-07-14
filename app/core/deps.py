@@ -1,5 +1,6 @@
 from uuid import UUID
 
+import sentry_sdk
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
@@ -11,6 +12,11 @@ from app.models.patient import Patient
 from app.models.professional import Professional
 
 bearer_scheme = HTTPBearer(auto_error=False)
+
+
+def _bind_sentry_user(professional: Professional) -> None:
+    # LGPD: only opaque id — never email/CPF/phone
+    sentry_sdk.set_user({"id": str(professional.id)})
 
 
 def _assert_token_version(payload: dict, professional: Professional) -> None:
@@ -43,6 +49,7 @@ async def get_current_professional(
     if professional.is_disabled:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
     _assert_token_version(payload, professional)
+    _bind_sentry_user(professional)
     return professional
 
 
@@ -68,6 +75,7 @@ async def get_optional_professional(
         _assert_token_version(payload, professional)
     except HTTPException:
         return None
+    _bind_sentry_user(professional)
     return professional
 
 

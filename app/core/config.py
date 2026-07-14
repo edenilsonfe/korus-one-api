@@ -74,6 +74,11 @@ class Settings(BaseSettings):
 
     max_upload_bytes: int = 26214400
 
+    sentry_dsn: str = ""
+    sentry_environment: str = ""
+    sentry_traces_sample_rate: float | None = None
+    sentry_release: str = ""
+
     @field_validator("evolution_api_base_url", mode="before")
     @classmethod
     def normalize_evolution_api_base_url(cls, value: object) -> str:
