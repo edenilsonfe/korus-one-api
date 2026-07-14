@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from uuid import UUID
 
@@ -7,6 +7,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
+from app.core.demo_patient import (
+    DEMO_AVATAR_COLOR,
+    DEMO_PATIENT_NAME,
+    demo_patient_birth_date,
+)
 from app.core.deps import get_current_professional
 from app.core.security import (
     create_access_token,
@@ -17,6 +22,7 @@ from app.core.security import (
 )
 from app.db.session import get_db
 from app.core.specialty_catalog import specialty_label
+from app.models.patient import Patient
 from app.models.professional import Professional
 from app.schemas.auth import (
     ChangePasswordRequest,
@@ -76,12 +82,24 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
         specialty=specialty_label(body.specialty_key),
         council=body.council,
         phone=body.phone,
-        cpf=body.cpf,
+        cpf=body.cpf or "",
         subscription_status="trialing",
         trial_started_at=now,
         trial_ends_at=now + timedelta(days=trial_days),
     )
     db.add(professional)
+    await db.flush()
+    db.add(
+        Patient(
+            professional_id=professional.id,
+            name=DEMO_PATIENT_NAME,
+            birth_date=demo_patient_birth_date(),
+            diagnosis_keys=[],
+            status="avaliacao",
+            start_date=date.today(),
+            avatar_color=DEMO_AVATAR_COLOR,
+        )
+    )
     await db.flush()
     return _tokens_for(professional)
 

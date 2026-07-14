@@ -15,7 +15,7 @@ class RegisterRequest(CamelModel):
     specialty_key: str
     council: str = ""
     phone: str = ""
-    cpf: str = Field(min_length=11, max_length=14)
+    cpf: str | None = None
 
     @field_validator("specialty_key")
     @classmethod
@@ -26,7 +26,9 @@ class RegisterRequest(CamelModel):
 
     @field_validator("cpf")
     @classmethod
-    def validate_cpf(cls, value: str) -> str:
+    def validate_cpf(cls, value: str | None) -> str:
+        if value is None or not str(value).strip():
+            return ""
         digits = _normalize_cpf(value)
         if len(digits) != 11:
             raise ValueError("CPF deve conter 11 dígitos")
