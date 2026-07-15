@@ -1,10 +1,24 @@
 import uuid
 from contextlib import asynccontextmanager
+from typing import Any
 
 import aioboto3
 from botocore.config import Config
 
-from app.core.config import get_settings
+from app.core.config import Settings, get_settings
+
+
+def s3_client_kwargs(settings: Settings) -> dict[str, Any]:
+    kwargs: dict[str, Any] = {
+        "aws_access_key_id": settings.s3_access_key,
+        "aws_secret_access_key": settings.s3_secret_key,
+        "region_name": settings.s3_region,
+        "config": Config(signature_version="s3v4"),
+    }
+    endpoint = settings.s3_endpoint_url
+    if endpoint:
+        kwargs["endpoint_url"] = endpoint
+    return kwargs
 
 
 class StorageService:
@@ -14,14 +28,7 @@ class StorageService:
 
     @asynccontextmanager
     async def _client(self):
-        async with self._session.client(
-            "s3",
-            endpoint_url=self.settings.s3_endpoint,
-            aws_access_key_id=self.settings.s3_access_key,
-            aws_secret_access_key=self.settings.s3_secret_key,
-            region_name=self.settings.s3_region,
-            config=Config(signature_version="s3v4"),
-        ) as client:
+        async with self._session.client("s3", **s3_client_kwargs(self.settings)) as client:
             yield client
 
     async def ensure_bucket(self) -> None:

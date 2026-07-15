@@ -206,6 +206,14 @@ uv run arq worker.WorkerSettings   # jobs IA (opcional)
 Health: `GET http://localhost:8000/health`  
 API: `http://localhost:8000/api/v1/...`
 
+### Deploy Railway
+
+- Spec: `docs/superpowers/specs/2026-07-15-railway-deploy-design.md`
+- `Dockerfile` + `railway.toml` (release: `alembic upgrade head`)
+- Plugins: Postgres + Redis; storage AWS S3 (`S3_ENDPOINT` vazio)
+- Worker: mesmo image, start `arq worker.WorkerSettings`
+- Vars: bloco Railway em `.env.example`; ponte web `API_ORIGIN` no Cloudflare
+
 ---
 
 ## O que evitar

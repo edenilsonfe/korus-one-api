@@ -8,6 +8,7 @@ from app.api.v1.router import api_router
 from app.core.config import get_settings, validate_settings
 from app.db.session import AsyncSessionLocal
 from app.middleware.entitlement import EntitlementMiddleware
+from app.seeds.demo import seed_protocols
 from app.services.plan_catalog_seed import seed_plan_catalog
 from app.services.sentry_init import init_sentry
 
@@ -17,9 +18,11 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with AsyncSessionLocal() as session:
+        # Catálogo de protocolos (idempotente) — sem isto /protocolos fica vazio em prod.
+        await seed_protocols(session)
         await seed_plan_catalog(session)
         await session.commit()
-    logger.info("Plan catalog seed checked")
+    logger.info("Protocol and plan catalog seed checked")
     try:
         yield
     finally:

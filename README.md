@@ -108,6 +108,26 @@ Configure `OPENCODE_API_KEY` no `.env` (chave em [opencode.ai/auth](https://open
 uv run pytest
 ```
 
+## Deploy Railway
+
+Spec: `docs/superpowers/specs/2026-07-15-railway-deploy-design.md`.
+
+Checklist no painel (projeto com Postgres + Redis + serviços `api` e `worker`):
+
+1. Conectar o repo / deploy via `railway up` (Dockerfile + `railway.toml`).
+2. Serviço **api**: start e release já no `railway.toml` (`alembic upgrade head` + uvicorn).
+3. Serviço **worker**: mesma imagem; start command `arq worker.WorkerSettings`.
+4. Variáveis: ver bloco Railway em `.env.example` (obrigatórias: `DEBUG=false`, `JWT_SECRET`, `DATABASE_URL`, `REDIS_URL`, `CORS_ORIGINS`, `FRONTEND_URL`, S3 AWS com `S3_ENDPOINT` vazio/omitido, Evolution se `WHATSAPP_PROVIDER=evolution`).
+5. Após a URL pública da API: setar `APP_PUBLIC_URL` e no Cloudflare Worker `API_ORIGIN` (origin sem path).
+
+Migrations: o `CMD` do Dockerfile roda `alembic upgrade head` antes do uvicorn (o `releaseCommand` do `railway.toml` pode não executar em todos os deploys CLI — o start garante o schema).
+
+Worker: `railway.worker.toml` (start `arq worker.WorkerSettings`); para redeploy do worker, troque temporariamente por `railway.toml` ou configure o start no painel.
+```bash
+docker build -t korus-one-api .
+# CLI: npm i -g @railway/cli && railway login && railway link && railway up
+```
+
 ## Credenciais demo
 
 - Email: `camila.rocha@korusone.com`

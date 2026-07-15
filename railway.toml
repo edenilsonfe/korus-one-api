@@ -1,0 +1,14 @@
+# Serviço API — no painel Railway, worker usa a mesma imagem com outro start command.
+# Plugins: Postgres + Redis. Storage: AWS S3 (S3_ENDPOINT vazio).
+# Start: CMD do Dockerfile (expande PORT). Release: migrations.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+releaseCommand = "alembic upgrade head"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

@@ -21,6 +21,17 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+asyncpg://korus:korus@localhost:5433/korus_one"
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_database_url(cls, value: object) -> str:
+        """Railway Postgres costuma entregar postgresql://; asyncpg exige +asyncpg."""
+        url = str(value or "").strip()
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[len("postgres://") :]
+        if url.startswith("postgresql://") and not url.startswith("postgresql+asyncpg://"):
+            url = "postgresql+asyncpg://" + url[len("postgresql://") :]
+        return url
+
     jwt_secret: str = "change-me-in-production"
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
@@ -34,11 +45,17 @@ class Settings(BaseSettings):
     password_token_expire_minutes: int = 60
     password_reset_cooldown_seconds: int = 60
 
-    s3_endpoint: str = "http://localhost:9000"
+    # Vazio = AWS S3 real. Dev local (docker-compose / .env): http://localhost:9000 (MinIO).
+    s3_endpoint: str = ""
     s3_access_key: str = "minioadmin"
     s3_secret_key: str = "minioadmin"
     s3_bucket: str = "korus-attachments"
     s3_region: str = "us-east-1"
+
+    @property
+    def s3_endpoint_url(self) -> str | None:
+        endpoint = (self.s3_endpoint or "").strip()
+        return endpoint or None
 
     opencode_api_key: str = ""
     opencode_base_url: str = "https://opencode.ai/zen/v1"
