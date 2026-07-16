@@ -4,6 +4,8 @@ from app.core.config import get_settings
 
 ACCESS_COOKIE = "korus_access"
 REFRESH_COOKIE = "korus_refresh"
+# Readable by JS/SSR route guards — not a secret; real auth is HttpOnly tokens.
+SESSION_HINT_COOKIE = "korus_session"
 
 
 def _cookie_secure() -> bool:
@@ -33,6 +35,15 @@ def set_auth_cookies(response: Response, access_token: str, refresh_token: str) 
         max_age=refresh_max_age,
         path="/api/v1/auth",
     )
+    response.set_cookie(
+        key=SESSION_HINT_COOKIE,
+        value="1",
+        httponly=False,
+        secure=secure,
+        samesite="lax",
+        max_age=refresh_max_age,
+        path="/",
+    )
 
 
 def clear_auth_cookies(response: Response) -> None:
@@ -43,5 +54,12 @@ def clear_auth_cookies(response: Response) -> None:
         path="/api/v1/auth",
         secure=secure,
         httponly=True,
+        samesite="lax",
+    )
+    response.delete_cookie(
+        key=SESSION_HINT_COOKIE,
+        path="/",
+        secure=secure,
+        httponly=False,
         samesite="lax",
     )
