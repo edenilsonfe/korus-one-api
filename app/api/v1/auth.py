@@ -165,27 +165,6 @@ async def login(
     access_token, refresh_token = await _issue_tokens(db, professional)
     return _apply_auth_cookies(response, access_token, refresh_token)
 
-
-@router.post("/demo-login", response_model=TokenResponse)
-async def demo_login(
-    request: Request,
-    response: Response,
-    db: AsyncSession = Depends(get_db),
-):
-    settings = get_settings()
-    if not settings.demo_login_enabled and not settings.debug:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Não encontrado")
-    enforce_login_rate_limit(_request_ip(request), "demo@korusone.internal")
-    result = await db.execute(
-        select(Professional).where(Professional.email == "camila.rocha@korusone.com")
-    )
-    professional = result.scalar_one_or_none()
-    if not professional or professional.is_disabled:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Demo indisponível")
-    access_token, refresh_token = await _issue_tokens(db, professional)
-    return _apply_auth_cookies(response, access_token, refresh_token)
-
-
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(
     request: Request,

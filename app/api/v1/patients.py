@@ -357,3 +357,14 @@ async def update_therapy_plan(
     )
     await db.flush()
     return await _build_summary(db, patient, professional)
+
+
+@router.delete("/{patient_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_patient(
+    patient_id: UUID,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    patient = await get_patient_for_professional(patient_id, professional, db)
+    await db.delete(patient)
+    await db.flush()

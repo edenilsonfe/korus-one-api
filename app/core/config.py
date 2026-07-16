@@ -37,7 +37,6 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
     auth_rate_limit_fail_closed: bool = True
-    demo_login_enabled: bool = False
 
     redis_url: str = "redis://localhost:6380"
 

@@ -5,7 +5,6 @@ from uuid import uuid4
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from app.core.config import get_settings
 from app.main import app
 from app.services.auth_rate_limit import normalize_auth_email
 
@@ -100,16 +99,6 @@ async def test_register_normalizes_email(api_client):
         json={"email": email.upper(), "password": "securepass123"},
     )
     assert login.status_code == 200
-
-
-@pytest.mark.asyncio
-async def test_demo_login_disabled_without_flag(api_client, monkeypatch):
-    settings = get_settings()
-    monkeypatch.setattr(settings, "debug", False)
-    monkeypatch.setattr(settings, "demo_login_enabled", False)
-
-    response = await api_client.post("/api/v1/auth/demo-login", json={})
-    assert response.status_code == 404
 
 
 @pytest.mark.asyncio
