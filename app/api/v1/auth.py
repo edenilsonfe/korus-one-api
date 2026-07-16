@@ -2,10 +2,15 @@ from datetime import UTC, date, datetime, timedelta
 
 from uuid import UUID
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.auth_cookies import (
+    REFRESH_COOKIE,
+    clear_auth_cookies,
+    set_auth_cookies,
+)
 from app.core.config import get_settings
 from app.core.demo_patient import (
     DEMO_AVATAR_COLOR,
@@ -15,8 +20,6 @@ from app.core.demo_patient import (
 from app.core.deps import get_current_professional
 from app.core.security import (
     create_access_token,
-    create_refresh_token,
-    decode_token,
     hash_password,
     verify_password,
 )
@@ -34,13 +37,24 @@ from app.schemas.auth import (
     ResetPasswordRequest,
     TokenResponse,
 )
-from app.services.auth_rate_limit import enforce_forgot_rate_limit, enforce_reset_rate_limit
+from app.services.auth_rate_limit import (
+    enforce_forgot_rate_limit,
+    enforce_login_rate_limit,
+    enforce_register_rate_limit,
+    enforce_reset_rate_limit,
+)
 from app.services.password_reset import (
     GENERIC_FORGOT_MESSAGE,
     change_password,
     request_password_reset,
     reset_password_with_token,
     send_password_reset_email_sync,
+)
+from app.services.refresh_token_service import (
+    create_refresh_session,
+    revoke_all_refresh_sessions,
+    revoke_refresh_session,
+    rotate_refresh_session,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -59,15 +73,45 @@ def send_password_reset_email_task(to_email: str, user_name: str, raw_token: str
     send_password_reset_email_sync(to_email=to_email, user_name=user_name, raw_token=raw_token)
 
 
-def _tokens_for(professional: Professional) -> TokenResponse:
+async def _issue_tokens(
+    db: AsyncSession,
+    professional: Professional,
+) -> tuple[str, str]:
+    access_token = create_access_token(professional.id, professional.token_version)
+    refresh_token = await create_refresh_session(db, professional)
+    await db.commit()
+    return access_token, refresh_token
+
+
+def _token_response(access_token: str, refresh_token: str) -> TokenResponse:
     return TokenResponse(
-        access_token=create_access_token(professional.id, professional.token_version),
-        refresh_token=create_refresh_token(professional.id, professional.token_version),
+        access_token=access_token,
+        refresh_token=refresh_token,
     )
 
 
+def _apply_auth_cookies(response: Response, access_token: str, refresh_token: str) -> TokenResponse:
+    set_auth_cookies(response, access_token, refresh_token)
+    return _token_response(access_token, refresh_token)
+
+
+def _resolve_refresh_token(request: Request, body: RefreshRequest) -> str:
+    cookie_token = request.cookies.get(REFRESH_COOKIE, "").strip()
+    body_token = (body.refresh_token or "").strip()
+    token = cookie_token or body_token
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+    return token
+
+
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
-async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
+async def register(
+    body: RegisterRequest,
+    request: Request,
+    response: Response,
+    db: AsyncSession = Depends(get_db),
+):
+    enforce_register_rate_limit(_request_ip(request))
     existing = await db.execute(select(Professional).where(Professional.email == body.email))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="E-mail já cadastrado")
@@ -100,42 +144,87 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
             avatar_color=DEMO_AVATAR_COLOR,
         )
     )
-    await db.flush()
-    return _tokens_for(professional)
+    access_token, refresh_token = await _issue_tokens(db, professional)
+    return _apply_auth_cookies(response, access_token, refresh_token)
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
+async def login(
+    body: LoginRequest,
+    request: Request,
+    response: Response,
+    db: AsyncSession = Depends(get_db),
+):
+    enforce_login_rate_limit(_request_ip(request), body.email)
     result = await db.execute(select(Professional).where(Professional.email == body.email))
     professional = result.scalar_one_or_none()
     if not professional or not verify_password(body.password, professional.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciais inválidas")
     if professional.is_disabled:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
-    return _tokens_for(professional)
+    access_token, refresh_token = await _issue_tokens(db, professional)
+    return _apply_auth_cookies(response, access_token, refresh_token)
+
+
+@router.post("/demo-login", response_model=TokenResponse)
+async def demo_login(
+    request: Request,
+    response: Response,
+    db: AsyncSession = Depends(get_db),
+):
+    settings = get_settings()
+    if not settings.demo_login_enabled and not settings.debug:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Não encontrado")
+    enforce_login_rate_limit(_request_ip(request), "demo@korusone.internal")
+    result = await db.execute(
+        select(Professional).where(Professional.email == "camila.rocha@korusone.com")
+    )
+    professional = result.scalar_one_or_none()
+    if not professional or professional.is_disabled:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Demo indisponível")
+    access_token, refresh_token = await _issue_tokens(db, professional)
+    return _apply_auth_cookies(response, access_token, refresh_token)
 
 
 @router.post("/refresh", response_model=TokenResponse)
-async def refresh(body: RefreshRequest, db: AsyncSession = Depends(get_db)):
-    try:
-        payload = decode_token(body.refresh_token)
-        if payload.get("type") != "refresh":
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
-        professional_id = UUID(payload["sub"])
-        token_version = int(payload.get("tv", 0))
-    except HTTPException:
-        raise
-    except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido") from exc
-    result = await db.execute(select(Professional).where(Professional.id == professional_id))
-    professional = result.scalar_one_or_none()
-    if not professional:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Profissional não encontrado")
-    if professional.is_disabled:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Conta desativada")
-    if token_version != professional.token_version:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sessão invalidada")
-    return _tokens_for(professional)
+async def refresh(
+    request: Request,
+    response: Response,
+    body: RefreshRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    raw_token = _resolve_refresh_token(request, body)
+    professional, new_refresh = await rotate_refresh_session(db, raw_token)
+    access_token = create_access_token(professional.id, professional.token_version)
+    await db.commit()
+    return _apply_auth_cookies(response, access_token, new_refresh)
+
+
+@router.post("/logout", response_model=MessageResponse)
+async def logout(
+    request: Request,
+    response: Response,
+    body: RefreshRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    raw_token = request.cookies.get(REFRESH_COOKIE, "").strip() or (body.refresh_token or "").strip()
+    if raw_token:
+        await revoke_refresh_session(db, raw_token)
+        await db.commit()
+    clear_auth_cookies(response)
+    return MessageResponse(message="Sessão encerrada")
+
+
+@router.post("/logout-all", response_model=MessageResponse)
+async def logout_all(
+    response: Response,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    await revoke_all_refresh_sessions(db, professional)
+    await db.commit()
+    clear_auth_cookies(response)
+    return MessageResponse(message="Todas as sessões foram encerradas")
 
 
 @router.post("/forgot-password", response_model=MessageResponse)

@@ -14,7 +14,7 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.compiler import compiles
 
-from app.core.security import create_access_token, create_refresh_token, hash_password
+from app.core.security import create_access_token, hash_password
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
@@ -208,9 +208,15 @@ async def test_self_disable_conflict(db):
 async def test_invalidate_sessions_rejects_old_refresh(db):
     staff = await _make_professional(db, email="staff5@x.com", is_staff=True)
     target = await _make_professional(db, email="sessions@x.com")
-    old_refresh = create_refresh_token(target.id, target.token_version)
     client = await _client(db)
     async with client:
+        login = await client.post(
+            "/api/v1/auth/login",
+            json={"email": "sessions@x.com", "password": "testpass123"},
+        )
+        assert login.status_code == 200
+        old_refresh = login.json()["refreshToken"]
+
         resp = await client.post(
             f"/api/v1/admin/professionals/{target.id}/invalidate-sessions",
             headers=_auth_headers(staff),

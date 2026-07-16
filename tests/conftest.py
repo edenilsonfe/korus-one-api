@@ -3,6 +3,7 @@ import uuid
 from datetime import date, timedelta
 
 os.environ.setdefault("JWT_SECRET", "test-secret-for-pytest-only-not-for-prod")
+os.environ.setdefault("AUTH_RATE_LIMIT_FAIL_CLOSED", "false")
 
 import pytest
 from httpx import ASGITransport, AsyncClient

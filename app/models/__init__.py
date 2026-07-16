@@ -18,6 +18,7 @@ from app.models.goal import ClinicalDomainSnapshot, Goal
 from app.models.notification_message_log import NotificationMessageLog
 from app.models.notification_settings import NotificationSettings
 from app.models.password_reset_token import PasswordResetToken
+from app.models.refresh_session import RefreshSession
 from app.models.patient import Patient
 from app.models.professional import Professional
 from app.models.session import Session
@@ -31,6 +32,7 @@ __all__ = [
     "BillingEvent",
     "Professional",
     "PasswordResetToken",
+    "RefreshSession",
     "Patient",
     "Caregiver",
     "Appointment",

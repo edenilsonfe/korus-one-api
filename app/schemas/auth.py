@@ -2,6 +2,7 @@ from pydantic import EmailStr, Field, field_validator
 
 from app.core.specialty_catalog import is_valid_specialty_key
 from app.schemas.common import CamelModel
+from app.services.auth_rate_limit import normalize_auth_email
 
 
 def _normalize_cpf(value: str) -> str:
@@ -16,6 +17,11 @@ class RegisterRequest(CamelModel):
     council: str = ""
     phone: str = ""
     cpf: str | None = None
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str) -> str:
+        return normalize_auth_email(value)
 
     @field_validator("specialty_key")
     @classmethod
@@ -41,9 +47,14 @@ class LoginRequest(CamelModel):
     email: EmailStr
     password: str
 
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str) -> str:
+        return normalize_auth_email(value)
+
 
 class RefreshRequest(CamelModel):
-    refresh_token: str
+    refresh_token: str = ""
 
 
 class TokenResponse(CamelModel):
@@ -54,6 +65,11 @@ class TokenResponse(CamelModel):
 
 class ForgotPasswordRequest(CamelModel):
     email: EmailStr
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str) -> str:
+        return normalize_auth_email(value)
 
 
 class ResetPasswordRequest(CamelModel):

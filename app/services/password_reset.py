@@ -17,6 +17,7 @@ from app.models.password_reset_token import PURPOSE_PASSWORD_RESET, PasswordRese
 from app.models.professional import Professional
 from app.services.email.resend_client import send_email
 from app.services.email.templates import password_reset_email
+from app.services.refresh_token_service import revoke_all_refresh_sessions
 from app.utils.token_hash import hash_token
 
 logger = logging.getLogger(__name__)
@@ -159,7 +160,7 @@ async def reset_password_with_token(
         )
 
     professional.password_hash = hash_password(new_password)
-    professional.token_version += 1
+    await revoke_all_refresh_sessions(db, professional)
     token.used_at = now
 
     await db.commit()
@@ -180,7 +181,7 @@ async def change_password(
         )
 
     professional.password_hash = hash_password(new_password)
-    professional.token_version += 1
+    await revoke_all_refresh_sessions(db, professional)
 
     await db.commit()
     await db.refresh(professional)

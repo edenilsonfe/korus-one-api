@@ -7,6 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
+from app.core.auth_cookies import ACCESS_COOKIE
 from app.core.security import decode_token
 from app.db.session import AsyncSessionLocal
 from app.models.professional import Professional
@@ -43,10 +44,14 @@ class EntitlementMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         auth_header = request.headers.get("Authorization")
-        if not auth_header or not auth_header.lower().startswith("bearer "):
+        token: str | None = None
+        if auth_header and auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1].strip()
+        if not token:
+            token = request.cookies.get(ACCESS_COOKIE, "").strip() or None
+        if not token:
             return await call_next(request)
 
-        token = auth_header.split(" ", 1)[1].strip()
         try:
             payload = decode_token(token)
             if payload.get("type") != "access":
