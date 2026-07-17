@@ -1,78 +1,78 @@
 [
   {
     "id": "fon_nm_01",
-    "target": "cachorro",
-    "text": "cachorro",
+    "target": "palhaço",
+    "text": "palhaço",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_02",
-    "target": "gato",
-    "text": "gato",
+    "target": "bolsa",
+    "text": "bolsa",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_03",
-    "target": "pássaro",
-    "text": "pássaro",
+    "target": "tesoura",
+    "text": "tesoura",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_04",
-    "target": "peixe",
-    "text": "peixe",
+    "target": "cadeira",
+    "text": "cadeira",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_05",
-    "target": "cavalo",
-    "text": "cavalo",
+    "target": "galinha",
+    "text": "galinha",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_06",
-    "target": "vaca",
-    "text": "vaca",
+    "target": "vassoura",
+    "text": "vassoura",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_07",
-    "target": "porco",
-    "text": "porco",
+    "target": "cebola",
+    "text": "cebola",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_08",
-    "target": "coelho",
-    "text": "coelho",
+    "target": "xícara",
+    "text": "xícara",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_09",
-    "target": "elefante",
-    "text": "elefante",
+    "target": "mesa",
+    "text": "mesa",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_10",
-    "target": "leão",
-    "text": "leão",
+    "target": "navio",
+    "text": "navio",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_11",
-    "target": "macaco",
-    "text": "macaco",
+    "target": "livro",
+    "text": "livro",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
@@ -85,155 +85,155 @@
   },
   {
     "id": "fon_nm_13",
-    "target": "borboleta",
-    "text": "borboleta",
+    "target": "tambor",
+    "text": "tambor",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_14",
-    "target": "abelha",
-    "text": "abelha",
+    "target": "sapato",
+    "text": "sapato",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_15",
-    "target": "carro",
-    "text": "carro",
+    "target": "balde",
+    "text": "balde",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_16",
-    "target": "avião",
-    "text": "avião",
+    "target": "faca",
+    "text": "faca",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_17",
-    "target": "barco",
-    "text": "barco",
+    "target": "fogão",
+    "text": "fogão",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_18",
-    "target": "bicicleta",
-    "text": "bicicleta",
+    "target": "peixe",
+    "text": "peixe",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_19",
-    "target": "trem",
-    "text": "trem",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_20",
-    "target": "ônibus",
-    "text": "ônibus",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_21",
-    "target": "casa",
-    "text": "casa",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_22",
-    "target": "árvore",
-    "text": "árvore",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_23",
-    "target": "flor",
-    "text": "flor",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_24",
-    "target": "sol",
-    "text": "sol",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_25",
-    "target": "lua",
-    "text": "lua",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_26",
-    "target": "estrela",
-    "text": "estrela",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_27",
-    "target": "bola",
-    "text": "bola",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_28",
-    "target": "boneca",
-    "text": "boneca",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_29",
-    "target": "urso",
-    "text": "urso",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_30",
-    "target": "pipa",
-    "text": "pipa",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_31",
-    "target": "telefone",
-    "text": "telefone",
-    "stimulus_type": "figure",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_nm_32",
     "target": "relógio",
     "text": "relógio",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
+    "id": "fon_nm_20",
+    "target": "cama",
+    "text": "cama",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_21",
+    "target": "anel",
+    "text": "anel",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_22",
+    "target": "milho",
+    "text": "milho",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_23",
+    "target": "cachorro",
+    "text": "cachorro",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_24",
+    "target": "blusa",
+    "text": "blusa",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_25",
+    "target": "garfo",
+    "text": "garfo",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_26",
+    "target": "trator",
+    "text": "trator",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_27",
+    "target": "prato",
+    "text": "prato",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_28",
+    "target": "pasta",
+    "text": "pasta",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_29",
+    "target": "dedo",
+    "text": "dedo",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_30",
+    "target": "braço",
+    "text": "braço",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_31",
+    "target": "girafa",
+    "text": "girafa",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_nm_32",
+    "target": "zebra",
+    "text": "zebra",
+    "stimulus_type": "figure",
+    "category": "fonologia"
+  },
+  {
     "id": "fon_nm_33",
-    "target": "copo",
-    "text": "copo",
+    "target": "planta",
+    "text": "planta",
     "stimulus_type": "figure",
     "category": "fonologia"
   },
   {
     "id": "fon_nm_34",
-    "target": "colher",
-    "text": "colher",
+    "target": "cruz",
+    "text": "cruz",
     "stimulus_type": "figure",
     "category": "fonologia"
   }

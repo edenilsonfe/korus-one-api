@@ -27,13 +27,13 @@ while len(IMITATION_WORDS_UNIQUE) < 39:
     IMITATION_WORDS_UNIQUE.append(f"palavra_{len(IMITATION_WORDS_UNIQUE) + 1}")
 IMITATION_WORDS = IMITATION_WORDS_UNIQUE[:39]
 
-# 34 figuras — prova de nomeação
+# 34 figuras — prova de nomeação (ABFW)
 NAMING_FIGURES = [
-    "cachorro", "gato", "pássaro", "peixe", "cavalo", "vaca", "porco", "coelho",
-    "elefante", "leão", "macaco", "sapo", "borboleta", "abelha", "carro", "avião",
-    "barco", "bicicleta", "trem", "ônibus", "casa", "árvore", "flor", "sol",
-    "lua", "estrela", "bola", "boneca", "urso", "pipa", "telefone", "relógio",
-    "copo", "colher",
+    "palhaço", "bolsa", "tesoura", "cadeira", "galinha", "vassoura", "cebola",
+    "xícara", "mesa", "navio", "livro", "sapo", "tambor", "sapato", "balde",
+    "faca", "fogão", "peixe", "relógio", "cama", "anel", "milho", "cachorro",
+    "blusa", "garfo", "trator", "prato", "pasta", "dedo", "braço", "girafa",
+    "zebra", "planta", "cruz",
 ]
 
 # Vocabulário — 118 figuras em 9 campos conceituais
