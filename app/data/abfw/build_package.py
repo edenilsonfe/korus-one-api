@@ -8,24 +8,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 
-# 39 vocábulos — prova de imitação (estrutura ABFW, vocabulário documentado na literatura)
+# 39 vocábulos — prova de imitação (ABFW)
 IMITATION_WORDS = [
-    "pato", "sapo", "papa", "baba", "bola", "casa", "gato", "cata", "fala", "trava",
-    "prato", "sapato", "caveira", "caminhão", "carro", "barco", "pipa", "pipoca",
-    "macaco", "mamadeira", "facada", "faca", "sapato", "sapato", "sapato",
-    "telefone", "televisão", "escada", "espada", "estrela", "estátua", "estojo",
-    "fralda", "fruta", "flor", "flauta", "placa", "planta", "plástico", "plástico",
+    "peteca", "bandeja", "tigela", "doce", "cortina", "gato", "foguete", "vinho",
+    "selo", "zero", "chuva", "jacaré", "machado", "nata", "lama", "lápis", "prego",
+    "café", "alface", "raposa", "borracha", "abelha", "carro", "branco", "travessa",
+    "droga", "cravo", "grosso", "fraco", "plástico", "bloco", "clube", "globo",
+    "flauta", "pastel", "porco", "nariz", "amor", "roupa",
 ]
-# dedupe while preserving order to exactly 39
-_seen: set[str] = set()
-IMITATION_WORDS_UNIQUE: list[str] = []
-for w in IMITATION_WORDS:
-    if w not in _seen:
-        _seen.add(w)
-        IMITATION_WORDS_UNIQUE.append(w)
-while len(IMITATION_WORDS_UNIQUE) < 39:
-    IMITATION_WORDS_UNIQUE.append(f"palavra_{len(IMITATION_WORDS_UNIQUE) + 1}")
-IMITATION_WORDS = IMITATION_WORDS_UNIQUE[:39]
 
 # 34 figuras — prova de nomeação (ABFW)
 NAMING_FIGURES = [

@@ -1,274 +1,274 @@
 [
   {
     "id": "fon_im_01",
-    "target": "pato",
-    "text": "pato",
+    "target": "peteca",
+    "text": "peteca",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_02",
-    "target": "sapo",
-    "text": "sapo",
+    "target": "bandeja",
+    "text": "bandeja",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_03",
-    "target": "papa",
-    "text": "papa",
+    "target": "tigela",
+    "text": "tigela",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_04",
-    "target": "baba",
-    "text": "baba",
+    "target": "doce",
+    "text": "doce",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_05",
-    "target": "bola",
-    "text": "bola",
+    "target": "cortina",
+    "text": "cortina",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_06",
-    "target": "casa",
-    "text": "casa",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_07",
     "target": "gato",
     "text": "gato",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
+    "id": "fon_im_07",
+    "target": "foguete",
+    "text": "foguete",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
     "id": "fon_im_08",
-    "target": "cata",
-    "text": "cata",
+    "target": "vinho",
+    "text": "vinho",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_09",
-    "target": "fala",
-    "text": "fala",
+    "target": "selo",
+    "text": "selo",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_10",
-    "target": "trava",
-    "text": "trava",
+    "target": "zero",
+    "text": "zero",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_11",
-    "target": "prato",
-    "text": "prato",
+    "target": "chuva",
+    "text": "chuva",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_12",
-    "target": "sapato",
-    "text": "sapato",
+    "target": "jacaré",
+    "text": "jacaré",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_13",
-    "target": "caveira",
-    "text": "caveira",
+    "target": "machado",
+    "text": "machado",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_14",
-    "target": "caminhão",
-    "text": "caminhão",
+    "target": "nata",
+    "text": "nata",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_15",
+    "target": "lama",
+    "text": "lama",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_16",
+    "target": "lápis",
+    "text": "lápis",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_17",
+    "target": "prego",
+    "text": "prego",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_18",
+    "target": "café",
+    "text": "café",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_19",
+    "target": "alface",
+    "text": "alface",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_20",
+    "target": "raposa",
+    "text": "raposa",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_21",
+    "target": "borracha",
+    "text": "borracha",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_22",
+    "target": "abelha",
+    "text": "abelha",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_23",
     "target": "carro",
     "text": "carro",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
-    "id": "fon_im_16",
-    "target": "barco",
-    "text": "barco",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_17",
-    "target": "pipa",
-    "text": "pipa",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_18",
-    "target": "pipoca",
-    "text": "pipoca",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_19",
-    "target": "macaco",
-    "text": "macaco",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_20",
-    "target": "mamadeira",
-    "text": "mamadeira",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_21",
-    "target": "facada",
-    "text": "facada",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_22",
-    "target": "faca",
-    "text": "faca",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_23",
-    "target": "telefone",
-    "text": "telefone",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
     "id": "fon_im_24",
-    "target": "televisão",
-    "text": "televisão",
+    "target": "branco",
+    "text": "branco",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_25",
-    "target": "escada",
-    "text": "escada",
+    "target": "travessa",
+    "text": "travessa",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_26",
-    "target": "espada",
-    "text": "espada",
+    "target": "droga",
+    "text": "droga",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_27",
-    "target": "estrela",
-    "text": "estrela",
+    "target": "cravo",
+    "text": "cravo",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_28",
-    "target": "estátua",
-    "text": "estátua",
+    "target": "grosso",
+    "text": "grosso",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_29",
-    "target": "estojo",
-    "text": "estojo",
+    "target": "fraco",
+    "text": "fraco",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_30",
-    "target": "fralda",
-    "text": "fralda",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_31",
-    "target": "fruta",
-    "text": "fruta",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_32",
-    "target": "flor",
-    "text": "flor",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_33",
-    "target": "flauta",
-    "text": "flauta",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_34",
-    "target": "placa",
-    "text": "placa",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_35",
-    "target": "planta",
-    "text": "planta",
-    "stimulus_type": "word",
-    "category": "fonologia"
-  },
-  {
-    "id": "fon_im_36",
     "target": "plástico",
     "text": "plástico",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
+    "id": "fon_im_31",
+    "target": "bloco",
+    "text": "bloco",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_32",
+    "target": "clube",
+    "text": "clube",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_33",
+    "target": "globo",
+    "text": "globo",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_34",
+    "target": "flauta",
+    "text": "flauta",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_35",
+    "target": "pastel",
+    "text": "pastel",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
+    "id": "fon_im_36",
+    "target": "porco",
+    "text": "porco",
+    "stimulus_type": "word",
+    "category": "fonologia"
+  },
+  {
     "id": "fon_im_37",
-    "target": "palavra_37",
-    "text": "palavra_37",
+    "target": "nariz",
+    "text": "nariz",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_38",
-    "target": "palavra_38",
-    "text": "palavra_38",
+    "target": "amor",
+    "text": "amor",
     "stimulus_type": "word",
     "category": "fonologia"
   },
   {
     "id": "fon_im_39",
-    "target": "palavra_39",
-    "text": "palavra_39",
+    "target": "roupa",
+    "text": "roupa",
     "stimulus_type": "word",
     "category": "fonologia"
   }
