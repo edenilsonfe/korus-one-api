@@ -4,6 +4,7 @@ from datetime import date, time
 from sqlalchemy import Date, ForeignKey, Integer, String, Time
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.types import JSON
 
 from app.db.base import Base, TimestampMixin, new_uuid
 
@@ -29,5 +30,6 @@ class Appointment(Base, TimestampMixin):
     )
     frequency: Mapped[str | None] = mapped_column(String(32), nullable=True)
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    weekdays: Mapped[list[int] | None] = mapped_column(JSON, nullable=True)
 
     patient: Mapped["Patient"] = relationship(back_populates="appointments")  # noqa: F821

@@ -24,7 +24,7 @@ from app.services.whatsapp_queue import enqueue_whatsapp_appointment_event
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
-VALID_FREQUENCIES = {"semanal", "quinzenal", "mensal"}
+VALID_FREQUENCIES = {"semanal", "quinzenal", "mensal", "personalizado"}
 
 
 def _end_time_from_duration(start: time, duration: int) -> time:
@@ -47,6 +47,7 @@ def _to_response(appt: Appointment, patient_name: str, therapist: str) -> Appoin
         series_id=str(appt.series_id) if appt.series_id else None,
         frequency=appt.frequency,
         end_date=appt.end_date.isoformat() if appt.end_date else None,
+        weekdays=appt.weekdays,
     )
 
 
@@ -121,10 +122,23 @@ async def create_appointment(
             validate_recurrent_range(body.date, body.end_date)
         except ValueError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        if body.frequency == "personalizado":
+            if not body.weekdays or len(body.weekdays) < 1:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Selecione ao menos um dia da semana",
+                )
+            invalid = [d for d in body.weekdays if d < 0 or d > 6]
+            if invalid:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Dias da semana inválidos",
+                )
 
     await _check_conflict(db, professional.id, body.date, body.time, body.duration)
 
     end_time = _end_time_from_duration(body.time, body.duration)
+    recurrence_weekdays = body.weekdays if body.frequency == "personalizado" else None
     anchor = Appointment(
         professional_id=professional.id,
         patient_id=patient.id,
@@ -136,6 +150,7 @@ async def create_appointment(
         appointment_type=appointment_type,
         frequency=body.frequency if appointment_type == "recorrente" else None,
         end_date=body.end_date if appointment_type == "recorrente" else None,
+        weekdays=recurrence_weekdays,
     )
     db.add(anchor)
     await db.flush()
@@ -148,6 +163,7 @@ async def create_appointment(
             body.end_date,
             body.time,
             end_time,
+            body.weekdays,
         ):
             await _check_conflict(db, professional.id, slot.start_date, slot.start_time, body.duration)
             child = Appointment(
@@ -162,6 +178,7 @@ async def create_appointment(
                 series_id=anchor.id,
                 frequency=body.frequency,
                 end_date=body.end_date,
+                weekdays=recurrence_weekdays,
             )
             db.add(child)
             children_created += 1

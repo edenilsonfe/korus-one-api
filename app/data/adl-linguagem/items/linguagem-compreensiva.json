@@ -6,7 +6,9 @@
     "text": "Vocabulário compreensivo. Identifica objetos familiares.",
     "age_start_months": 12,
     "age_end_months": 17,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "cachorro, bola, boneca, carro/caminhão.",
+    "examiner_instructions": "o examinador ou o cuidador chama a criança pelo nome, dizendo:\n( ) a. (nome da criança), me dá o cachorro (au au) __________________________\n( ) b. (nome da criança), me dá a bola ____________________________________\n( ) c. (nome da criança), me dá a neném __________________________________\n( ) d. (nome da criança), me dá o carro (caminhão) (bi bi) _____________________\n\nCritério (1 ponto): quando a criança reconhece 3 objetos ou o cuidador diz que ela os reconhece\nno seu contexo familiar."
   },
   {
     "id": "lr_04",
@@ -15,7 +17,9 @@
     "text": "Compreende pedidos verbais simples com pistas gestuais.",
     "age_start_months": 12,
     "age_end_months": 17,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "bola, cachorrinho e boneca.",
+    "examiner_instructions": "o examinador coloca o material próximo à criança, dizendo: Vamos\nbrincar?\nTreinamento: o examinador ou o cuidador diz o nome da criança e, fazendo gestos\ncom a mão, pede: Jogue a bola! Quando a criança não responde, o examinador ou\no cuidador dá o modelo, jogando a bola para a criança.\n( ) a. (nome da criança), dê a bola pra mim. (o examinador ou o cuidador oferece a\nsua mão para a criança) ____________________________________________\n( ) b. Agora dê a bola para a neném (o examinador aponta para a neném) ______\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_05",
@@ -24,7 +28,9 @@
     "text": "Vocabulário receptivo. Identifica figuras de objetos.",
     "age_start_months": 18,
     "age_end_months": 23,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 1 e 2.",
+    "examiner_instructions": "o examinador diz: Vamos olhar estas figuras, (nome da criança).\nEm seguida, aponta, dizendo: Olhe a bola. Continua: Agora, me mostre…\n( ) a. o carro _________________________________________________________\n( ) b. a banana _______________________________________________________\n( ) c. o gato __________________________________________________________\n( ) d. o tênis (sapato) __________________________________________________\n( ) e. o pé ___________________________________________________________\n( ) f. a mão __________________________________________________________\n( ) g. o biscoito (a bolacha) _____________________________________________\n\nCritério (1 ponto): 5 respostas corretas."
   },
   {
     "id": "lr_06",
@@ -33,7 +39,9 @@
     "text": "Compreende ordens simples com dois pedidos.",
     "age_start_months": 18,
     "age_end_months": 23,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "bolas.",
+    "examiner_instructions": "o examinador ou o cuidador diz:\n( ) a. (nome da criança), pegue a bola e me dê. _____________________________\n( ) b. Agora pegue a bola e dê para (o nome do acompanhante ou do examinador\nda criança). _______________________________________________________\n\nCritério (1 ponto): 1 resposta correta."
   },
   {
     "id": "lr_07",
@@ -42,7 +50,9 @@
     "text": "Compreende palavras inibitórias.",
     "age_start_months": 18,
     "age_end_months": 23,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "2 carros (caminhões) e 3 bolas.",
+    "examiner_instructions": "o examinador ou o cuidador chama a atenção da criança para o\nbrinquedo, falando o seu nome, e quando ela for movimentar-se para pegar o\ncarro (caminhão) ou a bola, diz: Não! Espere! É minha vez!\n\nCritério (1 ponto): quando a criança para pelo menos uma vez. O procedimento poderá ser\nrepetido duas vezes."
   },
   {
     "id": "lr_08",
@@ -51,7 +61,9 @@
     "text": "Compreende verbos dentro de um contexto.",
     "age_start_months": 18,
     "age_end_months": 23,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "miniaturas de um cachorro, um paninho, um prato, uma colher e uma\nxícara.",
+    "examiner_instructions": "o examinador coloca o material em frente à criança e, a chamando\npelo nome, diz:\n( ) a. O cachorro (au au) está com fome. Dê comida pra ele. ___________________\n( ) b. O cachorro (au au) está com sede. Dê água pra ele beber. ________________\n( ) c. O cachorro (au au) está com sono. Bote ele pra dormir. __________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_09",
@@ -60,7 +72,9 @@
     "text": "Usa apropriadamente objetos familiares enquanto brinca.",
     "age_start_months": 24,
     "age_end_months": 29,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "cachorro, carro (caminhão), bola, boneca, colher, prato, xícara.",
+    "examiner_instructions": "o examinador coloca o material próximo à criança, manipula\nalguns objetos e, dizendo o nome da criança, pergunta: Vamos brincar? Ao mesmo\ntempo em que estimula a criança, observa a sua manipulação com os objetos.\n( ) a. bola _____________________\n( ) b. carro (caminhão) ______________\n( ) c. cachorro __________________ ( ) d. boneca ______________________\n( ) e. xícara ____________________ ( ) f. colher ________________________\n\nCritério (1 ponto): quando manipula adequadamente 3 objetos."
   },
   {
     "id": "lr_10",
@@ -69,7 +83,9 @@
     "text": "Identifica partes do corpo em si ou na boneca.",
     "age_start_months": 24,
     "age_end_months": 29,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "boneca.",
+    "examiner_instructions": "o examinador, dizendo o nome da criança, pede-lhe para mostrar:\n( ) a. o nariz ___________________\n( ) b. os olhos ___________________\n( ) c. o pé _____________________\n( ) d. a mão _____________________\n( ) e. a boca ___________________\n( ) f. a barriga ___________________\n( ) g. as orelhas ________________\n( ) h. a cabeça __________________\n\nCritério (1 ponto): quando aponta 5 partes do corpo corretamente."
   },
   {
     "id": "lr_11",
@@ -78,7 +94,9 @@
     "text": "Compreende relação espacial.",
     "age_start_months": 24,
     "age_end_months": 29,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "uma bolsa e três bolas.",
+    "examiner_instructions": "o examinador coloca uma bolsa com duas bolas dentro e uma do\nlado de fora, chama a criança pelo nome, dizendo:\n( ) a. Tire as bolas de dentro da bolsa. ___________________\n( ) b. Bote todas as bolas em cima da mesa. ________________\n( ) c. Bote todas as bolas dentro da bolsa. __________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_12",
@@ -87,7 +105,9 @@
     "text": "Compreende alguns pronomes.",
     "age_start_months": 24,
     "age_end_months": 29,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "um cachorro e três bolas.",
+    "examiner_instructions": "o examinador, dizendo o nome da criança, pergunta: Vamos brincar\ncom as bolas e o cachorrinho? Eu dou todas as bolas para você!\n( ) a. Mostre as suas bolas (correto se a criança mostra uma ou todas as bolas).\n( ) b. Agora você dá uma bola para mim. _________________________________\nQuando a criança não dá, o examinador pega uma bola, perguntando à criança:\n( ) c. Onde está a minha bola? __________________________________________\n( ) d. Agora dê uma bola para ele (o cachorro). ____________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_13",
@@ -96,7 +116,9 @@
     "text": "Reconhece a ação nas figuras.",
     "age_start_months": 24,
     "age_end_months": 29,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 3 e 4.",
+    "examiner_instructions": "o examinador diz o nome da criança e nomeia uma ação. Aponta,\ndizendo: O menino está chutando. Mostrando cada figura, pergunta: Quem está…\n( ) a. bebendo? ____________________ ( ) b. comendo? ____________________\n( ) c. dormindo? ___________________ ( ) d. correndo? ____________________\n( ) e. tomando banho? _________________________________________________\n\nCritério (1 ponto): 4 respostas corretas."
   },
   {
     "id": "lr_14",
@@ -114,7 +136,9 @@
     "text": "Compreende o uso dos objetos.",
     "age_start_months": 30,
     "age_end_months": 35,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 5.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo: Mostre…\n( ) a. O que você usa para beber? ________________________________________\n( ) b. O que você usa para pentear os cabelos? _____________________________\n( ) c. O que você usa para cortar papel? ___________________________________\n( ) d. O que você usa para comer? ________________________________________\n\nCritério (1 ponto): 3 respostas corretas."
   },
   {
     "id": "lr_16",
@@ -123,7 +147,9 @@
     "text": "Compreende os conceitos dos adjetivos.",
     "age_start_months": 30,
     "age_end_months": 35,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 6, 7 e 8.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo: Mostre…\n( ) a. a vaca grande. _______________ ( ) b. o peixe pequeno. _______________\n( ) c. o menino molhado. ____________ ( ) d. o menino sujo. _________________\n\nCritério (1 ponto): 3 respostas corretas."
   },
   {
     "id": "lr_17",
@@ -132,7 +158,9 @@
     "text": "Compreende relações parte/todo.",
     "age_start_months": 36,
     "age_end_months": 41,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 9.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra uma figura de cada\nvez, dizendo: Mostre…\n( ) a. a porta do caminhão. __________ ( ) b. as rodas do caminhão. __________\n( ) c. a mão do menino. ____________ ( ) d. a perna do menino. _____________\n\nCritério (1 ponto): 3 respostas corretas."
   },
   {
     "id": "lr_18",
@@ -150,7 +178,9 @@
     "text": "Identifica cores.",
     "age_start_months": 36,
     "age_end_months": 41,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 10.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas bolas. Mostre a bola…\n( ) a. vermelha. ____________________ ( ) b. amarela. _____________________\n( ) c. branca. ___________ ( ) d. verde. ____________ ( ) e. azul. ____________\n\nCritério (1 ponto): 4 respostas corretas."
   },
   {
     "id": "lr_20",
@@ -159,7 +189,9 @@
     "text": "Identifica categorias de objetos em figuras.",
     "age_start_months": 36,
     "age_end_months": 41,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 11.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas figuras. Mostre…\n( ) a. todos os bichinhos. _______________________________________________\n( ) b. todas as coisas que comemos. ______________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_21",
@@ -177,7 +209,9 @@
     "text": "Compreende pronomes pessoais.",
     "age_start_months": 42,
     "age_end_months": 47,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 14 e 15.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas figuras e aponte a que…\n( ) a. ELA está chorando. _______________________________________________\n( ) b. ELE está tomando sorvete. _________________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_23",
@@ -186,7 +220,9 @@
     "text": "Faz deduções.",
     "age_start_months": 42,
     "age_end_months": 47,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 16, 17 e 18.",
+    "examiner_instructions": "o examinador diz o nome da criança. Lê a frase que corresponde à\nfigura-alvo. Aponta para cada figura e pede para a criança mostrar a resposta.\n( ) a. Olhe as figuras desta menina. O nome dela é Bia. A boneca de Bia está muito\nsuja. O que Bia deveria fazer com a boneca? ____________________________\n( ) b. Olhe as figuras destes meninos. Um deles teve uma boa surpresa e ficou muito\nfeliz. Quem teve a surpresa? _________________________________________\n( ) c. Olhe estas figuras. Se Tiago saísse de casa ficaria todo molhado. Como está o\ntempo lá fora?_____________________________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_24",
@@ -195,7 +231,9 @@
     "text": "Compreende o conceito de subir.",
     "age_start_months": 42,
     "age_end_months": 47,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 19.",
+    "examiner_instructions": "o examinador diz: Olhe estas meninas na escada.\nAponte para a menina que está subindo. __________________________________\n\nCritério (1 ponto): se responde corretamente."
   },
   {
     "id": "lr_25",
@@ -204,7 +242,9 @@
     "text": "Compreende questões com o pronome interrogativo \"que\".",
     "age_start_months": 42,
     "age_end_months": 47,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 20 e 21.",
+    "examiner_instructions": "o examinador diz: Olhe estas figuras. Mostre…\n( ) a. o que voa? ________________ ( ) b. o que late (au au)? _________________\n( ) c. o que nada? __________________ ( ) d. o que corta? ___________________\n( ) e. o que queima? ________________ ( ) f. o que derrete? __________________\n( ) g. o que dorme? ______________________\n\nCritério (1 ponto): 6 respostas corretas."
   },
   {
     "id": "lr_26",
@@ -213,7 +253,9 @@
     "text": "Compreende perguntas negativas.",
     "age_start_months": 48,
     "age_end_months": 53,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 22 e 23.",
+    "examiner_instructions": "o examinador diz: Olhe esta figura…\n( ) a. aponte para o passarinho que não está voando. ________________________\n( ) b. aponte para o menino que não está na piscina. _________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_27",
@@ -222,7 +264,9 @@
     "text": "Conceito de exclusão e inclusão.",
     "age_start_months": 48,
     "age_end_months": 53,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 24 e 25.",
+    "examiner_instructions": "o examinador diz: Olhe esta figura…\n( ) a. aponte para um dos peixes. _________________________________________\n( ) b. aponte para todos os macacos. _____________________________________\n\nCritério (1 ponto): 1 resposta correta."
   },
   {
     "id": "lr_28",
@@ -231,7 +275,9 @@
     "text": "Compreende conceitos de tempo.",
     "age_start_months": 48,
     "age_end_months": 53,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 26 e 27.",
+    "examiner_instructions": "o examinador diz: Olhe esta figura…\n( ) a. aponte para a figura que está de dia. _________________________________\n( ) b. aponte para a figura que está de noite. _______________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_29",
@@ -249,7 +295,9 @@
     "text": "Compreende conceitos espaciais.",
     "age_start_months": 48,
     "age_end_months": 53,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 31.",
+    "examiner_instructions": "o examinador diz: Olhe estas figuras. Aponte para o cachorro que\nestá…\n( ) a. em cima da cadeira. ___________________________\n( ) b. embaixo da cadeira. ___________________________\n( ) c. atrás da cadeira. ______________________________\n\nCritério (1 ponto): 3 respostas corretas."
   },
   {
     "id": "lr_31",
@@ -267,7 +315,9 @@
     "text": "Compreende analogias.",
     "age_start_months": 54,
     "age_end_months": 59,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 34, 35 e 36.",
+    "examiner_instructions": "o examinador diz: Olhe estas figuras. Aponte para a resposta.\n( ) a. Você lava as mãos com sabonete. Você escova os dentes com _____________\n( ) b. Você come em um prato. Você bebe em _________________________ (copo)\n( ) c. Você senta em uma cadeira. Você dorme em ____________________ (cama)\n\nCritério (1 ponto): 3 respostas corretas."
   },
   {
     "id": "lr_33",
@@ -285,7 +335,9 @@
     "text": "Compreende conceito de velocidade.",
     "age_start_months": 54,
     "age_end_months": 59,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 38.",
+    "examiner_instructions": "o examinador diz: Estas figuras mostram animais e transportes que\nse movem com velocidades diferentes.\n( ) a. Aponte para o transporte que é mais rápido. ____________________________\n( ) b. Aponte para o bicho que é mais devagar. ______________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_35",
@@ -294,7 +346,9 @@
     "text": "Compreende conceitos de adjetivos comparativos.",
     "age_start_months": 60,
     "age_end_months": 65,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 39 e 40.",
+    "examiner_instructions": "o examinador diz:\n( ) a. Olhe para estas bolas. Aponte para a bola menor. _______________________\n( ) b. Olhe para estes cachorros. Aponte para o cachorro maior. _________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_36",
@@ -303,7 +357,9 @@
     "text": "Compreende orações com adjetivos.",
     "age_start_months": 60,
     "age_end_months": 65,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 41.",
+    "examiner_instructions": "o examinador diz: Olhe estes gatos.\n( ) a. Aponte para o gato branco e peludo. _________________________________\n( ) b. Aponte para o gato preto e grande. ___________________________________\n( ) c. Aponte para o gato branco e pequeno. ________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_37",
@@ -312,7 +368,9 @@
     "text": "Compreende os sufixos de gênero.",
     "age_start_months": 60,
     "age_end_months": 65,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 42 e 43.",
+    "examiner_instructions": "o examinador diz: Olhe estas figuras.\n( ) a. Aponte para o pintor. ______________________________________________\n( ) b. Aponte para a cantora. ____________________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_38",
@@ -321,7 +379,9 @@
     "text": "Compreende conceito de quantidade.",
     "age_start_months": 60,
     "age_end_months": 65,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 12 e 13.",
+    "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas figuras…\n( ) a. Estes meninos estão segurando balões. Qual está com mais balões?\n( ) b. Estas meninas estão segurando bonecas. Qual está com mais bonecas?\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_39",
@@ -330,7 +390,9 @@
     "text": "Compreende conceitos de adjetivos.",
     "age_start_months": 66,
     "age_end_months": 71,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 45 e 46.",
+    "examiner_instructions": "examinador aponta para cada figura dizendo: Eu vou falar sobre\numa destas figuras e você vai descobrir qual é.\n( ) a. Aponte para a menina que está feliz. _________________________________\n( ) b. Aponte para o menino que está triste. _________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_40",
@@ -339,7 +401,9 @@
     "text": "Compreende palavras que indicam relação espacial.",
     "age_start_months": 66,
     "age_end_months": 71,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "1 lápis e uma cadeira com espaldar.",
+    "examiner_instructions": "o examinador diz: Pegue este lápis e coloque…\n( ) a. em cima da cadeira ___________ ( ) b. embaixo da cadeira ____________\n( ) c. na frente da cadeira ___________ ( ) d. atrás da cadeira ______________\n\nCritério (1 ponto): 4 respostas corretas."
   },
   {
     "id": "lr_41",
@@ -384,7 +448,9 @@
     "text": "Identifica sons iniciais das palavras.",
     "age_start_months": 72,
     "age_end_months": 77,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 57, 58 e 59.",
+    "examiner_instructions": "o examinador diz: Preste atenção! Vou falar o som de uma letra e você\naponta para a figura que começa com este som. Agora vamos ouvir com atenção:\n( ) a. Qual começa com o som /a/?. Avião, carro, bola. ______________________\n( ) b. Qual começa com o som /g/?. Pipa, carro, gato. _______________________\n( ) c. Qual começa com o som /v/?. Peixe, macaco, vaca. ____________________\n\nCritério (1 ponto): 2 respostas corretas.\nMaterial: Manual de Figuras, página 29.\nProcedimento: o examinador mostra os quadrinhos para a criança, dizendo:\nOlhe estas crianças, preste atenção no que elas estão fazendo. Conte uma história\nseguindo os quadrinhos, começa aqui. _____________________________________\n1 ponto*: quando a criança descreve os acontecimentos na sequência dos quadrinhos\ncom a semântica e a sintaxe corretas.\nMaterial: não necessário.\nProcedimento: o examinador fala: Diga o que você sabe sobre…\n( ) a. o celular. _______________________________________________________\n( ) b. a banana. ______________________________________________________\n( ) c. o carro. ________________________________________________________\n1 ponto*: se a criança descrever duas características de dois objetos."
   },
   {
     "id": "lr_46",
@@ -402,7 +468,9 @@
     "text": "Relação temporal/sequência.",
     "age_start_months": 72,
     "age_end_months": 77,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 60 e 61.",
+    "examiner_instructions": "o examinador mostra as figuras, dizendo:\n( ) a. Depois de você apontar para o gato, aponte para o sapo. ________________\n( ) b. Depois de você apontar para o jacaré, aponte para o elefante. ____________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_48",
@@ -411,7 +479,9 @@
     "text": "Compreende conceitos de quantidade.",
     "age_start_months": 78,
     "age_end_months": 83,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, página 64.",
+    "examiner_instructions": "o examinador mostra a figura, dizendo: Joana cortou uma laranja\nao meio.\n( ) a. Aponte para a laranja inteira. _________________________________\n( ) b. Aponte para a metade da laranja. _________________________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_49",
@@ -420,7 +490,9 @@
     "text": "Compreende sentenças na voz passiva.",
     "age_start_months": 78,
     "age_end_months": 83,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 65 e 66.",
+    "examiner_instructions": "o examinador aponta as figuras, dizendo: Olhe estas figuras com\natenção.\n( ) a. Aponte para a menina que foi beijada pelo menino. _____________________\n( ) b. Aponte para o menino que foi empurrado pela menina. __________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_50",
@@ -429,7 +501,9 @@
     "text": "Aliteração.",
     "age_start_months": 78,
     "age_end_months": 83,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "Manual de Figuras, páginas 67 e 68.",
+    "examiner_instructions": "o examinador aponta para cada figura, dizendo:\nVou falar o nome destas figuras e duas começam com sílabas que têm o mesmo som.\nAponte para as duas que começam com o mesmo som.\n( ) a. casa – carro – bola _______________________\n( ) b. tênis – mola – moto _______________________\n( ) c. chave – chapéu – faca _______________________\n( ) d. bola – peixe – bota _______________________\n\nCritério (1 ponto): 2 respostas corretas."
   },
   {
     "id": "lr_51",

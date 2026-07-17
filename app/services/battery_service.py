@@ -205,6 +205,8 @@ class BatteryService:
                 battery_meta["examiner_name"] = data.setup.examiner_name
             if data.setup.initial_notes is not None:
                 battery_meta["initial_notes"] = data.setup.initial_notes
+            if data.setup.selected_age_band_id is not None:
+                battery_meta["selected_age_band_id"] = data.setup.selected_age_band_id
         metadata = {
             "engine": "battery",
             "package_id": package.package_id,
@@ -226,7 +228,17 @@ class BatteryService:
         self.db.add(record)
         await self.db.flush()
 
-        for slug in package.modules:
+        module_slugs = data.module_slugs if data.module_slugs else list(package.modules)
+        unknown = [slug for slug in module_slugs if slug not in package.modules]
+        if unknown:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Módulos inválidos: {', '.join(unknown)}",
+            )
+        if not module_slugs:
+            raise HTTPException(status_code=400, detail="Selecione ao menos um módulo")
+
+        for slug in module_slugs:
             mod = package.get_module_config(slug)
             items = package.get_module_items(slug)
             subform = BatterySubformAssessment(

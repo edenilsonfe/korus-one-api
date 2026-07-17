@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 from typing import Iterable
 
 from dateutil import rrule
@@ -22,7 +22,20 @@ def _frequency_dates(
     frequency: str,
     start_date: date,
     end_date: date,
+    weekdays: list[int] | None = None,
 ) -> list[date]:
+    if frequency == "personalizado":
+        selected = weekdays or []
+        if not selected:
+            return [start_date]
+        result: list[date] = []
+        current = start_date
+        while current <= end_date:
+            if current.weekday() in selected:
+                result.append(current)
+            current += timedelta(days=1)
+        return result
+
     if frequency == "semanal":
         dates = list(
             rrule.rrule(
@@ -65,12 +78,13 @@ def iter_recurring_child_slots(
     end_date: date,
     start_time: time,
     end_time: time,
+    weekdays: list[int] | None = None,
 ) -> Iterable[AppointmentSlot]:
     """Yield expected child slots (excludes the anchor's first day)."""
     if not end_date:
         return
 
-    dates = _frequency_dates(frequency or "semanal", start_date, end_date)
+    dates = _frequency_dates(frequency or "semanal", start_date, end_date, weekdays)
     for appointment_date in dates[1:]:
         yield AppointmentSlot(
             start_date=appointment_date,

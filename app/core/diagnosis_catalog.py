@@ -8,6 +8,7 @@ DIAGNOSIS_CATALOG: dict[str, dict[str, str]] = {
     "fono": {
         "tea": "TEA — Transtorno do Espectro Autista",
         "linguagem": "Atraso de Linguagem",
+        "atraso_de_fala": "Atraso de Fala",
         "apraxia": "Apraxia de Fala na Infância",
         "dislexia": "Dislexia",
         "disfagia": "Disfagia",

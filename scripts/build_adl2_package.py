@@ -126,20 +126,29 @@ QUALITATIVE_NOTE = (
 
 def build_items(domain: str, catalog: dict[int, tuple[int, int, str]]) -> list[dict]:
     prefix = "le" if domain == "LE" else "lr"
+    details_path = DATA / "protocol-details.json"
+    domain_details: dict = {}
+    if details_path.exists():
+        domain_details = json.loads(details_path.read_text(encoding="utf-8")).get(domain, {})
+
     items = []
     for num in sorted(catalog):
         start, end, text = catalog[num]
-        items.append(
-            {
-                "id": f"{prefix}_{num:02d}",
-                "item_number": num,
-                "domain": domain,
-                "text": text,
-                "age_start_months": start,
-                "age_end_months": end,
-                "response_type": "developmental",
-            }
-        )
+        extra = domain_details.get(str(num), {})
+        item = {
+            "id": f"{prefix}_{num:02d}",
+            "item_number": num,
+            "domain": domain,
+            "text": text,
+            "age_start_months": start,
+            "age_end_months": end,
+            "response_type": "developmental",
+        }
+        if extra.get("material"):
+            item["material"] = extra["material"]
+        if extra.get("examiner_instructions"):
+            item["examiner_instructions"] = extra["examiner_instructions"]
+        items.append(item)
     return items
 
 
@@ -207,7 +216,30 @@ def main() -> None:
     for name, data in [
         ("linguagem-expressiva.json", build_items("LE", LE_ITEMS)),
         ("linguagem-compreensiva.json", build_items("LR", LR_ITEMS)),
-        ("pre-requisitos.json", [{**i, "response_type": "developmental"} for i in PREREQ_ITEMS]),
+        (
+            "pre-requisitos.json",
+            [
+                {
+                    **i,
+                    "response_type": "developmental",
+                    **(
+                        {
+                            k: v
+                            for k, v in json.loads(
+                                (DATA / "protocol-details.json").read_text(encoding="utf-8")
+                            )
+                            .get("PRE", {})
+                            .get(str(i["item_number"]), {})
+                            .items()
+                            if k in ("material", "examiner_instructions")
+                        }
+                        if (DATA / "protocol-details.json").exists()
+                        else {}
+                    ),
+                }
+                for i in PREREQ_ITEMS
+            ],
+        ),
     ]:
         path = ITEMS_DIR / name
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

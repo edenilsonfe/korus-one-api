@@ -1,0 +1,352 @@
+{
+  "PRE": {
+    "1": {
+      "material": "um brinquedo que a criança tenha demonstrado interesse ou bolhinhas\nde sabão.",
+      "examiner_instructions": "inicialmente, o examinador ou cuidador brinca com a criança e, em\nseguida:\n( ) a. movimenta o brinquedo que a criança demonstrou interesse da esquerda\npara a direita, observando se ela acompanha com o olhar o brinquedo em\nmovimento. ______________________________________________________\n( ) b. aguarda um minuto, fala o nome da criança, mostra o recipiente com o\nsabão e assopra as bolinhas de sabão, observando se ela acompanha com\no olhar as bolinhas. ________________________________________________\n\nCritério (1 ponto): quando a criança acompanha com o olhar o brinquedo ou as bolinhas de\nsabão (cada procedimento poderá ser repetido duas vezes)."
+    },
+    "2": {
+      "material": "brinquedos.",
+      "examiner_instructions": "inicialmente o examinador ou o cuidador brinca com a criança e,\nem seguida:\n( ) a. chama a criança pelo nome e observa se ela olha na direção de quem a\nchamou. _________________________________________________________\n( ) b. aguarda um minuto, depois bate palma atrás da criança, do lado direito, e,\npor último, do lado esquerdo, observando se ela procura a fonte sonora. ___\n\nCritério (1 ponto): quando a criança responde ao item a ou b (cada procedimento poderá ser\nrepetido duas vezes)."
+    }
+  },
+  "LR": {
+    "3": {
+      "material": "cachorro, bola, boneca, carro/caminhão.",
+      "examiner_instructions": "o examinador ou o cuidador chama a criança pelo nome, dizendo:\n( ) a. (nome da criança), me dá o cachorro (au au) __________________________\n( ) b. (nome da criança), me dá a bola ____________________________________\n( ) c. (nome da criança), me dá a neném __________________________________\n( ) d. (nome da criança), me dá o carro (caminhão) (bi bi) _____________________\n\nCritério (1 ponto): quando a criança reconhece 3 objetos ou o cuidador diz que ela os reconhece\nno seu contexo familiar."
+    },
+    "4": {
+      "material": "bola, cachorrinho e boneca.",
+      "examiner_instructions": "o examinador coloca o material próximo à criança, dizendo: Vamos\nbrincar?\nTreinamento: o examinador ou o cuidador diz o nome da criança e, fazendo gestos\ncom a mão, pede: Jogue a bola! Quando a criança não responde, o examinador ou\no cuidador dá o modelo, jogando a bola para a criança.\n( ) a. (nome da criança), dê a bola pra mim. (o examinador ou o cuidador oferece a\nsua mão para a criança) ____________________________________________\n( ) b. Agora dê a bola para a neném (o examinador aponta para a neném) ______\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "5": {
+      "material": "Manual de Figuras, páginas 1 e 2.",
+      "examiner_instructions": "o examinador diz: Vamos olhar estas figuras, (nome da criança).\nEm seguida, aponta, dizendo: Olhe a bola. Continua: Agora, me mostre…\n( ) a. o carro _________________________________________________________\n( ) b. a banana _______________________________________________________\n( ) c. o gato __________________________________________________________\n( ) d. o tênis (sapato) __________________________________________________\n( ) e. o pé ___________________________________________________________\n( ) f. a mão __________________________________________________________\n( ) g. o biscoito (a bolacha) _____________________________________________\n\nCritério (1 ponto): 5 respostas corretas."
+    },
+    "6": {
+      "material": "bolas.",
+      "examiner_instructions": "o examinador ou o cuidador diz:\n( ) a. (nome da criança), pegue a bola e me dê. _____________________________\n( ) b. Agora pegue a bola e dê para (o nome do acompanhante ou do examinador\nda criança). _______________________________________________________\n\nCritério (1 ponto): 1 resposta correta."
+    },
+    "7": {
+      "material": "2 carros (caminhões) e 3 bolas.",
+      "examiner_instructions": "o examinador ou o cuidador chama a atenção da criança para o\nbrinquedo, falando o seu nome, e quando ela for movimentar-se para pegar o\ncarro (caminhão) ou a bola, diz: Não! Espere! É minha vez!\n\nCritério (1 ponto): quando a criança para pelo menos uma vez. O procedimento poderá ser\nrepetido duas vezes."
+    },
+    "8": {
+      "material": "miniaturas de um cachorro, um paninho, um prato, uma colher e uma\nxícara.",
+      "examiner_instructions": "o examinador coloca o material em frente à criança e, a chamando\npelo nome, diz:\n( ) a. O cachorro (au au) está com fome. Dê comida pra ele. ___________________\n( ) b. O cachorro (au au) está com sede. Dê água pra ele beber. ________________\n( ) c. O cachorro (au au) está com sono. Bote ele pra dormir. __________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "9": {
+      "material": "cachorro, carro (caminhão), bola, boneca, colher, prato, xícara.",
+      "examiner_instructions": "o examinador coloca o material próximo à criança, manipula\nalguns objetos e, dizendo o nome da criança, pergunta: Vamos brincar? Ao mesmo\ntempo em que estimula a criança, observa a sua manipulação com os objetos.\n( ) a. bola _____________________\n( ) b. carro (caminhão) ______________\n( ) c. cachorro __________________ ( ) d. boneca ______________________\n( ) e. xícara ____________________ ( ) f. colher ________________________\n\nCritério (1 ponto): quando manipula adequadamente 3 objetos."
+    },
+    "10": {
+      "material": "boneca.",
+      "examiner_instructions": "o examinador, dizendo o nome da criança, pede-lhe para mostrar:\n( ) a. o nariz ___________________\n( ) b. os olhos ___________________\n( ) c. o pé _____________________\n( ) d. a mão _____________________\n( ) e. a boca ___________________\n( ) f. a barriga ___________________\n( ) g. as orelhas ________________\n( ) h. a cabeça __________________\n\nCritério (1 ponto): quando aponta 5 partes do corpo corretamente."
+    },
+    "11": {
+      "material": "uma bolsa e três bolas.",
+      "examiner_instructions": "o examinador coloca uma bolsa com duas bolas dentro e uma do\nlado de fora, chama a criança pelo nome, dizendo:\n( ) a. Tire as bolas de dentro da bolsa. ___________________\n( ) b. Bote todas as bolas em cima da mesa. ________________\n( ) c. Bote todas as bolas dentro da bolsa. __________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "12": {
+      "material": "um cachorro e três bolas.",
+      "examiner_instructions": "o examinador, dizendo o nome da criança, pergunta: Vamos brincar\ncom as bolas e o cachorrinho? Eu dou todas as bolas para você!\n( ) a. Mostre as suas bolas (correto se a criança mostra uma ou todas as bolas).\n( ) b. Agora você dá uma bola para mim. _________________________________\nQuando a criança não dá, o examinador pega uma bola, perguntando à criança:\n( ) c. Onde está a minha bola? __________________________________________\n( ) d. Agora dê uma bola para ele (o cachorro). ____________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "13": {
+      "material": "Manual de Figuras, páginas 3 e 4.",
+      "examiner_instructions": "o examinador diz o nome da criança e nomeia uma ação. Aponta,\ndizendo: O menino está chutando. Mostrando cada figura, pergunta: Quem está…\n( ) a. bebendo? ____________________ ( ) b. comendo? ____________________\n( ) c. dormindo? ___________________ ( ) d. correndo? ____________________\n( ) e. tomando banho? _________________________________________________\n\nCritério (1 ponto): 4 respostas corretas."
+    },
+    "15": {
+      "material": "Manual de Figuras, página 5.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo: Mostre…\n( ) a. O que você usa para beber? ________________________________________\n( ) b. O que você usa para pentear os cabelos? _____________________________\n( ) c. O que você usa para cortar papel? ___________________________________\n( ) d. O que você usa para comer? ________________________________________\n\nCritério (1 ponto): 3 respostas corretas."
+    },
+    "16": {
+      "material": "Manual de Figuras, páginas 6, 7 e 8.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo: Mostre…\n( ) a. a vaca grande. _______________ ( ) b. o peixe pequeno. _______________\n( ) c. o menino molhado. ____________ ( ) d. o menino sujo. _________________\n\nCritério (1 ponto): 3 respostas corretas."
+    },
+    "17": {
+      "material": "Manual de Figuras, página 9.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra uma figura de cada\nvez, dizendo: Mostre…\n( ) a. a porta do caminhão. __________ ( ) b. as rodas do caminhão. __________\n( ) c. a mão do menino. ____________ ( ) d. a perna do menino. _____________\n\nCritério (1 ponto): 3 respostas corretas."
+    },
+    "48": {
+      "material": "Manual de Figuras, página 64.",
+      "examiner_instructions": "o examinador mostra a figura, dizendo: Joana cortou uma laranja\nao meio.\n( ) a. Aponte para a laranja inteira. _________________________________\n( ) b. Aponte para a metade da laranja. _________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "19": {
+      "material": "Manual de Figuras, página 10.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas bolas. Mostre a bola…\n( ) a. vermelha. ____________________ ( ) b. amarela. _____________________\n( ) c. branca. ___________ ( ) d. verde. ____________ ( ) e. azul. ____________\n\nCritério (1 ponto): 4 respostas corretas."
+    },
+    "20": {
+      "material": "Manual de Figuras, página 11.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas figuras. Mostre…\n( ) a. todos os bichinhos. _______________________________________________\n( ) b. todas as coisas que comemos. ______________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "38": {
+      "material": "Manual de Figuras, páginas 12 e 13.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas figuras…\n( ) a. Estes meninos estão segurando balões. Qual está com mais balões?\n( ) b. Estas meninas estão segurando bonecas. Qual está com mais bonecas?\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "22": {
+      "material": "Manual de Figuras, páginas 14 e 15.",
+      "examiner_instructions": "o examinador diz o nome da criança. Mostra as figuras, dizendo:\nOlhe estas figuras e aponte a que…\n( ) a. ELA está chorando. _______________________________________________\n( ) b. ELE está tomando sorvete. _________________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "23": {
+      "material": "Manual de Figuras, páginas 16, 17 e 18.",
+      "examiner_instructions": "o examinador diz o nome da criança. Lê a frase que corresponde à\nfigura-alvo. Aponta para cada figura e pede para a criança mostrar a resposta.\n( ) a. Olhe as figuras desta menina. O nome dela é Bia. A boneca de Bia está muito\nsuja. O que Bia deveria fazer com a boneca? ____________________________\n( ) b. Olhe as figuras destes meninos. Um deles teve uma boa surpresa e ficou muito\nfeliz. Quem teve a surpresa? _________________________________________\n( ) c. Olhe estas figuras. Se Tiago saísse de casa ficaria todo molhado. Como está o\ntempo lá fora?_____________________________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "24": {
+      "material": "Manual de Figuras, página 19.",
+      "examiner_instructions": "o examinador diz: Olhe estas meninas na escada.\nAponte para a menina que está subindo. __________________________________\n\nCritério (1 ponto): se responde corretamente."
+    },
+    "25": {
+      "material": "Manual de Figuras, páginas 20 e 21.",
+      "examiner_instructions": "o examinador diz: Olhe estas figuras. Mostre…\n( ) a. o que voa? ________________ ( ) b. o que late (au au)? _________________\n( ) c. o que nada? __________________ ( ) d. o que corta? ___________________\n( ) e. o que queima? ________________ ( ) f. o que derrete? __________________\n( ) g. o que dorme? ______________________\n\nCritério (1 ponto): 6 respostas corretas."
+    },
+    "26": {
+      "material": "Manual de Figuras, páginas 22 e 23.",
+      "examiner_instructions": "o examinador diz: Olhe esta figura…\n( ) a. aponte para o passarinho que não está voando. ________________________\n( ) b. aponte para o menino que não está na piscina. _________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "27": {
+      "material": "Manual de Figuras, páginas 24 e 25.",
+      "examiner_instructions": "o examinador diz: Olhe esta figura…\n( ) a. aponte para um dos peixes. _________________________________________\n( ) b. aponte para todos os macacos. _____________________________________\n\nCritério (1 ponto): 1 resposta correta."
+    },
+    "28": {
+      "material": "Manual de Figuras, páginas 26 e 27.",
+      "examiner_instructions": "o examinador diz: Olhe esta figura…\n( ) a. aponte para a figura que está de dia. _________________________________\n( ) b. aponte para a figura que está de noite. _______________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "39": {
+      "material": "Manual de Figuras, páginas 45 e 46.",
+      "examiner_instructions": "examinador aponta para cada figura dizendo: Eu vou falar sobre\numa destas figuras e você vai descobrir qual é.\n( ) a. Aponte para a menina que está feliz. _________________________________\n( ) b. Aponte para o menino que está triste. _________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "30": {
+      "material": "Manual de Figuras, página 31.",
+      "examiner_instructions": "o examinador diz: Olhe estas figuras. Aponte para o cachorro que\nestá…\n( ) a. em cima da cadeira. ___________________________\n( ) b. embaixo da cadeira. ___________________________\n( ) c. atrás da cadeira. ______________________________\n\nCritério (1 ponto): 3 respostas corretas."
+    },
+    "32": {
+      "material": "Manual de Figuras, páginas 34, 35 e 36.",
+      "examiner_instructions": "o examinador diz: Olhe estas figuras. Aponte para a resposta.\n( ) a. Você lava as mãos com sabonete. Você escova os dentes com _____________\n( ) b. Você come em um prato. Você bebe em _________________________ (copo)\n( ) c. Você senta em uma cadeira. Você dorme em ____________________ (cama)\n\nCritério (1 ponto): 3 respostas corretas."
+    },
+    "34": {
+      "material": "Manual de Figuras, página 38.",
+      "examiner_instructions": "o examinador diz: Estas figuras mostram animais e transportes que\nse movem com velocidades diferentes.\n( ) a. Aponte para o transporte que é mais rápido. ____________________________\n( ) b. Aponte para o bicho que é mais devagar. ______________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "35": {
+      "material": "Manual de Figuras, páginas 39 e 40.",
+      "examiner_instructions": "o examinador diz:\n( ) a. Olhe para estas bolas. Aponte para a bola menor. _______________________\n( ) b. Olhe para estes cachorros. Aponte para o cachorro maior. _________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "36": {
+      "material": "Manual de Figuras, página 41.",
+      "examiner_instructions": "o examinador diz: Olhe estes gatos.\n( ) a. Aponte para o gato branco e peludo. _________________________________\n( ) b. Aponte para o gato preto e grande. ___________________________________\n( ) c. Aponte para o gato branco e pequeno. ________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "37": {
+      "material": "Manual de Figuras, páginas 42 e 43.",
+      "examiner_instructions": "o examinador diz: Olhe estas figuras.\n( ) a. Aponte para o pintor. ______________________________________________\n( ) b. Aponte para a cantora. ____________________________________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "40": {
+      "material": "1 lápis e uma cadeira com espaldar.",
+      "examiner_instructions": "o examinador diz: Pegue este lápis e coloque…\n( ) a. em cima da cadeira ___________ ( ) b. embaixo da cadeira ____________\n( ) c. na frente da cadeira ___________ ( ) d. atrás da cadeira ______________\n\nCritério (1 ponto): 4 respostas corretas."
+    },
+    "44": {
+      "material": "",
+      "examiner_instructions": ""
+    },
+    "45": {
+      "material": "Manual de Figuras, páginas 57, 58 e 59.",
+      "examiner_instructions": "o examinador diz: Preste atenção! Vou falar o som de uma letra e você\naponta para a figura que começa com este som. Agora vamos ouvir com atenção:\n( ) a. Qual começa com o som /a/?. Avião, carro, bola. ______________________\n( ) b. Qual começa com o som /g/?. Pipa, carro, gato. _______________________\n( ) c. Qual começa com o som /v/?. Peixe, macaco, vaca. ____________________\n\nCritério (1 ponto): 2 respostas corretas.\nMaterial: Manual de Figuras, página 29.\nProcedimento: o examinador mostra os quadrinhos para a criança, dizendo:\nOlhe estas crianças, preste atenção no que elas estão fazendo. Conte uma história\nseguindo os quadrinhos, começa aqui. _____________________________________\n1 ponto*: quando a criança descreve os acontecimentos na sequência dos quadrinhos\ncom a semântica e a sintaxe corretas.\nMaterial: não necessário.\nProcedimento: o examinador fala: Diga o que você sabe sobre…\n( ) a. o celular. _______________________________________________________\n( ) b. a banana. ______________________________________________________\n( ) c. o carro. ________________________________________________________\n1 ponto*: se a criança descrever duas características de dois objetos."
+    },
+    "47": {
+      "material": "Manual de Figuras, páginas 60 e 61.",
+      "examiner_instructions": "o examinador mostra as figuras, dizendo:\n( ) a. Depois de você apontar para o gato, aponte para o sapo. ________________\n( ) b. Depois de você apontar para o jacaré, aponte para o elefante. ____________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "49": {
+      "material": "Manual de Figuras, páginas 65 e 66.",
+      "examiner_instructions": "o examinador aponta as figuras, dizendo: Olhe estas figuras com\natenção.\n( ) a. Aponte para a menina que foi beijada pelo menino. _____________________\n( ) b. Aponte para o menino que foi empurrado pela menina. __________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "50": {
+      "material": "Manual de Figuras, páginas 67 e 68.",
+      "examiner_instructions": "o examinador aponta para cada figura, dizendo:\nVou falar o nome destas figuras e duas começam com sílabas que têm o mesmo som.\nAponte para as duas que começam com o mesmo som.\n( ) a. casa – carro – bola _______________________\n( ) b. tênis – mola – moto _______________________\n( ) c. chave – chapéu – faca _______________________\n( ) d. bola – peixe – bota _______________________\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "51": {
+      "material": "",
+      "examiner_instructions": ""
+    }
+  },
+  "LE": {
+    "1": {
+      "material": "um marcador de tempo (ex.: celular), paninho e brinquedos.",
+      "examiner_instructions": "solicitar ao acompanhante que brinque com a criança como faria em\ncasa. O examinador poderá observar e anotar o interesse da criança pelos brinquedos.\n\nCritério (1 ponto): quando a criança mantém o contato do olhar e demonstra prazer com\na brincadeira. Quando este comportamento é observado em outro momento na\nsessão de avaliação ou o cuidador relata este comportamento no contexto."
+    },
+    "2": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o examinador ou o cuidador brinca com a criança. O examinador\nobserva e anota a comunicação gestual da criança. _________________________\n\nCritério (1 ponto): quando observado, no período de avaliação, um ou mais comportamentos\nda criança usando gestos com intenção de se comunicar (exemplos: estender um\nobjeto para o examinador ou para o cuidador, apontar para um objeto ou para uma\npessoa, balançar a mão dando adeus)."
+    },
+    "3": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o cuidador ou o examinador se posiciona frente à criança, de\nforma que esta possa ver o seu rosto, sorri e verbaliza, imitando os sons que fez\ndurante a sessão de avaliação ou que têm sido observados em casa. __________\n\nCritério (1 ponto): quando o examinador ou o cuidador fala com a criança e esta responde\nvocalizando sem movimentos do corpo.\n1 ano a 1 ano e 5 meses\n1 ano a 1 ano e 5 meses"
+    },
+    "4": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o examinador ou o cuidador, enquanto manipula os brinquedos\ncom a criança. estimula sua comunicação verbal fazendo perguntas. Exemplos:\nchama a criança pelo nome. Em seguida, faz uma pergunta: Cadê o bi bi?; Vamos\ndar papá para o au au?; Cadê o (nome do acompanhante)? ____________________\n\nCritério (1 ponto): quando a criança produz uma ou mais sequências de duas sílabas durante o\nperíodo de avaliação ou se o cuidador relata o que ela “fala” no seu contexto familiar."
+    },
+    "5": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o examinador ou o cuidador brinca com a criança. Exemplos: retira\nda bolsinha um cachorro, mostra para a criança, perguntando: O que é isto? Quando\na criança não responde, diz: Olhe o cachorro, ele faz “au au”. Apontando para o\ncachorro, pergunta novamente: O que é isto? Em seguida, pega a bola e volta a\nperguntar: O que é isto? ________________________________________________\n\nCritério (1 ponto): quando durante o período de avaliação, a criança usa consistentemente a\nmesma combinação de sons para nomear a mesma pessoa ou o mesmo objeto ou\nquando o cuidador relata que ela “fala” no contexto familiar, dando exemplos."
+    },
+    "6": {
+      "material": "paninho e brinquedos.",
+      "examiner_instructions": "o examinador ou cuidador começa a brincar com a criança de\nesconde-esconde (cobre seu próprio rosto com o paninho e depois retira, dizendo:\nAchou!). Em seguida, cobre um brinquedo do interesse da criança e a\nestimula a descobrir, dizendo: Achou! Fala: Agora é minha vez! Pega o paninho e\ncobre um brinquedo, dizendo: Agora, você! ________________________________\n\nCritério (1 ponto): quando a criança se engaja na brincadeira, espera a sua vez e a do examinador.\n1 ano a 1 ano e 5 meses"
+    },
+    "7": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o examinador pergunta ao cuidador quais os sons “falados” pela\ncriança em casa. Enquanto brinca com a criança, o examinador segura um objeto\ncujo nome se inicia com um dos sons que quer observar se a criança já adquiriu, e\no nomeia, elevando o a voz no fonema alvo. Exemplo: fonema /b/ – pega a bola e\ndiz o nome da criança e, em seguida: Olhe a bola! – b, b, bola.\nMarque os sons que a criança repetir:\n( ) a. /b/ ______________ ( ) b. /p/ ______________ ( ) c. /d/ _____________\n( ) d. /m/ ______________ ( ) e. /n/ ______________ ( ) f. /t/ ______________\n( ) g. outros ________________________\n\nCritério (1 ponto): quando repete ou emite espontaneamente quatro destes fonemas ou o cuidador\ntraz um mini-vídeo com a criança emitindo quatro fonemas diferentes em casa."
+    },
+    "8": {
+      "material": "brinquedos.",
+      "examiner_instructions": "inicialmente, o examinador observa a criança manipulando\nbrinquedos. Após alguns minutos, coloca fora do alcance da criança dois ou três\nbrinquedos que ela demonstrou preferência. Então, pergunta: Qual você quer?\n\nCritério (1 ponto): quando a criança aponta e diz “ah!” ou “dá!”, ou outras emissões vocais, ou\nainda quando vai em direção ao objeto, vocalizando."
+    },
+    "9": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o examinador pergunta ao cuidador que palavras a criança fala no\nseu ambiente familiar e social. Em seguida, fala uma dessas palavras ou uma das\nque a criança falou durante o período de avaliação. _________________________\n\nCritério (1 ponto): quando a criança imita uma palavra durante o período da avaliação ou\nquando o cuidador cita palavras que ela imita no seu contexto familiar."
+    },
+    "10": {
+      "material": "brinquedos.",
+      "examiner_instructions": "o examinador ou o cuidador brinca com a criança estimulando a\nsua fala. Exemplos: dar comida para a bonequinha e quando acaba poderá dizer:\nNeném papou. Repete ação com o cachorro e pergunta: E o “au au”, o que fez?\n\nCritério (1 ponto): quando a criança produz sequências de duas ou mais palavras em uma\nemissão vocal durante o período da avaliação ou o cuidador diz que ela “fala” no seu\ncontexto familiar e exemplifica."
+    },
+    "11": {
+      "material": "brinquedos e livros infantis.",
+      "examiner_instructions": "observar a linguagem espontânea da criança no período de avaliação\ne solicitar ao cuidador para observar e escrever as palavras que a criança fala\nespontaneamente em seu ambiente familiar. ________________________________\n\nCritério (1 ponto): quando são observadas cinco ou mais palavras na fala espontânea da\ncriança no período de avaliação ou quando o cuidador relata que a criança fala\ncinco ou mais palavras espontaneamente em seu ambiente familiar."
+    },
+    "12": {
+      "material": "livrinho com muitas figuras coloridas ou uma cena montada com brinquedos.",
+      "examiner_instructions": "estimular a criança a falar sobre a cena do livrinho ou dos\nbrinquedos arrumados representando uma cena. ___________________________\n\nCritério (1 ponto): quando a criança emitir sequência de três ou mais palavras, mesmo sem\nsignificado, com prosódia, entonação, da fala do adulto, ou quando o cuidador\ndescrever este comportamento no seu contexto familiar.\n2 anos a 2 anos e 5 meses\n2 anos a 2 anos e 5 meses"
+    },
+    "13": {
+      "material": "saco pequeno da ADL 2 e alguns brinquedos.",
+      "examiner_instructions": "o examinador deve observar a linguagem espontânea da criança\nem atividades lúdicas e criar situações através de brincadeiras para estimular a\ncriança a falar. Se necessário, pedir ao cuidador para participar. Após se certificar\nde que a criança está observando a ação, o examinador deve colocar alguns\nbrinquedos da preferência dela dentro do saco pequeno, fechar em seguida e\nbalançar levemente. Deixar o saco fechado por alguns segundos e fazer algumas\nperguntas à criança. Exemplos:\n( ) a. O que tem neste saco? ____________________________________________\n( ) b. Ih! O saco está fechado? ___________________________________________\n( ) c. Você quer a bola? ________________________________________________\n( ) d. Você quer o cachorro (au au)? ______________________________________\n\nCritério (1 ponto): quando a criança pede objetos que estão dentro do saco através de\nemissões de palavras acompanhadas de gestos. Exemplos: “dá”, “quer esse”, “mais”;\ndizendo “bóa”, bola”, “mais bola” ou “quer mais”; “sim”, “não”, “abi”. Quando o\ncuidador descreve um desses comportamentos no seu contexto familiar."
+    },
+    "14": {
+      "material": "brinquedos.",
+      "examiner_instructions": "observação da linguagem espontânea da criança em atividades\nlúdicas. O examinador poderá criar situações através de brincadeiras para estimular\na criança a falar. _______________________________________________________\n\nCritério (1 ponto): quando a criança produzir sequência de duas ou mais palavras em uma\nemissão vocal e com significado semântico. Exemplo: “papato neném” (o sapato da\nboneca), “au-au mimiu”. Quando o cuidador descrever este comportamento no seu\ncontexto familiar.\n2 anos a 2 anos e 5 meses\n2 anos a 2 anos e 5 meses"
+    },
+    "15": {
+      "material": "Manual de Figuras, páginas 1 e 2.",
+      "examiner_instructions": "examinador aponta para cada figura diz para a criança: Olhe esta\nfoto! O que é isto?\n( ) a. carro ___________________ ( ) b. bola _________________________\n( ) c. gato ____________________ ( ) d. banana _______________________\n( ) e. sapato (ou tênis) __________ ( ) f. pé ____________________________\n( ) g. mão ____________________ ( ) h. biscoito (bolacha) ______________\n\nCritério (1 ponto): 6 acertos. Falhas fonológicas não são consideradas."
+    },
+    "16": {
+      "material": "brinquedos e objetos.",
+      "examiner_instructions": "estimular e observar a linguagem espontânea da criança em\natividades lúdicas. Anotar as palavras ditas pela criança e os seus gestos durante o\nperíodo de avaliação. ___________________________________________________\n\nCritério (1 ponto): quando a criança se comunica um pouco mais por palavras do que por\ngestos ou o cuidador descrever este comportamento no seu contexto familiar."
+    },
+    "17": {
+      "material": "brinquedos e objetos.",
+      "examiner_instructions": "brincar com a criança com os objetos e brinquedos em que\ndemonstrou mais interesse. Durante a brincadeira, descreva as ações que estão\nrealizando com os brinquedos. Exemplo: o examinador e a criança brincam com o\nbonequinho, o prato, colher e a toalha. O examinador poderá dizer: O neném está\ncom fome. O que você vai fazer com ele? Eh! Agora ele está com sono! O que você vai\nfazer com ele? _________________________________________________________\n\nCritério (1 ponto): quando a criança se expressa verbalmente através de sequências de três\nou mais palavras."
+    },
+    "19": {
+      "material": "Manual de Figuras, páginas 4 e 5.",
+      "examiner_instructions": "o examinador mostra cada figura e diz para a criança: Olhe esta foto!\nO que é isto?\n( ) a. vaca ___________ ( ) b. peixe ___________ ( ) c. leão ___________\n( ) d. sapo ___________ ( ) e. avião ___________ ( ) f. faca ____________\n( ) g. jacaré __________ ( ) h. moto ___________ ( ) i. chave __________\n\nCritério (1 ponto): 6 acertos. Falhas fonológicas não são consideradas.\n3 anos a 3 anos e 5 meses\n3 anos a 3 anos e 5 meses"
+    },
+    "20": {
+      "material": "Manual de Figuras, página 6. //",
+      "examiner_instructions": "o examinador mostra\npara a criança a figura do menino que está chutando a bola e diz: Este menino está\nchutando a bola. Em seguida, mostra as outras figuras apontando e perguntando:\n( ) a. O que esta menina está fazendo? __________________________ (comendo)\n( ) b. E esta menina, o que ela está fazendo? ______________________ (bebendo)\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "22": {
+      "material": "Manual de Figuras, página 8.",
+      "examiner_instructions": "o examinador diz: Olhe estas bolas. Quando eu apontar, você diz a\ncor. Vamos começar? Qual é a cor desta?\n( ) a. (vermelha) ___________________ ( ) b. (amarela) _____________________\n( ) c. (branca) ___________ ( ) d. (verde) ___________ ( ) e. (azul) ___________\n\nCritério (1 ponto): 4 respostas corretas."
+    },
+    "23": {
+      "material": "Manual de Figuras, página 9. //",
+      "examiner_instructions": "o examinador mostra\npara a criança a figura da menina que está correndo e diz: Este menino está\ndormindo. Em seguida mostra as outras figuras, apontando e perguntando:\n( ) a. Este menino, o que ele está fazendo? _________________________________\n( ) b. E esta menino, o que ela está fazendo? _______________________________\n\nCritério (1 ponto): quando a criança faz uma frase com um pronome ou substantivo + verbo.\nFalhas articulatórias não são consideradas."
+    },
+    "24": {
+      "material": "Manual de Figuras, página 10.",
+      "examiner_instructions": "o examinador mostra as figuras para a criança, apontando, e\npergunta: Onde está este cachorro?\n( ) a. (em cima da cadeira) ___________ ( ) b. (embaixo da cadeira) ___________\n( ) c. (atrás da cadeira) ____________________\n\nCritério (1 ponto): 3 respostas corretas."
+    },
+    "25": {
+      "material": "Manual de Figuras, página 11.",
+      "examiner_instructions": "o examinador, mostrando a figura, diz: Olhe estes cachorros. Você\npode contar quantos tem?\n\nCritério (1 ponto): quando a criança usa qualquer palavra que expresse quantidade. Exemplos:\n\"muitos\"; \"todos estes\"; qualquer número: “3, 2, 5”; se a criança conta incorretamente: \"1, 3, 5”."
+    },
+    "26": {
+      "material": "não necessário.",
+      "examiner_instructions": ": o examinador pergunta: O que você faz…\n( ) a. quando está com sono? ____________________________________________\n( ) b. quando as suas mãos estão sujas? ___________________________________\n( ) c. quando está com fome? ____________________________________________\n\nCritério (1 ponto): 3 respostas corretas. Gestos não são considerados."
+    },
+    "43": {
+      "material": "Manual de Figuras, página 23.",
+      "examiner_instructions": "o examinador diz: Vamos olhar estas figuras: aqui menina está\ncolocando as sementes na terra para plantar uma árvore. Após descrever a primeira,\no examinador aponta para a segunda figura e, em seguida, para a última.\n( ) a. (2ª figura) Aqui ela está ____________________________________________\n( ) b. (3ª figura) E agora, o que ela está fazendo? ____________________________\n1 ponto*: quando completa as duas frases semanticamente corretas. Falhas\nfonológicas não são consideradas."
+    },
+    "28": {
+      "material": "não necessário.",
+      "examiner_instructions": "o examinador poderá fazer perguntas para estimular a comunicação\nverbal da criança. Exemplos:\n( ) a. Qual o nome do seu colégio (ou da sua escola)? ________________________\n( ) b. Você gosta do seu colégio (ou da sua escola)?_________________ (sim/não)\n( ) c. Por quê? _______________________________________________________\n( ) d. O que você mais gosta de fazer no seu colégio (ou na sua escola)? ________\n( ) e. Como você gosta mais de brincar? __________________________________\n\nCritério (1 ponto): quando a criança responde três ou mais questões corretamente. Falhas\nfonológicas não são consideradas."
+    },
+    "29": {
+      "material": "não necessário.",
+      "examiner_instructions": "o examinador diz: Vou perguntar como você usa algumas coisas.\nTreinamento: O que você faz com um sabão (sabonete)? Eu lavo as mãos, tomo\nbanho. E você?\n( ) a. O que você faz com uma bola? _____________________________________\n( ) b. O que você faz com uma copo? _____________________________________\n( ) c. O que você faz com uma tesoura? ___________________________________\n\nCritério (1 ponto): 3 respostas corretas. Falhas articulatórias não são consideradas.\n4 anos a 4 anos e 5 meses\n4 anos a 4 anos e 5 meses"
+    },
+    "31": {
+      "material": "Manual de Figuras, página 13.",
+      "examiner_instructions": "o examinador descreve para a criança a primeira figura dos pares.\nExemplo: Ela tem um picolé (ou sorvete). O picolé é dela.\n( ) a. Elas têm um picolé (sorvete). O picolé (sorvete) é ___________________ (delas)\n( ) b. Ele tem um picolé (sorvete). O picolé (sorvete) é _____________________ (dele)\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "45": {
+      "material": "Manual de Figuras, páginas 25 e 26.",
+      "examiner_instructions": "o examinador diz:\n( ) a. Olhe essas formiguinhas. Quantas formiguinhas têm aqui? _____________ (10)\n( ) b. Olhe os peixes. Quantos peixes tem dentro do aquário? ________________ (12)\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "34": {
+      "material": "Manual de Figuras, página 16.",
+      "examiner_instructions": "o examinador dá o exemplo, descrevendo o primeiro par de figuras\npara a criança.\nTreinamento: Aqui tem um carro. Aqui tem dois carros.\n( ) a. Aqui tem uma meia. Aqui tem duas ____________________________ (meias)\n( ) b. Aqui tem uma bola. Aqui tem três ______________________________ (bolas)\n\nCritério (1 ponto): quando a criança acrescenta “s” no final das palavras."
+    },
+    "35": {
+      "material": "Manual de Figuras, páginas 17 e 18.",
+      "examiner_instructions": "o examinador descreve para a criança as primeiras figuras e lhe\npede para completar a última com o verbo.\n( ) a. O nome desta menina é Ana. Aqui ela está comendo. Este é o prato que ela\n( ) b. O nome deste menino é Pedro. Aqui ele está pulando o muro. Este é o muro que\nele ________________________________________________________ (pulou)\n\nCritério (1 ponto): 2 respostas corretas.\n(*) Ver exemplos de respostas no Anexo 1 do Manual do Examinador."
+    },
+    "37": {
+      "material": "não necessário.",
+      "examiner_instructions": "o examinador diz: Eu vou falar uma frase e queria que você a\nterminasse para mim.\n( ) a. O gato é pequeno, o leão é __________________________________ (grande)\n( ) b. O sorvete é gelado, o café é __________________________________ (quente)\n( ) c. O céu é azul e a folha da planta é _______________________________ (verde)\n\nCritério (1 ponto): 2 respostas corretas."
+    },
+    "38": {
+      "material": "não necessário.",
+      "examiner_instructions": "o examinador fala para a criança que existem coisas que pertencem\nao mesmo conjunto.\nTreinamento: Blusa, calça, camisa, bermuda, vestido, saia, são… roupas.\n( ) a. Cachorro, gato, jacaré, cavalo, porco, cobra, são ________________________\n( ) b. Batata frita, pizza, macarrão, feijão, arroz, carne e pastel são ______________\n\nCritério (1 ponto): as 2 respostas corretas.\n5 anos a 5 anos e 5 meses\n5 anos a 5 anos e 5 meses"
+    },
+    "40": {
+      "material": "Manual de Figuras, página 20.",
+      "examiner_instructions": "o examinador diz: Vamos brincar de adivinhar. Eu falo sobre uma\ndas figuras e você descobre qual é, OK? Mostre a menina que está muito feliz porque\na sua roupa é nova e bonita.\n( ) Agora você vai falar alguma coisa sobre uma destas figuras. E eu vou tentar\nadivinhar e mostrar para você ________________________________________\n\nCritério (1 ponto): se a criança descreve uma figura com a semântica adequada."
+    },
+    "41": {
+      "material": "Manual de Figuras, páginas 21 e 22.",
+      "examiner_instructions": "o examinador aponta para as duas primeiras figuras e diz: Vamos\nobservar estas figuras. A banana e a laranja. Em que elas se parecem? Elas são\nfrutas e servem para comer.\n( ) a. Em que se parecem o pássaro e a borboleta? __________________________\n( ) b. Em que se parecem a faca e a tesoura? ________________ (cortam; picotam)\n( ) c. Em que se parecem a caneca e o copo? _______________________________\n\nCritério (1 ponto): 3 respostas corretas.\n5 anos a 5 anos e 5 meses"
+    },
+    "42": {
+      "material": "não necessário.",
+      "examiner_instructions": "o examinador chama a criança pelo nome e diz: Vou falar uma frase\ne queria que você a repetisse igual.\n( ) a. Lucas treinou bem e ganhou o jogo. __________________________________\n( ) b. Ana caiu e derrubou a sua pipoca. ___________________________________\n( ) c. Igor ouviu a música e dançou. ______________________________________\n\nCritério (1 ponto): 3 respostas corretas. Falhas fonológicas não são consideradas."
+    },
+    "44": {
+      "material": "Manual de Figuras, página 24.",
+      "examiner_instructions": "o examinador fala, mostrando cada figura: Olhe as figuras destes\nmeninos e suas bolas. Este está alegre porque ganhou uma bola nova.\n( ) a. E o outro menino como está? _______________________________________\n( ) b. Por quê? _______________________________________________________\n( ) c. E agora, o que eles estão fazendo? ___________________________________\n1 ponto*: quando a criança responde com frases semanticamente corretas.\n(*) Ver exemplos de respostas no Anexo 1 do Manual do Examinador."
+    },
+    "46": {
+      "material": "cronômetro para marcar o tempo.",
+      "examiner_instructions": "o examinador dá o exemplo com nomes da categoria semântica de\ntransportes (exemplo abaixo). Em seguida, pede para a criança dizer os nomes de\nobjetos que pertencem a uma categoria semântica. Nesse momento, o examinador\ncomeça a marcar o tempo.\nTreinamento: Carro, moto, navio, avião, bicicleta, metrô, ônibus, barco. São meios\nde transporte, levam a gente de um lugar a outro. Agora você diz…\n( ) a. o nome de todas as comidas que você se lembrar, até eu pedir para parar.\n( ) b. E agora você diz o nome de todos os bichos que você se lembrar, até eu pedir\npara parar _______________________________________________________\n\nCritério (1 ponto): quando nomeia seis alimentos ou animais em 60 segundos."
+    },
+    "56": {
+      "material": "",
+      "examiner_instructions": ""
+    },
+    "50": {
+      "material": "Manual de Figuras, páginas 52 e 53.",
+      "examiner_instructions": "o examinador mostra cada figura, dizendo:\n( ) a. Olhe estes carros, eles estão chegando na garagem. Qual é o primeiro carro?\n( ) b. Este menino está se arrumando para sair. O que ele vestiu primeiro?. ________\n\nCritério (1 ponto): 2 respostas corretas.\nMaterial: Manual de Figuras, páginas 54, 55 e 56.\nProcedimento: o examinador diz: Olhe estas figuras.\n( ) a. Aponte para o macaco que está mais perto do leão. ______________________\n( ) b. Aponte para a pipa que está mais longe do menino. ______________________\n( ) c. Aponte para o bichinho que está entre os cachorros. ______________________\n1 ponto: 2 respostas corretas."
+    },
+    "51": {
+      "material": "Manual de Figuras, página 30.",
+      "examiner_instructions": "o examinador diz para a criança: Preste atenção, vou falar sobre\nesta figura e, quando terminar, vou dizer uma frase da história para você repetir\nquando eu disser “VOCÊ!”\nAna, o seu irmão Luiz e a sua mãe estão na cozinha. A mãe está segurando um pote\nde sorvete, dizendo para as crianças: “Só vai ganhar sorvete quem comer tudo“.\nLuiz já terminou de comer a sua comida e diz: “Eu já comi tudo\".\nAna ainda não terminou. A mãe diz para Ana: “Só ganha sorvete se você comer tudo.”\nAna respondeu: “Eu vou comer tudo”.\nTreinamento: Agora eu vou falar uma parte da história para você repetir quando\neu disser “VOCÊ!”, combinado? A mãe está dizendo para as crianças: “Só vai ganhar\nsorvete quem comer tudo“. VOCÊ!\n(*) Ver exemplos de respostas no Anexo 1 do Manual do Examinador.\n6 anos a 6 anos e 5 meses\n6 anos a 6 anos e 5 meses"
+    },
+    "53": {
+      "material": "Manual de Figuras, páginas 32 e 33.",
+      "examiner_instructions": "o examinador diz para a criança: Vou falar sobre esta criança, o pai e\no jogo de futebol. Depois quero que você reconte a história para mim. Posso começar?\nJoão chamou o seu pai para ir ao jogo de futebol. O seu pai disse: “vamos”. João\ncolocou o uniforme do Brasil e foi de carro com o seu pai para o estádio de futebol.\nTorceram pelo time do Brasil e saíram felizes porque o Brasil ganhou.\n1 ponto*: quando a criança recontar a história de forma semelhante, com semântica\ne sintaxe, e com início ( ), meio ( ) e fim ( )\n(*) Ver exemplos de respostas no Anexo 1 do Manual do Examinador."
+    },
+    "54": {
+      "material": "não necessário.",
+      "examiner_instructions": "o examinador diz: Tente se lembrar…\n( ) a. o que você faz para escovar os dentes? ________________________________\n( ) b. o que você faz para tomar banho? ___________________________________\n1 ponto*: quando a criança descreve três etapas em sequência do item a ou do item b."
+    },
+    "57": {
+      "material": "Manual de Figuras, páginas 69 e 70.",
+      "examiner_instructions": "o examinador aponta para cada figura, dizendo:\nVou falar o nome dessas figuras e duas terminam com sílabas que têm o mesmo som.\nAponte para as duas que terminam com o mesmo som.\n( ) a. mão – avião – pá _______________________\n( ) b. gato – peixe – rato _______________________\n( ) c. boca – chapéu – foca _______________________\n( ) d. panela – moto – janela _______________________\n\nCritério (1 ponto): 2 respostas corretas.\nMaterial: Manual de Figuras, páginas 71 e 72.\nProcedimento: o examinador diz: Preste atenção, eu vou falar uns sons que juntos\nformam uma palavra.\nExemplo: Juntando o som do /p/ + /e/, formamos a palavra “pé” (o examinador\naponta para a figura do pé). Agora você.\n( ) a. m – ão ___________________________ (mão)\n( ) a. p – á ____________________________ (pá)\n( ) c. u – v – a __________________________ (uva)\n( ) d. m – o – t – o ______________________ (moto)\n( ) e. f – a – c – a _______________________ (faca)\n( ) f. g – a – t – o _______________________ (gato)\n( ) g. f – o – c – a _______________________ (foca)\n1 ponto: 3 respostas corretas.\nMaterial: Manual de Figuras, páginas 35 e 36.\nProcedimento: o examinador diz: Olhe estas figuras de um menino e uma menina\nque estão no parque. Conte uma história sobre eles.\n1 ponto: quando a criança narra uma história em sequência com a semântica e a\nsintaxe corretas.\nMaterial: não necessário.\nProcedimento: o examinador diz: Eu vou falar um probleminha para você descobrir\na resposta.\n( ) a. Se você tem 3 balas e lhe dou mais 2, com quantas você vai ficar? ___________\n( ) b. Se você tem 2 lápis e eu lhe dou mais 2, com quantos você vai ficar? _________\n( ) c. Se você tem 3 balas e come 1, com quantas você vai ficar? _________________\n1 ponto: 3 respostas corretas."
+    },
+    "58": {
+      "material": "Manual de Figuras, página 37.",
+      "examiner_instructions": "o examinador diz: Eu vou mostrar uma letrinha de cada vez e quando\neu apontar você diz o som (ou o nome).\nA ______ B ______ C ______ D ______ E ______ F ______ G ______ H ______\nI ______ J ______ L ______ M ______ N ______ O ______ P ______ Q ______\nR ______ S ______ T ______ U ______ V ______ X ______ Z ______\n\nCritério (1 ponto): quando identifica 96% das letras (corresponde a 22).\n(*) Ver exemplos de respostas no Anexo 1 do Manual do Examinador.\nOBSERVAÇÕES\nObservação do comportamento:\nDescrição breve dos comportamentos: auditivo, visual, atencional e o tempo necessário para\nresponder as tarefas (imediato, médio, lento).\nOBSERVAÇÃO DA AQUISIÇÃO FONOLÓGICA E DO VOCABULÁRIO\nNome: ______________________________________________________________________________________________________\nData de nascimento: ___ / ___ / _______ Data da aplicação: ___ / ___ / _________ Idade: ______________________________\nAs palavras que fazem parte desse protocolo foram pesquisadas em estudos sobre aquisição fonológica\nde crianças na faixa etária de 3 a 6 anos. Não é um teste fonoaudiológico. Este foi construído com o\nobjetivo de auxiliar o fonoaudiólogo a obter um perfil da aquisição fonológica da criança que está sendo\navaliada com a escala da ADL 2.\nOrientação para aplicação: o examinador coloca a página com as figuras diante da criança, aponta para\numa figura, perguntando: O que é isto? ou Como é o nome desta figura? Em seguida, anota a palavra da\nforma que criança falou.\n3 anos a 3 anos e 5 meses\nEMISSÃO\t\tNOMEOU/REPETIU\n01. bola ( /b/ ) \t\t ( ) _______________________________________ (\n)\n02. moto ( /m/ ; /t/ ) ( ) _______________________________________ (\n)\n03. cama ( /c/ ; /m/ ) ( ) _______________________________________ (\n)\n04. dedo ( /d/ )\t\t ( ) _______________________________________ (\n)\n05. tênis ( /t/ ; /n/ ) ( ) _______________________________________ (\n)\n06. pato ( /p/ ; /t/ ) ( ) _______________________________________ (\n)\n07. pipa ( /p/ )\t\t ( ) _______________________________________ (\n)\n08. nuvem ( /n/ )\t\t ( ) _______________________________________ (\n)\n09. banana ( /n/ )\t\t ( ) _______________________________________ (\n)\n10. gato ( /g/ )\t\t ( ) _______________________________________ (\n)\n11. galinha ( /nh/ )\t\t ( ) _______________________________________ (\n)\n12. água ( /gu/ )\t\t ( ) _______________________________________ (\n)\n13. faca ( /f/ ) \t\t ( ) _______________________________________ (\n)\n14. café ( /f/ ) \t\t ( ) _______________________________________ (\n)\nPontuação:\n+ emissão correta do fonema alvo\n– se a criança não emite o som alvo\nN se a criança nomeia a figura\nR se a criança só repete corretamente a palavra e o som alvo\nNR se a criança não repete\nEMISSÃO\t\tNOMEOU/REPETIU\n15. vaca ( /v/ ) \t\t ( ) _______________________________________ (\n)\n16. avião ( /v/ ) \t\t ( ) _______________________________________ (\n)\n17. sapato ( /s/ ) \t\t ( ) _______________________________________ (\n)\n18. calça ( /s/ ) \t\t ( ) _______________________________________ (\n)\n19. mesa ( /z/ ) \t\t ( ) _______________________________________ (\n)\nEMISSÃO\t\tNOMEOU/REPETIU\n20. chave ( /ch/ ) \t\t\t\t ( ) _______________________________________ (\n)\n21. peixe ( /ch/ ) \t\t\t\t ( ) _______________________________________ (\n)\n22. rato ( /rr/ ) \t\t\t\t ( ) _______________________________________ (\n)\n23. carro ( /rr/ ) \t\t\t\t ( ) _______________________________________ (\n)\n24. joaninha ( /j/ ) \t\t\t\t ( ) _______________________________________ (\n)\n4 anos a 4 anos e 5 meses\nEMISSÃO\t\tNOMEOU/REPETIU\n25. lápis ( /l/ ) \t\t\t\t ( ) _______________________________________ (\n)\n26. bola ( /l/ ) \t\t\t\t ( ) _______________________________________ (\n)\n27. palhaço ( /lh/ ) \t\t\t ( ) _______________________________________ (\n)\n28. jacaré ( /r/ ) \t\t\t\t ( ) _______________________________________ (\n)\nEMISSÃO\t\tNOMEOU/REPETIU\n29. garfo ( /rf/ ) \t\t\t\t ( ) _______________________________________ (\n)\n30. porco ( /rc/ ) \t\t\t\t ( ) _______________________________________ (\n)\n31. escova ( /sc/ ) \t\t\t\t ( ) _______________________________________ (\n)\n32. sorvete ( /rv/ ) \t\t\t\t ( ) _______________________________________ (\n)\n5 anos a 5 anos e 11 meses\nEMISSÃO\t\tNOMEOU/REPETIU\n33. prato ( /pr/ ) \t\t\t\t ( ) _______________________________________ (\n)\n34. Brasil ( /br/ ) \t\t\t\t ( ) _______________________________________ (\n)\n35. cobra ( /br/ ) \t\t\t\t ( ) _______________________________________ (\n)\n36. dragão ( /dr/ ) \t\t\t\t ( ) _______________________________________ (\n)\n37. flor ( /fl/ ) \t\t\t\t ( ) _______________________________________ (\n)\n38. trem ( /tr/ ) \t\t\t\t ( ) _______________________________________ (\n)\n39. planta ( /pl/ ) \t\t\t\t ( ) _______________________________________ (\n)\n40. presente ( /pr/ ) \t\t ( ) _______________________________________ (\n)\nOBSERVAÇÕES\nMaria Lucia Menezes, PhD\ncontato: marialucia.menezes@yahoo.com.br"
+    }
+  }
+}

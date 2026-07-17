@@ -15,6 +15,7 @@ class AppointmentCreate(CamelModel):
     appointment_type: str = "avulso"
     frequency: str | None = None
     end_date: DateType | None = None
+    weekdays: list[int] | None = None
 
 
 class AppointmentUpdate(CamelModel):
@@ -39,6 +40,7 @@ class AppointmentResponse(CamelModel):
     series_id: str | None = None
     frequency: str | None = None
     end_date: str | None = None
+    weekdays: list[int] | None = None
 
 
 class AppointmentCreateResponse(AppointmentResponse):

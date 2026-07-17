@@ -6,7 +6,9 @@
     "text": "Atenção visual.",
     "age_start_months": 12,
     "age_end_months": 83,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "um brinquedo que a criança tenha demonstrado interesse ou bolhinhas\nde sabão.",
+    "examiner_instructions": "inicialmente, o examinador ou cuidador brinca com a criança e, em\nseguida:\n( ) a. movimenta o brinquedo que a criança demonstrou interesse da esquerda\npara a direita, observando se ela acompanha com o olhar o brinquedo em\nmovimento. ______________________________________________________\n( ) b. aguarda um minuto, fala o nome da criança, mostra o recipiente com o\nsabão e assopra as bolinhas de sabão, observando se ela acompanha com\no olhar as bolinhas. ________________________________________________\n\nCritério (1 ponto): quando a criança acompanha com o olhar o brinquedo ou as bolinhas de\nsabão (cada procedimento poderá ser repetido duas vezes)."
   },
   {
     "id": "pre_02",
@@ -15,6 +17,8 @@
     "text": "Atenção auditiva.",
     "age_start_months": 12,
     "age_end_months": 83,
-    "response_type": "developmental"
+    "response_type": "developmental",
+    "material": "brinquedos.",
+    "examiner_instructions": "inicialmente o examinador ou o cuidador brinca com a criança e,\nem seguida:\n( ) a. chama a criança pelo nome e observa se ela olha na direção de quem a\nchamou. _________________________________________________________\n( ) b. aguarda um minuto, depois bate palma atrás da criança, do lado direito, e,\npor último, do lado esquerdo, observando se ela procura a fonte sonora. ___\n\nCritério (1 ponto): quando a criança responde ao item a ou b (cada procedimento poderá ser\nrepetido duas vezes)."
   }
 ]

@@ -11,12 +11,14 @@ class BatterySetupMetadata(CamelModel):
     assessment_date: Optional[str] = None
     examiner_name: Optional[str] = None
     initial_notes: Optional[str] = None
+    selected_age_band_id: Optional[str] = None
 
 
 class BatteryCreate(CamelModel):
     instrument_slug: str = Field(..., min_length=1, max_length=64)
     patient_id: UUID
     setup: Optional[BatterySetupMetadata] = None
+    module_slugs: list[str] | None = None
 
 
 class BatterySubformAnswersUpdate(CamelModel):
