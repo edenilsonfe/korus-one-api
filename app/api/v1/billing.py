@@ -386,10 +386,20 @@ async def generate_pix_checkout(
     return await service.generate_pix(session_id=session_id, professional=professional)
 
 
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    if request.client and request.client.host:
+        return request.client.host
+    return "127.0.0.1"
+
+
 @router.post("/checkout/{session_id}/credit-card", response_model=CreditCardPaymentResponse)
 async def pay_checkout_credit_card(
     session_id: str,
     payload: CreditCardPaymentRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     professional: Professional = Depends(get_current_professional),
 ):
@@ -405,6 +415,8 @@ async def pay_checkout_credit_card(
         postal_code=payload.postal_code.strip(),
         address_number=payload.address_number.strip(),
         phone=payload.phone.strip(),
+        installment_count=payload.installment_count,
+        remote_ip=_client_ip(request),
     )
 
 

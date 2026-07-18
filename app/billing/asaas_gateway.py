@@ -349,6 +349,78 @@ class AsaasPaymentGateway:
             },
         )
 
+    async def delete_payment(self, payment_id: str) -> None:
+        try:
+            await request_json(
+                "DELETE",
+                f"{self._base_url}/payments/{payment_id}",
+                headers=self._headers(),
+            )
+        except PaymentGatewayError as exc:
+            if exc.status_code != 404:
+                raise
+
+    async def pay_with_credit_card_installments(
+        self,
+        *,
+        customer_id: str,
+        total_value_cents: int,
+        installment_count: int,
+        holder_name: str,
+        number: str,
+        expiry_month: str,
+        expiry_year: str,
+        ccv: str,
+        holder_info: dict[str, Any],
+        remote_ip: str,
+        description: str,
+        external_reference: str,
+    ) -> dict[str, Any]:
+        if installment_count < 2:
+            raise PaymentGatewayError("Parcelamento exige ao menos 2 parcelas")
+        if total_value_cents <= 0:
+            raise PaymentGatewayError("Valor inválido para cobrança parcelada")
+        payload: dict[str, Any] = {
+            "customer": customer_id,
+            "billingType": "CREDIT_CARD",
+            "dueDate": date.today().isoformat(),
+            "installmentCount": installment_count,
+            "totalValue": round(total_value_cents / 100, 2),
+            "description": description,
+            "externalReference": external_reference,
+            "creditCard": {
+                "holderName": holder_name,
+                "number": number,
+                "expiryMonth": expiry_month,
+                "expiryYear": expiry_year,
+                "ccv": ccv,
+            },
+            "creditCardHolderInfo": holder_info,
+            "remoteIp": remote_ip or "127.0.0.1",
+        }
+        data = await request_json(
+            "POST",
+            f"{self._base_url}/payments",
+            headers=self._headers(),
+            json_body=payload,
+        )
+        if not data.get("id"):
+            raise PaymentGatewayError("Asaas não retornou id da cobrança parcelada")
+        return data
+
+    async def defer_subscription_renewal(
+        self, *, subscription_id: str, next_due_date: str
+    ) -> dict[str, Any]:
+        return await request_json(
+            "POST",
+            f"{self._base_url}/subscriptions/{subscription_id}",
+            headers=self._headers(),
+            json_body={
+                "nextDueDate": next_due_date,
+                "updatePendingPayments": False,
+            },
+        )
+
     async def create_subscription(
         self,
         *,
