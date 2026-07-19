@@ -37,6 +37,17 @@ async def test_list_assessments_filters_by_status(
             Assessment(
                 patient_id=patient.id,
                 professional_id=professional.id,
+                protocol_id="spm",
+                date=date.today(),
+                result="Aguardando informante",
+                percentage=0,
+                interpretation="",
+                fields=[],
+                status="draft",
+            ),
+            Assessment(
+                patient_id=patient.id,
+                professional_id=professional.id,
                 protocol_id="fois",
                 date=date.today(),
                 result="FOIS 5",
@@ -64,11 +75,25 @@ async def test_list_assessments_filters_by_status(
     assert draft.status_code == 200
     assert draft.json()["total"] >= 1
     assert all(item["status"] == "draft" for item in draft.json()["items"])
+    assert all(
+        "aguardando" not in (item.get("result") or "").lower()
+        for item in draft.json()["items"]
+    )
+
+    awaiting = await api_client.get(
+        "/api/v1/assessments?status=awaiting_informant", headers=auth_headers
+    )
+    assert awaiting.status_code == 200
+    assert awaiting.json()["total"] >= 1
+    assert all(
+        item["status"] == "draft" and "aguardando" in (item.get("result") or "").lower()
+        for item in awaiting.json()["items"]
+    )
 
     done = await api_client.get("/api/v1/assessments?status=completed", headers=auth_headers)
     assert done.status_code == 200
     assert done.json()["total"] >= 1
     assert all(item["status"] == "completed" for item in done.json()["items"])
 
-    bad = await api_client.get("/api/v1/assessments?status=foo", headers=auth_headers)
+    bad = await api_client.get("/api/v1/assessments?status=weird", headers=auth_headers)
     assert bad.status_code == 400

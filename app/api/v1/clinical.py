@@ -126,7 +126,7 @@ async def list_assessments_global(
     status_filter: str | None = Query(
         None,
         alias="status",
-        description="Filtro por status: draft | completed | cancelled",
+        description="Filtro: draft | completed | cancelled | awaiting_informant",
     ),
     q: str | None = None,
     page: int = Query(1, ge=1),
@@ -144,13 +144,20 @@ async def list_assessments_global(
         query = query.where(Assessment.protocol_id == protocol.lower())
     if status_filter:
         normalized = status_filter.strip().lower()
-        allowed = {"draft", "completed", "cancelled"}
+        allowed = {"draft", "completed", "cancelled", "awaiting_informant"}
         if normalized not in allowed:
             raise HTTPException(
                 status_code=400,
                 detail=f"Status inválido. Use: {', '.join(sorted(allowed))}",
             )
-        query = query.where(Assessment.status == normalized)
+        awaiting_clause = Assessment.result.ilike("%aguardando%")
+        if normalized == "awaiting_informant":
+            query = query.where(Assessment.status == "draft", awaiting_clause)
+        elif normalized == "draft":
+            # Rascunho clínico — exclui SPM "Aguardando informante".
+            query = query.where(Assessment.status == "draft", ~awaiting_clause)
+        else:
+            query = query.where(Assessment.status == normalized)
     if q:
         query = query.where(Patient.name.ilike(f"%{q}%"))
     total = await db.scalar(select(func.count()).select_from(query.subquery()))
