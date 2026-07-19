@@ -179,6 +179,26 @@ class SpmBatteryService:
             return link
         return None
 
+    def _compute_draft_result(self, subforms: list[SpmSubformAssessment]) -> str:
+        """Hub-facing label: awaiting informant vs in coordination."""
+        for subform in subforms:
+            config = self.package.get_subform(subform.subform_slug)
+            if config["filler"] != SPM_FILLER_EXTERNAL:
+                continue
+            if subform.status == SPM_SUBFORM_STATUS_COMPLETED:
+                continue
+            if self._active_link(subform):
+                return "Aguardando informante"
+        return "Em coordenação SPM"
+
+    async def refresh_draft_result_label(self, battery_id: UUID) -> None:
+        record = await self._load_battery(battery_id)
+        if record.status != SPM_BATTERY_STATUS_DRAFT:
+            return
+        subforms = await self._load_subforms(battery_id)
+        record.result = self._compute_draft_result(subforms)
+        await self.db.commit()
+
     def _to_subform_response(self, subform: SpmSubformAssessment) -> SpmSubformResponse:
         config = self.package.get_subform(subform.subform_slug)
         active = self._active_link(subform)
@@ -276,7 +296,7 @@ class SpmBatteryService:
             professional_id=professional_id,
             protocol_id=SPM_INSTRUMENT_SLUG,
             date=today,
-            result="Rascunho SPM",
+            result="Em coordenação SPM",
             percentage=0,
             interpretation="",
             status=SPM_BATTERY_STATUS_DRAFT,
@@ -472,6 +492,7 @@ class SpmBatteryService:
             inherit_draft=data.inherit_draft,
         )
         self.db.add(link)
+        record.result = "Aguardando informante"
         await self.db.commit()
 
         return SpmInformantLinkCreated(
@@ -500,6 +521,10 @@ class SpmBatteryService:
             if not link.revoked_at and not link.submitted_at:
                 link.revoked_at = now
 
+        await self.db.flush()
+        subforms = await self._load_subforms(battery_id)
+        if record.status == SPM_BATTERY_STATUS_DRAFT:
+            record.result = self._compute_draft_result(subforms)
         await self.db.commit()
         record = await self._load_battery(battery_id, professional_id=professional_id)
         subforms = await self._load_subforms(battery_id)

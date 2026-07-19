@@ -138,6 +138,12 @@ class SpmInformantService:
         link.submitted_at = _utcnow()
 
         await self.db.commit()
+
+        # Refresh hub label (may clear "Aguardando informante").
+        from app.services.spm_battery_service import SpmBatteryService
+
+        await SpmBatteryService(self.db).refresh_draft_result_label(subform.battery_id)
+
         return SpmInformantProgress(
             items_answered=subform.items_answered,
             items_total=subform.items_total,
