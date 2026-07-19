@@ -135,7 +135,7 @@ class CreditCardPaymentRequest(CamelModel):
     postal_code: str
     address_number: str
     phone: str
-    installment_count: int = Field(default=1, ge=1, le=10)
+    installment_count: int = Field(default=1, ge=1, le=12)
 
 
 class CreditCardPaymentResponse(CamelModel):

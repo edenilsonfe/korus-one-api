@@ -172,10 +172,10 @@ class BillingCheckoutService:
         plan = sub.plan
         is_annual = _is_annual_interval(plan.billing_interval if plan else None)
 
-        if installment_count < 1 or installment_count > 10:
+        if installment_count < 1 or installment_count > 12:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Número de parcelas inválido. Escolha entre 1x e 10x.",
+                detail="Número de parcelas inválido. Escolha entre 1x e 12x.",
             )
         if installment_count > 1 and not is_annual:
             raise HTTPException(
