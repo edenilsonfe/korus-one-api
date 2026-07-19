@@ -181,33 +181,80 @@ def score_fluency_module(
     duration_seconds = float(session.get("duration_seconds") or 0)
     syllable_count = int(session.get("syllable_count") or 0)
     word_count = int(session.get("word_count") or 0)
+    sample_type = str(session.get("sample_type") or "").strip() or None
 
-    disfluency_total = 0
+    stuttering_like_count = 0
+    common_count = 0
     disfluency_breakdown: list[dict[str, Any]] = []
     for item in package.get_module_items(module_slug):
         if item.get("stimulus_type") != "counter":
             continue
         ans = _item_answer(answers, item["id"])
         count = int(ans.get("count") or 0)
-        disfluency_total += count
+        category = str(item.get("category") or "common")
+        if category == "stuttering":
+            stuttering_like_count += count
+        else:
+            common_count += count
         disfluency_breakdown.append(
-            {"id": item["id"], "label": item.get("text"), "count": count, "category": item.get("category")}
+            {
+                "id": item["id"],
+                "label": item.get("text"),
+                "count": count,
+                "category": category,
+            }
         )
 
+    disfluency_total = stuttering_like_count + common_count
     minutes = duration_seconds / 60 if duration_seconds > 0 else 0
     syllables_per_min = round(syllable_count / minutes, 1) if minutes > 0 else 0
     words_per_min = round(word_count / minutes, 1) if minutes > 0 else 0
-    disfluency_pct = round((disfluency_total / syllable_count) * 100, 2) if syllable_count > 0 else 0
+
+    def _pct(count: int) -> float:
+        return round((count / syllable_count) * 100, 2) if syllable_count > 0 else 0.0
+
+    disfluency_pct = _pct(disfluency_total)
+    sld_pct = _pct(stuttering_like_count)
+    common_pct = _pct(common_count)
 
     norms = package.get_norms().get("fluency_reference", {})
+    rate_min = float(norms.get("syllables_per_minute_min", 120) or 120)
+    rate_max = float(norms.get("syllables_per_minute_max", 200) or 200)
+    sld_max = float(norms.get("disfluency_percent_max", 3) or 3)
+
+    if syllables_per_min <= 0:
+        rate_status = "unknown"
+    elif syllables_per_min < rate_min:
+        rate_status = "below"
+    elif syllables_per_min > rate_max:
+        rate_status = "above"
+    else:
+        rate_status = "within"
+
+    # Interpretação clínica: tipologias de gagueira (SLD), não o % total
     level = "unknown"
-    if syllables_per_min and norms:
-        if disfluency_pct <= norms.get("disfluency_percent_max", 3):
+    if syllable_count > 0 and duration_seconds > 0:
+        if sld_pct <= sld_max:
             level = "adequate"
-        elif disfluency_pct <= 5:
+        elif sld_pct <= 5:
             level = "attention"
         else:
             level = "altered"
+
+    # Índice só para radar — fluência não entra na média geral da bateria
+    if level == "adequate":
+        percentage = 100.0 if rate_status == "within" else 85.0
+    elif level == "attention":
+        percentage = 55.0
+    elif level == "altered":
+        percentage = max(0.0, round(40.0 - max(0.0, sld_pct - 5) * 5, 1))
+    else:
+        percentage = 0.0
+
+    sample_label = {
+        "reading": "leitura",
+        "spontaneous": "fala espontânea",
+    }.get(sample_type or "", "amostra")
 
     return {
         "module_kind": "fluency",
@@ -215,13 +262,25 @@ def score_fluency_module(
         "duration_seconds": duration_seconds,
         "syllable_count": syllable_count,
         "word_count": word_count,
+        "sample_type": sample_type,
         "syllables_per_minute": syllables_per_min,
         "words_per_minute": words_per_min,
+        "rate_status": rate_status,
+        "rate_reference": {"min": rate_min, "max": rate_max},
         "disfluency_count": disfluency_total,
         "disfluency_percentage": disfluency_pct,
+        "stuttering_like_count": stuttering_like_count,
+        "stuttering_like_percentage": sld_pct,
+        "common_disfluency_count": common_count,
+        "common_disfluency_percentage": common_pct,
         "disfluency_breakdown": disfluency_breakdown,
         "level": level,
-        "summary": f"Fluência: {syllables_per_min} síl/min, {disfluency_pct}% descontinuidade",
+        "percentage": percentage,
+        "norms_note": "Referência pública aproximada — não substitui normas licenciadas do ABFW.",
+        "summary": (
+            f"Fluência ({sample_label}): {syllables_per_min} síl/min, "
+            f"{sld_pct}% tipicas de gagueira, {disfluency_pct}% total"
+        ),
     }
 
 
@@ -1038,8 +1097,39 @@ def synthesize_battery_scores(
         mod = package.get_module_config(score["module_slug"])
         domain_id = mod.get("domain", score["module_slug"])
         domain_score = domains.get(domain_id, score)
-        if "percentage" in score:
+        # Fluência usa percentage só para radar; não distorce a média de DVU/fonologia
+        if "percentage" in score and score.get("module_kind") != "fluency":
             percentages.append(float(score["percentage"]))
+
+        if score.get("module_kind") == "fluency":
+            level = score.get("level")
+            if level in ("attention", "altered"):
+                critical_items.append(
+                    {
+                        "type": "fluency",
+                        "label": "Fluência — tipologias de gagueira",
+                        "detail": (
+                            f"{score.get('stuttering_like_percentage')}% SLD · "
+                            f"{score.get('disfluency_percentage')}% total · "
+                            f"{score.get('syllables_per_minute')} síl/min "
+                            f"(ref. pública)"
+                        ),
+                    }
+                )
+            rate_status = score.get("rate_status")
+            if rate_status in ("below", "above"):
+                critical_items.append(
+                    {
+                        "type": "fluency_rate",
+                        "label": "Fluência — velocidade de fala",
+                        "detail": (
+                            f"{score.get('syllables_per_minute')} síl/min "
+                            f"({'abaixo' if rate_status == 'below' else 'acima'} "
+                            f"da faixa {score.get('rate_reference', {}).get('min')}-"
+                            f"{score.get('rate_reference', {}).get('max')})"
+                        ),
+                    }
+                )
 
         if score.get("module_kind") == "vocabulary":
             vocab = domain_score if domain_score.get("module_kind") == "vocabulary" else score

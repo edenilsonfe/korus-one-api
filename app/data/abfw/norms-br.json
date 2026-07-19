@@ -48,6 +48,7 @@
   "fluency_reference": {
     "syllables_per_minute_min": 120,
     "syllables_per_minute_max": 200,
-    "disfluency_percent_max": 3
+    "disfluency_percent_max": 3,
+    "note": "Cortes aproximados sobre % de tipologias de gagueira (SLD). Substituir por normas licenciadas do ABFW."
   }
 }

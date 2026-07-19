@@ -1,26 +1,26 @@
 [
   {
     "id": "flu_session",
-    "text": "Amostra de fala — leitura até 200 sílabas",
+    "text": "Amostra de fala — leitura ou fala espontânea até 200 sílabas",
     "stimulus_type": "session"
   },
   {
     "id": "flu_segment_repetition",
-    "text": "Repetição de segmento",
+    "text": "Repetição de segmento (som)",
     "stimulus_type": "counter",
-    "category": "common"
+    "category": "stuttering"
   },
   {
     "id": "flu_syllable_repetition",
     "text": "Repetição de sílaba",
     "stimulus_type": "counter",
-    "category": "common"
+    "category": "stuttering"
   },
   {
     "id": "flu_word_repetition",
     "text": "Repetição de palavra",
     "stimulus_type": "counter",
-    "category": "common"
+    "category": "stuttering"
   },
   {
     "id": "flu_phrase_repetition",

@@ -49,14 +49,57 @@ def test_vocabulary_scoring_dvu_percentages():
 def test_fluency_scoring_calculates_rates():
     package = _package()
     answers = {
-        "flu_session": {"duration_seconds": 120, "syllable_count": 200, "word_count": 80},
+        "flu_session": {
+            "duration_seconds": 120,
+            "syllable_count": 200,
+            "word_count": 80,
+            "sample_type": "reading",
+        },
         "flu_syllable_repetition": {"count": 3},
         "flu_block": {"count": 1},
+        "flu_interjection": {"count": 2},
     }
     result = score_fluency_module(package, "fluencia", answers)
     assert result["syllables_per_minute"] == 100.0
     assert result["words_per_minute"] == 40.0
-    assert result["disfluency_count"] == 4
+    assert result["disfluency_count"] == 6
+    assert result["stuttering_like_count"] == 4
+    assert result["common_disfluency_count"] == 2
+    assert result["stuttering_like_percentage"] == 2.0
+    assert result["common_disfluency_percentage"] == 1.0
+    assert result["disfluency_percentage"] == 3.0
+    assert result["sample_type"] == "reading"
+    assert result["rate_status"] == "below"  # 100 < 120
+    assert result["level"] == "adequate"  # SLD% <= 3
+    assert "percentage" in result
+
+
+def test_fluency_scoring_levels_by_sld_not_total():
+    package = _package()
+    # Muitas comuns, poucas SLD → adequado por SLD
+    answers = {
+        "flu_session": {"duration_seconds": 60, "syllable_count": 200, "word_count": 90},
+        "flu_interjection": {"count": 10},
+        "flu_revision": {"count": 8},
+        "flu_block": {"count": 2},
+    }
+    result = score_fluency_module(package, "fluencia", answers)
+    assert result["stuttering_like_percentage"] == 1.0
+    assert result["disfluency_percentage"] == 10.0
+    assert result["level"] == "adequate"
+
+
+def test_fluency_scoring_altered_when_sld_high():
+    package = _package()
+    answers = {
+        "flu_session": {"duration_seconds": 60, "syllable_count": 100, "word_count": 40},
+        "flu_syllable_repetition": {"count": 4},
+        "flu_prolongation": {"count": 3},
+    }
+    result = score_fluency_module(package, "fluencia", answers)
+    assert result["stuttering_like_percentage"] == 7.0
+    assert result["level"] == "altered"
+    assert result["rate_status"] == "below"  # 100 síl/min < 120
 
 
 def test_pragmatics_scoring_checklist():
