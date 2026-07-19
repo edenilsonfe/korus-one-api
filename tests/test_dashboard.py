@@ -28,14 +28,42 @@ def test_status_cancelado_nao_derivado():
 
 
 def test_suggestions_vazia_sem_pendencias():
-    assert build_suggestions({"evolutions": 0, "reports": 0, "sessions": 0}) == []
+    assert (
+        build_suggestions(
+            {
+                "evolutions": 0,
+                "reports": 0,
+                "sessions": 0,
+                "assessmentDrafts": 0,
+                "awaitingInformant": 0,
+            }
+        )
+        == []
+    )
 
 
 def test_suggestions_completa_com_ctas():
-    result = build_suggestions({"evolutions": 2, "reports": 1, "sessions": 3})
-    assert [s["id"] for s in result] == ["pending-evolutions", "pending-reports", "pending-sessions"]
-    assert result[0]["ctaTo"] == "/sessoes"
-    assert result[1]["ctaTo"] == "/relatorios"
-    assert result[2]["ctaTo"] == "/agenda"
+    result = build_suggestions(
+        {
+            "evolutions": 2,
+            "reports": 1,
+            "sessions": 3,
+            "assessmentDrafts": 4,
+            "awaitingInformant": 1,
+        }
+    )
+    assert [s["id"] for s in result] == [
+        "pending-evolutions",
+        "pending-assessment-drafts",
+        "pending-awaiting-informant",
+        "pending-reports",
+        "pending-sessions",
+    ]
+    assert result[0]["ctaTo"] == "/agenda"
+    assert result[1]["ctaTo"] == "/avaliacoes?status=draft"
+    assert result[2]["ctaTo"] == "/avaliacoes?status=awaiting_informant"
+    assert result[3]["ctaTo"] == "/relatorios"
+    assert result[4]["ctaTo"] == "/agenda"
     assert "2 evoluções" in result[0]["text"]
-    assert "1 relatório em rascunho" in result[1]["text"]
+    assert "4 avaliações em rascunho" in result[1]["text"]
+    assert "1 relatório em rascunho" in result[3]["text"]

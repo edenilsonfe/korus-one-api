@@ -1,8 +1,8 @@
-from datetime import date
+from datetime import date, timedelta
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import func, select
+from sqlalchemy import and_, case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_professional, get_patient_for_professional
@@ -12,8 +12,15 @@ from app.models.assessment import Assessment, ASSESSMENT_STATUS_COMPLETED, Proto
 from app.models.goal import ClinicalDomainSnapshot, Goal
 from app.models.patient import Patient
 from app.models.professional import Professional
-from app.schemas.clinical import AssessmentCreate, GoalCreate, GoalUpdate, ProtocolResponse
-from app.schemas.common import PaginatedResponse
+from app.schemas.clinical import (
+    AssessmentCancelResponse,
+    AssessmentCreate,
+    AssessmentStatusCounts,
+    AssessmentsPage,
+    GoalCreate,
+    GoalUpdate,
+    ProtocolResponse,
+)
 from app.schemas.patient import (
     AssessmentResponse,
     DevelopmentAnalyticsAreaResponse,
@@ -120,7 +127,20 @@ async def get_protocol(protocol_id: str, db: AsyncSession = Depends(get_db)):
     )
 
 
-@router.get("/assessments", response_model=PaginatedResponse[AssessmentResponse])
+def _assessment_period_start(period: str | None) -> date | None:
+    if not period or period == "all":
+        return None
+    today = date.today()
+    normalized = period.strip().lower()
+    if normalized == "week":
+        # Segunda-feira da semana corrente (ISO).
+        return today - timedelta(days=today.weekday())
+    if normalized == "month":
+        return today.replace(day=1)
+    return None
+
+
+@router.get("/assessments", response_model=AssessmentsPage)
 async def list_assessments_global(
     protocol: str | None = None,
     status_filter: str | None = Query(
@@ -128,20 +148,79 @@ async def list_assessments_global(
         alias="status",
         description="Filtro: draft | completed | cancelled | awaiting_informant",
     ),
+    period: str | None = Query(
+        None,
+        description="Filtro temporal: week | month | all",
+    ),
     q: str | None = None,
     page: int = Query(1, ge=1),
     limit: int = Query(30, ge=1, le=100),
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
+    if period and period.strip().lower() not in {"week", "month", "all"}:
+        raise HTTPException(status_code=400, detail="Período inválido. Use: week, month, all")
+
+    awaiting_clause = Assessment.result.ilike("%aguardando%")
+    scope = [Patient.professional_id == professional.id]
+    if protocol:
+        scope.append(Assessment.protocol_id == protocol.lower())
+    period_start = _assessment_period_start(period)
+    if period_start is not None:
+        scope.append(Assessment.date >= period_start)
+    if q:
+        scope.append(Patient.name.ilike(f"%{q}%"))
+
+    counts_row = (
+        await db.execute(
+            select(
+                func.count(),
+                func.coalesce(
+                    func.sum(
+                        case(
+                            (and_(Assessment.status == "draft", ~awaiting_clause), 1),
+                            else_=0,
+                        )
+                    ),
+                    0,
+                ),
+                func.coalesce(
+                    func.sum(
+                        case(
+                            (and_(Assessment.status == "draft", awaiting_clause), 1),
+                            else_=0,
+                        )
+                    ),
+                    0,
+                ),
+                func.coalesce(
+                    func.sum(case((Assessment.status == "completed", 1), else_=0)),
+                    0,
+                ),
+                func.coalesce(
+                    func.sum(case((Assessment.status == "cancelled", 1), else_=0)),
+                    0,
+                ),
+            )
+            .select_from(Assessment)
+            .join(Patient, Assessment.patient_id == Patient.id)
+            .where(*scope)
+        )
+    ).one()
+    status_counts = AssessmentStatusCounts(
+        all=int(counts_row[0] or 0),
+        draft=int(counts_row[1] or 0),
+        awaiting_informant=int(counts_row[2] or 0),
+        completed=int(counts_row[3] or 0),
+        cancelled=int(counts_row[4] or 0),
+    )
+
     query = (
         select(Assessment, Patient, ProtocolCatalog)
         .join(Patient, Assessment.patient_id == Patient.id)
         .join(ProtocolCatalog, Assessment.protocol_id == ProtocolCatalog.id)
-        .where(Patient.professional_id == professional.id)
+        .where(*scope)
     )
-    if protocol:
-        query = query.where(Assessment.protocol_id == protocol.lower())
     if status_filter:
         normalized = status_filter.strip().lower()
         allowed = {"draft", "completed", "cancelled", "awaiting_informant"}
@@ -150,23 +229,66 @@ async def list_assessments_global(
                 status_code=400,
                 detail=f"Status inválido. Use: {', '.join(sorted(allowed))}",
             )
-        awaiting_clause = Assessment.result.ilike("%aguardando%")
         if normalized == "awaiting_informant":
             query = query.where(Assessment.status == "draft", awaiting_clause)
         elif normalized == "draft":
-            # Rascunho clínico — exclui SPM "Aguardando informante".
             query = query.where(Assessment.status == "draft", ~awaiting_clause)
         else:
             query = query.where(Assessment.status == normalized)
-    if q:
-        query = query.where(Patient.name.ilike(f"%{q}%"))
+
     total = await db.scalar(select(func.count()).select_from(query.subquery()))
-    result = await db.execute(query.order_by(Assessment.date.desc()).offset((page - 1) * limit).limit(limit))
+    result = await db.execute(
+        query.order_by(Assessment.date.desc()).offset((page - 1) * limit).limit(limit)
+    )
     items = [
         _assessment_response(a, proto.name, professional.name, patient=patient)
         for a, patient, proto in result.all()
     ]
-    return PaginatedResponse(items=items, total=total or 0, page=page, limit=limit)
+    return AssessmentsPage(
+        items=items,
+        total=total or 0,
+        page=page,
+        limit=limit,
+        status_counts=status_counts,
+    )
+
+
+@router.post(
+    "/assessments/{assessment_id}/cancel",
+    response_model=AssessmentCancelResponse,
+)
+async def cancel_assessment(
+    assessment_id: UUID,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Assessment, Patient)
+        .join(Patient, Assessment.patient_id == Patient.id)
+        .where(
+            Assessment.id == assessment_id,
+            Patient.professional_id == professional.id,
+        )
+    )
+    row = result.one_or_none()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Avaliação não encontrada")
+    assessment, _patient = row
+    if assessment.status != "draft":
+        raise HTTPException(
+            status_code=400,
+            detail="Só é possível cancelar avaliações em rascunho",
+        )
+    assessment.status = "cancelled"
+    if not assessment.result or assessment.result.lower() in {
+        "rascunho",
+        "aguardando informante",
+        "em coordenação spm",
+        "em coordenação",
+    }:
+        assessment.result = "Cancelada"
+    await db.commit()
+    return AssessmentCancelResponse(id=str(assessment.id), status=assessment.status)
 
 
 patient_router = APIRouter(prefix="/patients/{patient_id}", tags=["clinical"])

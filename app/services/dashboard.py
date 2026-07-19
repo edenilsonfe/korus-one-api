@@ -1,6 +1,6 @@
 from datetime import date, datetime, time, timedelta
 
-from sqlalchemy import func, select
+from sqlalchemy import and_, case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.appointment import Appointment
@@ -40,6 +40,12 @@ def build_suggestions(pending: dict) -> list[dict]:
     evolutions = pending.get("evolutions", 0)
     reports = pending.get("reports", 0)
     sessions = pending.get("sessions", 0)
+    assessment_drafts = pending.get("assessmentDrafts", 0) or pending.get(
+        "assessment_drafts", 0
+    )
+    awaiting_informant = pending.get("awaitingInformant", 0) or pending.get(
+        "awaiting_informant", 0
+    )
 
     if evolutions > 0:
         suggestions.append({
@@ -50,8 +56,32 @@ def build_suggestions(pending: dict) -> list[dict]:
                 if evolutions == 1
                 else f"Você tem {evolutions} evoluções pendentes de registrar."
             ),
-            "ctaLabel": "Ver sessões",
-            "ctaTo": "/sessoes",
+            "ctaLabel": "Ver na agenda",
+            "ctaTo": "/agenda",
+        })
+    if assessment_drafts > 0:
+        suggestions.append({
+            "id": "pending-assessment-drafts",
+            "title": "Avaliações em rascunho",
+            "text": (
+                f"Você tem {assessment_drafts} avaliação em rascunho para continuar."
+                if assessment_drafts == 1
+                else f"Você tem {assessment_drafts} avaliações em rascunho para continuar."
+            ),
+            "ctaLabel": "Ver rascunhos",
+            "ctaTo": "/avaliacoes?status=draft",
+        })
+    if awaiting_informant > 0:
+        suggestions.append({
+            "id": "pending-awaiting-informant",
+            "title": "Aguardando informante",
+            "text": (
+                f"Você tem {awaiting_informant} SPM aguardando resposta do informante."
+                if awaiting_informant == 1
+                else f"Você tem {awaiting_informant} SPM aguardando resposta do informante."
+            ),
+            "ctaLabel": "Ver pendências",
+            "ctaTo": "/avaliacoes?status=awaiting_informant",
         })
     if reports > 0:
         suggestions.append({
@@ -229,10 +259,43 @@ async def build_dashboard(db: AsyncSession, professional_id) -> dict:
         1 for appt in past_appts if (appt.patient_id, appt.date) not in sessions_past
     )
 
+    awaiting_clause = Assessment.result.ilike("%aguardando%")
+    assessment_counts = (
+        await db.execute(
+            select(
+                func.coalesce(
+                    func.sum(
+                        case(
+                            (and_(Assessment.status == "draft", ~awaiting_clause), 1),
+                            else_=0,
+                        )
+                    ),
+                    0,
+                ),
+                func.coalesce(
+                    func.sum(
+                        case(
+                            (and_(Assessment.status == "draft", awaiting_clause), 1),
+                            else_=0,
+                        )
+                    ),
+                    0,
+                ),
+            )
+            .select_from(Assessment)
+            .join(Patient, Assessment.patient_id == Patient.id)
+            .where(Patient.professional_id == professional_id)
+        )
+    ).one()
+    assessment_drafts = int(assessment_counts[0] or 0)
+    awaiting_informant = int(assessment_counts[1] or 0)
+
     pending = {
         "evolutions": evolutions_pending,
         "reports": reports_draft or 0,
         "sessions": sessions_pending or 0,
+        "assessmentDrafts": assessment_drafts,
+        "awaitingInformant": awaiting_informant,
     }
     suggestions = build_suggestions(pending)
 

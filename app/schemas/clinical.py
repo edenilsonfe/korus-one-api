@@ -1,6 +1,7 @@
 from pydantic import Field
 
 from app.schemas.common import CamelModel
+from app.schemas.patient import AssessmentResponse
 
 
 class ProtocolFieldTemplate(CamelModel):
@@ -38,6 +39,27 @@ class AssessmentCreate(CamelModel):
     status: str = "completed"
     informant: str | None = None
     metadata: dict | None = None
+
+
+class AssessmentStatusCounts(CamelModel):
+    all: int = 0
+    draft: int = 0
+    awaiting_informant: int = 0
+    completed: int = 0
+    cancelled: int = 0
+
+
+class AssessmentsPage(CamelModel):
+    items: list[AssessmentResponse]
+    total: int
+    page: int
+    limit: int
+    status_counts: AssessmentStatusCounts
+
+
+class AssessmentCancelResponse(CamelModel):
+    id: str
+    status: str
 
 
 class GoalCreate(CamelModel):
