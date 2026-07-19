@@ -1,130 +1,96 @@
 {
-  "version": 1,
-  "package_id": "tli-br",
+  "version": 2,
+  "package_id": "tli-br-v2",
   "instrument_slug": "tli",
   "instrument_title": "TLI — Teste de Linguagem Infantil",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "publisher": "Editor / autores do TLI — estrutura modular (sem itens proprietários)",
+  "license_ref": "REQUIRES-LICENSE",
+  "content_status": "structure-only",
   "norms_region": "BR",
   "archetype": "battery",
+  "administration_notes": "STRUCTURE-ONLY: módulos Expressivo e Receptivo. NÃO inclui estímulos, itens de prova nem normas. Administração clínica exige kit TLI licenciado.",
   "scale": [
     {
       "value": 0,
-      "label": "Não se aplica / Nunca"
+      "label": "Pendente / não registrado"
     },
     {
       "value": 1,
-      "label": "Raramente"
-    },
-    {
-      "value": 2,
-      "label": "Às vezes"
-    },
-    {
-      "value": 3,
-      "label": "Frequentemente"
-    },
-    {
-      "value": 4,
-      "label": "Sempre / Muito frequente"
+      "label": "Registrado (kit licenciado)"
     }
   ],
   "domains": [
     {
       "id": "EXP",
-      "title": "Subteste EXP"
+      "title": "Linguagem expressiva"
     },
     {
       "id": "REC",
-      "title": "Subteste REC"
+      "title": "Linguagem receptiva"
     }
   ],
   "modules": {
     "EXP": {
       "id": "EXP",
-      "title": "Subteste EXP",
+      "title": "Módulo Expressivo",
+      "domain": "EXP",
+      "module_kind": "expressive",
+      "filler": "clinician",
+      "item_count": 3,
       "items": [
         {
-          "id": "exp_01",
+          "id": "exp_complete",
           "domain": "EXP",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar conclusão do módulo Expressivo (kit TLI licenciado — sem itens proprietários neste pacote)."
         },
         {
-          "id": "exp_02",
+          "id": "exp_vocab",
           "domain": "EXP",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar subárea expressiva: vocabulário / produção lexical (pontuação oficial no kit)."
         },
         {
-          "id": "exp_03",
+          "id": "exp_morpho",
           "domain": "EXP",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "exp_04",
-          "domain": "EXP",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "exp_05",
-          "domain": "EXP",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "exp_06",
-          "domain": "EXP",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar subárea expressiva: morfologia / sintaxe (pontuação oficial no kit)."
         }
-      ],
-      "filler": "clinician"
+      ]
     },
     "REC": {
       "id": "REC",
-      "title": "Subteste REC",
+      "title": "Módulo Receptivo",
+      "domain": "REC",
+      "module_kind": "receptive",
+      "filler": "clinician",
+      "item_count": 3,
       "items": [
         {
-          "id": "rec_01",
+          "id": "rec_complete",
           "domain": "REC",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar conclusão do módulo Receptivo (kit TLI licenciado — sem itens proprietários neste pacote)."
         },
         {
-          "id": "rec_02",
+          "id": "rec_vocab",
           "domain": "REC",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar subárea receptiva: compreensão lexical (pontuação oficial no kit)."
         },
         {
-          "id": "rec_03",
+          "id": "rec_grammar",
           "domain": "REC",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "rec_04",
-          "domain": "REC",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "rec_05",
-          "domain": "REC",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "rec_06",
-          "domain": "REC",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar subárea receptiva: compreensão gramatical (pontuação oficial no kit)."
         }
-      ],
-      "filler": "clinician"
+      ]
     }
   },
   "subtests": [
     {
       "id": "EXP",
-      "title": "Subteste EXP",
-      "item_count": 6
+      "title": "Linguagem expressiva",
+      "item_count": 3
     },
     {
       "id": "REC",
-      "title": "Subteste REC",
-      "item_count": 6
+      "title": "Linguagem receptiva",
+      "item_count": 3
     }
   ],
   "scoring": {
@@ -133,29 +99,24 @@
       "EXP": {
         "method": "sum",
         "item_ids": [
-          "exp_01",
-          "exp_02",
-          "exp_03",
-          "exp_04",
-          "exp_05",
-          "exp_06"
+          "exp_complete",
+          "exp_vocab",
+          "exp_morpho"
         ]
       },
       "REC": {
         "method": "sum",
         "item_ids": [
-          "rec_01",
-          "rec_02",
-          "rec_03",
-          "rec_04",
-          "rec_05",
-          "rec_06"
+          "rec_complete",
+          "rec_vocab",
+          "rec_grammar"
         ]
       }
-    }
+    },
+    "note": "Soma de checkpoints estruturais — não substitui escores oficiais do TLI."
   },
   "report": {
-    "template_id": "tli-br-v1",
+    "template_id": "tli-br-v2",
     "sections": [
       "identificacao",
       "resultados",

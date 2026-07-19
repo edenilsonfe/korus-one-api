@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
+  "status": "structure_only",
+  "note": "Estrutura expressivo/receptivo apenas. Normas e itens oficiais exigem kit TLI licenciado.",
   "domains": {},
   "age_bands": []
 }

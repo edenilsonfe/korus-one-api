@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
+  "status": "structure_only",
+  "note": "Somente estrutura de módulos. Algoritmos e normas oficiais ADOS-2 exigem kit/manual licenciado (WPS).",
   "domains": {},
   "age_bands": []
 }

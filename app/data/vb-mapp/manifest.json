@@ -1,148 +1,273 @@
 {
-  "version": 1,
-  "package_id": "vb-mapp-br",
+  "version": 2,
+  "package_id": "vb-mapp-br-v2",
   "instrument_slug": "vb-mapp",
-  "instrument_title": "VB-MAPP — Verbal Behavior Milestones",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "instrument_title": "VB-MAPP — Verbal Behavior Milestones Assessment and Placement Program",
+  "publisher": "Sundberg — estrutura pública das áreas de marcos (sem itens proprietários)",
+  "license_ref": "REQUIRES-LICENSE",
+  "content_status": "structure-only",
   "norms_region": "BR",
   "archetype": "multi_domain",
+  "administration_notes": "STRUCTURE-ONLY: 16 áreas públicas de marcos VB-MAPP (Milestones). Barriers, Transition e Task Analysis NÃO estão neste pacote. Estímulos, critérios de marco e materiais oficiais exigem kit/licença VB-MAPP.",
   "scale": [
     {
       "value": 0,
-      "label": "Não adquirido"
+      "label": "Não adquirido / área não registrada"
     },
     {
       "value": 1,
-      "label": "Emergente"
+      "label": "Emergente / registro parcial"
     },
     {
       "value": 2,
-      "label": "Adquirido"
+      "label": "Adquirido / área registrada (kit licenciado)"
     }
   ],
   "domains": [
     {
+      "id": "MAND",
+      "title": "Mandos (pedidos)"
+    },
+    {
+      "id": "TACT",
+      "title": "Tatos (nomeação)"
+    },
+    {
+      "id": "LR",
+      "title": "Resposta de ouvinte (Listener Responding)"
+    },
+    {
+      "id": "VP_MTS",
+      "title": "Percepção visual e matching-to-sample (VP-MTS)"
+    },
+    {
+      "id": "PLAY",
+      "title": "Brincadeira independente"
+    },
+    {
+      "id": "SOCIAL",
+      "title": "Comportamento social e brincadeira social"
+    },
+    {
+      "id": "IMIT",
+      "title": "Imitação motora"
+    },
+    {
+      "id": "ECHOIC",
+      "title": "Ecoico (incl. EESA)"
+    },
+    {
+      "id": "VOCAL",
+      "title": "Comportamento vocal espontâneo"
+    },
+    {
+      "id": "LRFFC",
+      "title": "Ouvinte por função, característica e classe (LRFFC)"
+    },
+    {
+      "id": "INTRA",
+      "title": "Intraverbal"
+    },
+    {
+      "id": "GROUP",
+      "title": "Rotinas de sala e habilidades em grupo"
+    },
+    {
       "id": "LING",
-      "title": "Domínio LING"
+      "title": "Estrutura linguística"
     },
     {
-      "id": "SOC",
-      "title": "Domínio SOC"
+      "id": "READ",
+      "title": "Leitura"
     },
     {
-      "id": "ACAD",
-      "title": "Domínio ACAD"
+      "id": "WRITE",
+      "title": "Escrita"
+    },
+    {
+      "id": "MATH",
+      "title": "Matemática"
     }
   ],
   "items": [
     {
-      "id": "LING_item_01",
+      "id": "MAND_checkpoint",
+      "domain": "MAND",
+      "text": "Registrar conclusão da área de marcos «Mandos (pedidos)» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "TACT_checkpoint",
+      "domain": "TACT",
+      "text": "Registrar conclusão da área de marcos «Tatos (nomeação)» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "LR_checkpoint",
+      "domain": "LR",
+      "text": "Registrar conclusão da área de marcos «Resposta de ouvinte (Listener Responding)» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "VP_MTS_checkpoint",
+      "domain": "VP_MTS",
+      "text": "Registrar conclusão da área de marcos «Percepção visual e matching-to-sample (VP-MTS)» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "PLAY_checkpoint",
+      "domain": "PLAY",
+      "text": "Registrar conclusão da área de marcos «Brincadeira independente» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "SOCIAL_checkpoint",
+      "domain": "SOCIAL",
+      "text": "Registrar conclusão da área de marcos «Comportamento social e brincadeira social» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "IMIT_checkpoint",
+      "domain": "IMIT",
+      "text": "Registrar conclusão da área de marcos «Imitação motora» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "ECHOIC_checkpoint",
+      "domain": "ECHOIC",
+      "text": "Registrar conclusão da área de marcos «Ecoico (incl. EESA)» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "VOCAL_checkpoint",
+      "domain": "VOCAL",
+      "text": "Registrar conclusão da área de marcos «Comportamento vocal espontâneo» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "LRFFC_checkpoint",
+      "domain": "LRFFC",
+      "text": "Registrar conclusão da área de marcos «Ouvinte por função, característica e classe (LRFFC)» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "INTRA_checkpoint",
+      "domain": "INTRA",
+      "text": "Registrar conclusão da área de marcos «Intraverbal» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "GROUP_checkpoint",
+      "domain": "GROUP",
+      "text": "Registrar conclusão da área de marcos «Rotinas de sala e habilidades em grupo» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
+    },
+    {
+      "id": "LING_checkpoint",
       "domain": "LING",
-      "text": "[Sample] Critério 1 do domínio LING."
+      "text": "Registrar conclusão da área de marcos «Estrutura linguística» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
     },
     {
-      "id": "LING_item_02",
-      "domain": "LING",
-      "text": "[Sample] Critério 2 do domínio LING."
+      "id": "READ_checkpoint",
+      "domain": "READ",
+      "text": "Registrar conclusão da área de marcos «Leitura» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
     },
     {
-      "id": "LING_item_03",
-      "domain": "LING",
-      "text": "[Sample] Critério 3 do domínio LING."
+      "id": "WRITE_checkpoint",
+      "domain": "WRITE",
+      "text": "Registrar conclusão da área de marcos «Escrita» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
     },
     {
-      "id": "LING_item_04",
-      "domain": "LING",
-      "text": "[Sample] Critério 4 do domínio LING."
-    },
-    {
-      "id": "LING_item_05",
-      "domain": "LING",
-      "text": "[Sample] Critério 5 do domínio LING."
-    },
-    {
-      "id": "SOC_item_01",
-      "domain": "SOC",
-      "text": "[Sample] Critério 1 do domínio SOC."
-    },
-    {
-      "id": "SOC_item_02",
-      "domain": "SOC",
-      "text": "[Sample] Critério 2 do domínio SOC."
-    },
-    {
-      "id": "SOC_item_03",
-      "domain": "SOC",
-      "text": "[Sample] Critério 3 do domínio SOC."
-    },
-    {
-      "id": "SOC_item_04",
-      "domain": "SOC",
-      "text": "[Sample] Critério 4 do domínio SOC."
-    },
-    {
-      "id": "SOC_item_05",
-      "domain": "SOC",
-      "text": "[Sample] Critério 5 do domínio SOC."
-    },
-    {
-      "id": "ACAD_item_01",
-      "domain": "ACAD",
-      "text": "[Sample] Critério 1 do domínio ACAD."
-    },
-    {
-      "id": "ACAD_item_02",
-      "domain": "ACAD",
-      "text": "[Sample] Critério 2 do domínio ACAD."
-    },
-    {
-      "id": "ACAD_item_03",
-      "domain": "ACAD",
-      "text": "[Sample] Critério 3 do domínio ACAD."
-    },
-    {
-      "id": "ACAD_item_04",
-      "domain": "ACAD",
-      "text": "[Sample] Critério 4 do domínio ACAD."
-    },
-    {
-      "id": "ACAD_item_05",
-      "domain": "ACAD",
-      "text": "[Sample] Critério 5 do domínio ACAD."
+      "id": "MATH_checkpoint",
+      "domain": "MATH",
+      "text": "Registrar conclusão da área de marcos «Matemática» (kit VB-MAPP licenciado). Não inclui marcos/itens proprietários — use o protocolo oficial para pontuar cada marco."
     }
   ],
   "scoring": {
     "engine": "domain_mastery",
     "domains": {
+      "MAND": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "MAND_checkpoint"
+        ]
+      },
+      "TACT": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "TACT_checkpoint"
+        ]
+      },
+      "LR": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "LR_checkpoint"
+        ]
+      },
+      "VP_MTS": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "VP_MTS_checkpoint"
+        ]
+      },
+      "PLAY": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "PLAY_checkpoint"
+        ]
+      },
+      "SOCIAL": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "SOCIAL_checkpoint"
+        ]
+      },
+      "IMIT": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "IMIT_checkpoint"
+        ]
+      },
+      "ECHOIC": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "ECHOIC_checkpoint"
+        ]
+      },
+      "VOCAL": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "VOCAL_checkpoint"
+        ]
+      },
+      "LRFFC": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "LRFFC_checkpoint"
+        ]
+      },
+      "INTRA": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "INTRA_checkpoint"
+        ]
+      },
+      "GROUP": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "GROUP_checkpoint"
+        ]
+      },
       "LING": {
         "method": "mastery_pct",
         "item_ids": [
-          "LING_item_01",
-          "LING_item_02",
-          "LING_item_03",
-          "LING_item_04",
-          "LING_item_05"
+          "LING_checkpoint"
         ]
       },
-      "SOC": {
+      "READ": {
         "method": "mastery_pct",
         "item_ids": [
-          "SOC_item_01",
-          "SOC_item_02",
-          "SOC_item_03",
-          "SOC_item_04",
-          "SOC_item_05"
+          "READ_checkpoint"
         ]
       },
-      "ACAD": {
+      "WRITE": {
         "method": "mastery_pct",
         "item_ids": [
-          "ACAD_item_01",
-          "ACAD_item_02",
-          "ACAD_item_03",
-          "ACAD_item_04",
-          "ACAD_item_05"
+          "WRITE_checkpoint"
+        ]
+      },
+      "MATH": {
+        "method": "mastery_pct",
+        "item_ids": [
+          "MATH_checkpoint"
         ]
       }
     },
@@ -150,22 +275,23 @@
       {
         "min": 0,
         "max": 49,
-        "label": "Habilidades iniciais — foco em ensino estruturado"
+        "label": "Registro estrutural inicial — aplicar marcos oficiais do kit"
       },
       {
         "min": 50,
         "max": 79,
-        "label": "Desenvolvimento parcial — metas intermediárias"
+        "label": "Registro parcial das áreas de marcos"
       },
       {
         "min": 80,
         "max": 100,
-        "label": "Domínio elevado na amostra aplicada"
+        "label": "Maioria das áreas com checkpoint registrado"
       }
-    ]
+    ],
+    "note": "Percentuais refletem checkpoints estruturais, não mestria real dos marcos VB-MAPP."
   },
   "report": {
-    "template_id": "vb-mapp-br-v1",
+    "template_id": "vb-mapp-br-v2",
     "sections": [
       "identificacao",
       "resultados",

@@ -1,8 +1,5 @@
 {
-  "version": 1,
+  "status": "not_applicable",
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
-  "domains": {},
-  "age_bands": []
+  "note": "DOSS é escala ordinal clínica (O'Neil et al.) — interpretação por nível, sem norma populacional."
 }

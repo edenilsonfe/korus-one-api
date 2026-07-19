@@ -1,110 +1,195 @@
 {
-  "version": 1,
-  "package_id": "omes-br",
+  "version": 2,
+  "package_id": "omes-br-v2",
   "instrument_slug": "omes",
-  "instrument_title": "OMES — Orofacial Myofunctional Evaluation Scale",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "instrument_title": "OMES — Orofacial Myofunctional Evaluation with Scores",
+  "publisher": "Felício et al. — estrutura aparência/mobilidade/funções (sem âncoras proprietárias completas)",
+  "license_ref": "REQUIRES-LICENSE",
+  "content_status": "structure-only",
   "norms_region": "BR",
   "archetype": "scaled",
+  "administration_notes": "STRUCTURE-ONLY: eixos Aparência, Mobilidade e Funções (análogo leve ao AMIOFE). Critérios/âncoras oficiais OMES e materiais de exame exigem protocolo licenciado. Para avaliação miofuncional completa com escores publicados no produto, preferir AMIOFE quando disponível.",
   "scale": [
     {
-      "value": 0,
-      "label": "Nunca / Ausente"
-    },
-    {
-      "value": 1,
-      "label": "Ocasionalmente"
-    },
-    {
-      "value": 2,
-      "label": "Frequentemente"
+      "value": 4,
+      "label": "Normal / adequado (registro estrutural)"
     },
     {
       "value": 3,
-      "label": "Muito frequentemente / Severo"
+      "label": "Leve"
+    },
+    {
+      "value": 2,
+      "label": "Moderado"
+    },
+    {
+      "value": 1,
+      "label": "Severo"
     }
   ],
   "domains": [
     {
+      "id": "APPEARANCE",
+      "title": "Aparência / postura orofacial"
+    },
+    {
+      "id": "MOBILITY",
+      "title": "Mobilidade"
+    },
+    {
+      "id": "FUNCTIONS",
+      "title": "Funções"
+    },
+    {
       "id": "TOTAL",
-      "title": "Pontuação total"
+      "title": "Média estrutural total"
     }
   ],
   "items": [
     {
-      "id": "omes_01",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_app_face",
+      "domain": "APPEARANCE",
+      "text": "Aparência: face / simetria (registro estrutural — kit OMES/AMIOFE licenciado para critérios oficiais)"
     },
     {
-      "id": "omes_02",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_app_cheeks",
+      "domain": "APPEARANCE",
+      "text": "Aparência: bochechas"
     },
     {
-      "id": "omes_03",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_app_jaw",
+      "domain": "APPEARANCE",
+      "text": "Aparência: relação maxilo-mandibular / mandíbula"
     },
     {
-      "id": "omes_04",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_app_lips",
+      "domain": "APPEARANCE",
+      "text": "Aparência: lábios em repouso"
     },
     {
-      "id": "omes_05",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_app_tongue",
+      "domain": "APPEARANCE",
+      "text": "Aparência: língua em repouso / postura"
     },
     {
-      "id": "omes_06",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_app_palate",
+      "domain": "APPEARANCE",
+      "text": "Aparência: palato duro"
     },
     {
-      "id": "omes_07",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_mob_lips",
+      "domain": "MOBILITY",
+      "text": "Mobilidade: lábios"
     },
     {
-      "id": "omes_08",
-      "domain": "TOTAL",
-      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+      "id": "omes_mob_tongue",
+      "domain": "MOBILITY",
+      "text": "Mobilidade: língua"
+    },
+    {
+      "id": "omes_mob_jaw",
+      "domain": "MOBILITY",
+      "text": "Mobilidade: mandíbula"
+    },
+    {
+      "id": "omes_mob_cheeks",
+      "domain": "MOBILITY",
+      "text": "Mobilidade: bochechas"
+    },
+    {
+      "id": "omes_fn_breath",
+      "domain": "FUNCTIONS",
+      "text": "Função: respiração (modo / competência)"
+    },
+    {
+      "id": "omes_fn_swallow",
+      "domain": "FUNCTIONS",
+      "text": "Função: deglutição"
+    },
+    {
+      "id": "omes_fn_chew",
+      "domain": "FUNCTIONS",
+      "text": "Função: mastigação"
+    },
+    {
+      "id": "omes_fn_speech",
+      "domain": "FUNCTIONS",
+      "text": "Função: fala / articulação (observação miofuncional)"
     }
   ],
   "scoring": {
     "engine": "scaled_likert_mean",
     "domains": {
+      "APPEARANCE": {
+        "method": "mean",
+        "item_ids": [
+          "omes_app_face",
+          "omes_app_cheeks",
+          "omes_app_jaw",
+          "omes_app_lips",
+          "omes_app_tongue",
+          "omes_app_palate"
+        ]
+      },
+      "MOBILITY": {
+        "method": "mean",
+        "item_ids": [
+          "omes_mob_lips",
+          "omes_mob_tongue",
+          "omes_mob_jaw",
+          "omes_mob_cheeks"
+        ]
+      },
+      "FUNCTIONS": {
+        "method": "mean",
+        "item_ids": [
+          "omes_fn_breath",
+          "omes_fn_swallow",
+          "omes_fn_chew",
+          "omes_fn_speech"
+        ]
+      },
       "TOTAL": {
         "method": "mean",
         "item_ids": [
-          "omes_01",
-          "omes_02",
-          "omes_03",
-          "omes_04",
-          "omes_05",
-          "omes_06",
-          "omes_07",
-          "omes_08"
+          "omes_app_face",
+          "omes_app_cheeks",
+          "omes_app_jaw",
+          "omes_app_lips",
+          "omes_app_tongue",
+          "omes_app_palate",
+          "omes_mob_lips",
+          "omes_mob_tongue",
+          "omes_mob_jaw",
+          "omes_mob_cheeks",
+          "omes_fn_breath",
+          "omes_fn_swallow",
+          "omes_fn_chew",
+          "omes_fn_speech"
         ]
       }
     },
     "interpretations": [
       {
-        "min": 0,
-        "max": 1.0,
-        "label": "Função miofuncional preservada"
+        "min": 3.5,
+        "max": 4,
+        "label": "Registro estrutural predominantemente adequado — validar no protocolo OMES"
       },
       {
-        "min": 1.01,
-        "max": 3.0,
-        "label": "Disfunção miofuncional identificada"
+        "min": 2,
+        "max": 3.49,
+        "label": "Sinais de alteração miofuncional no registro estrutural — confirmar no kit"
+      },
+      {
+        "min": 1,
+        "max": 1.99,
+        "label": "Alteração acentuada no registro estrutural — confirmar no kit OMES"
       }
-    ]
+    ],
+    "note": "Médias estruturais não substituem escores oficiais OMES."
   },
   "report": {
-    "template_id": "omes-br-v1",
+    "template_id": "omes-br-v2",
     "sections": [
       "identificacao",
       "resultados",

@@ -1,84 +1,72 @@
 {
-  "version": 1,
-  "package_id": "tvip-br",
+  "version": 2,
+  "package_id": "tvip-br-v2",
   "instrument_slug": "tvip",
   "instrument_title": "TVIP — Teste de Vocabulário por Imagens Peabody",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "publisher": "American Guidance Service / editor local — estrutura (sem lista de palavras)",
+  "license_ref": "REQUIRES-LICENSE",
+  "content_status": "structure-only",
   "norms_region": "BR",
   "archetype": "battery",
+  "administration_notes": "STRUCTURE-ONLY: vocabulário receptivo por imagens com regras de basal e teto. NÃO inclui pranchas, palavras-alvo nem tabelas normativas. Administre com o kit TVIP/PPVT licenciado; registre aqui apenas checkpoints de procedimento e escore bruto oficial.",
   "scale": [
     {
       "value": 0,
-      "label": "Não se aplica / Nunca"
+      "label": "Pendente / não registrado"
     },
     {
       "value": 1,
-      "label": "Raramente"
-    },
-    {
-      "value": 2,
-      "label": "Às vezes"
-    },
-    {
-      "value": 3,
-      "label": "Frequentemente"
-    },
-    {
-      "value": 4,
-      "label": "Sempre / Muito frequente"
+      "label": "Registrado (kit licenciado)"
     }
   ],
   "domains": [
     {
       "id": "VOC",
-      "title": "Subteste VOC"
+      "title": "Vocabulário receptivo"
     }
   ],
   "modules": {
     "VOC": {
       "id": "VOC",
-      "title": "Subteste VOC",
+      "title": "Vocabulário receptivo (TVIP)",
+      "domain": "VOC",
+      "module_kind": "receptive_vocab",
+      "filler": "clinician",
+      "item_count": 4,
       "items": [
         {
-          "id": "voc_01",
+          "id": "tvip_start",
           "domain": "VOC",
-          "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar item de partida / idade cronológica conforme manual TVIP licenciado (sem lista de palavras neste pacote)."
         },
         {
-          "id": "voc_02",
+          "id": "tvip_basal",
           "domain": "VOC",
-          "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar obtenção do basal (regra oficial do manual — tipicamente sequência de acertos iniciais)."
         },
         {
-          "id": "voc_03",
+          "id": "tvip_ceiling",
           "domain": "VOC",
-          "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar teto/ceiling (regra oficial do manual — tipicamente sequência de erros consecutivos)."
         },
         {
-          "id": "voc_04",
+          "id": "tvip_raw",
           "domain": "VOC",
-          "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "voc_05",
-          "domain": "VOC",
-          "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
-        },
-        {
-          "id": "voc_06",
-          "domain": "VOC",
-          "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+          "text": "Registrar conclusão do cálculo da pontuação bruta oficial (kit/manual TVIP — sem itens de vocabulário neste app)."
         }
       ],
-      "filler": "clinician"
+      "administration_rules": {
+        "basal": "Conforme manual TVIP licenciado (tipicamente sequência de acertos a partir do item de partida por idade).",
+        "ceiling": "Conforme manual TVIP licenciado (tipicamente sequência de erros consecutivos).",
+        "stimuli": "Pranchas e lista de palavras do kit oficial — não fornecidas neste pacote."
+      }
     }
   },
   "subtests": [
     {
       "id": "VOC",
-      "title": "Subteste VOC",
-      "item_count": 6
+      "title": "Vocabulário receptivo",
+      "item_count": 4
     }
   ],
   "scoring": {
@@ -87,18 +75,21 @@
       "VOC": {
         "method": "sum",
         "item_ids": [
-          "voc_01",
-          "voc_02",
-          "voc_03",
-          "voc_04",
-          "voc_05",
-          "voc_06"
+          "tvip_start",
+          "tvip_basal",
+          "tvip_ceiling",
+          "tvip_raw"
         ]
       }
-    }
+    },
+    "administration_rules": {
+      "basal_rule_note": "Usar regra de basal do manual TVIP licenciado.",
+      "ceiling_rule_note": "Usar regra de teto/ceiling do manual TVIP licenciado."
+    },
+    "note": "Soma de checkpoints estruturais — não é a pontuação bruta normativa do TVIP."
   },
   "report": {
-    "template_id": "tvip-br-v1",
+    "template_id": "tvip-br-v2",
     "sections": [
       "identificacao",
       "resultados",

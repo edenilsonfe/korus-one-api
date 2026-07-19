@@ -1,90 +1,71 @@
 {
-  "version": 1,
+  "version": 2,
   "package_id": "eat-10-br",
   "instrument_slug": "eat-10",
   "instrument_title": "EAT-10 — Eating Assessment Tool",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "publisher": "Belafsky et al. (2008) — estrutura pública",
+  "license_ref": "PUBLIC-BELFSKY-2008",
+  "content_status": "official-structure",
   "norms_region": null,
   "archetype": "scaled",
   "scale": [
-    {
-      "value": 0,
-      "label": "Sem problema"
-    },
-    {
-      "value": 1,
-      "label": "Problema"
-    },
-    {
-      "value": 2,
-      "label": "Problema significativo"
-    },
-    {
-      "value": 3,
-      "label": "Problema severo"
-    },
-    {
-      "value": 4,
-      "label": "Incapaz de realizar"
-    }
+    { "value": 0, "label": "Sem problema" },
+    { "value": 1, "label": "Problema leve" },
+    { "value": 2, "label": "Problema moderado" },
+    { "value": 3, "label": "Problema severo" },
+    { "value": 4, "label": "Problema incapacitante" }
   ],
-  "domains": [
-    {
-      "id": "TOTAL",
-      "title": "Pontuação total"
-    }
-  ],
+  "domains": [{ "id": "TOTAL", "title": "Pontuação total" }],
   "items": [
     {
       "id": "eat10_01",
       "domain": "TOTAL",
-      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+      "text": "Meu problema de deglutição me fez perder peso."
     },
     {
       "id": "eat10_02",
       "domain": "TOTAL",
-      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+      "text": "Meu problema de deglutição interfere na minha capacidade de sair para comer."
     },
     {
       "id": "eat10_03",
       "domain": "TOTAL",
-      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+      "text": "Engolir líquidos exige esforço extra."
     },
     {
       "id": "eat10_04",
       "domain": "TOTAL",
-      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+      "text": "Engolir sólidos exige esforço extra."
     },
     {
       "id": "eat10_05",
       "domain": "TOTAL",
-      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+      "text": "Engolir comprimidos exige esforço extra."
     },
     {
       "id": "eat10_06",
       "domain": "TOTAL",
-      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+      "text": "Engolir é doloroso."
     },
     {
       "id": "eat10_07",
       "domain": "TOTAL",
-      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+      "text": "O prazer de comer é afetado pelo meu problema de deglutição."
     },
     {
       "id": "eat10_08",
       "domain": "TOTAL",
-      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+      "text": "Quando engulo, a comida gruda na minha garganta."
     },
     {
       "id": "eat10_09",
       "domain": "TOTAL",
-      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+      "text": "Eu tusso quando como."
     },
     {
       "id": "eat10_10",
       "domain": "TOTAL",
-      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+      "text": "Engolir me deixa estressado(a)."
     }
   ],
   "scoring": {
@@ -107,15 +88,11 @@
       }
     },
     "interpretations": [
-      {
-        "min": 0,
-        "max": 2,
-        "label": "Baixo risco de disfagia"
-      },
+      { "min": 0, "max": 2, "label": "Baixo risco de disfagia (EAT-10 < 3)" },
       {
         "min": 3,
         "max": 40,
-        "label": "Risco de disfagia — investigação clínica indicada"
+        "label": "Risco de disfagia — investigação clínica indicada (EAT-10 ≥ 3)"
       }
     ],
     "cutoffs": [
@@ -123,24 +100,19 @@
         "domain": "TOTAL",
         "operator": ">=",
         "value": 3,
-        "label": "Positivo para disfagia"
+        "label": "Positivo para disfagia (ponto de corte Belafsky)"
       }
     ]
   },
   "report": {
-    "template_id": "eat-10-br-v1",
-    "sections": [
-      "identificacao",
-      "resultados",
-      "interpretacao",
-      "recomendacoes"
-    ]
+    "template_id": "eat-10-br-v2",
+    "sections": ["identificacao", "resultados", "interpretacao", "recomendacoes"]
   },
   "informant_forms": [
     {
       "slug": "caregiver",
       "filler": "external",
-      "title": "Versão cuidador"
+      "title": "Versão cuidador / paciente"
     }
   ]
 }

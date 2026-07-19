@@ -223,6 +223,9 @@ class InstrumentContentPackage:
             "domains": self.domains,
             "item_count": len(self.get_items()),
             "scoring_engine": self.scoring.get("engine"),
+            "license_ref": self.data.get("license_ref"),
+            "content_status": self.data.get("content_status"),
+            "administration_notes": self.data.get("administration_notes"),
             "report": {
                 "template_id": self.report.get("template_id"),
                 "sections": self.report.get("sections", []),

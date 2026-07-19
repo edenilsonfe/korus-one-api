@@ -12,6 +12,7 @@ LEVEL_LABELS: dict[str, str] = {
     "qualitative": "Interpretação qualitativa (manual)",
     "reference": "Referência científica",
     "public_reference": "Referência pública (aproximada)",
+    "structure_only": "Estrutura apenas — kit licenciado necessário",
     "not_applicable": "Sem norma populacional",
     "stub": "Normas BR pendentes",
     "unknown": "Status normativo indefinido",
@@ -23,6 +24,7 @@ LEVEL_DETAILS: dict[str, str] = {
     "qualitative": "Faixa etária abaixo de 3 anos — idade de desenvolvimento por habilidades (sem EP).",
     "reference": "Interpretação baseada em estudos publicados — não substitui manual do editor.",
     "public_reference": "Referência etária aproximada para heatmap — não substitui norma licenciada.",
+    "structure_only": "Fluxo e módulos alinhados ao protocolo; estímulos/itens oficiais exigem pacote licenciado.",
     "not_applicable": "Instrumento critério-referenciado ou ordinal — interpretação clínica direta.",
     "stub": "Exibir apenas pontuação bruta até publicação de normas brasileiras licenciadas.",
     "unknown": "Verifique o pacote do instrumento antes de interpretar escores padronizados.",
@@ -95,6 +97,8 @@ def _resolve_level(
         return "reference"
     if "public_reference" in normalized:
         return "public_reference"
+    if "structure_only" in normalized:
+        return "structure_only"
     if "stub" in normalized:
         return "stub"
 

@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
+  "status": "not_applicable",
+  "note": "CARS é critério-referenciado com faixas públicas clássicas (<30 / 30–36 / ≥37). Sem norma populacional BR no pacote; âncoras detalhadas exigem manual licenciado.",
   "domains": {},
   "age_bands": []
 }

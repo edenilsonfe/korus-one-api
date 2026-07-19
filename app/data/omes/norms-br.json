@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
+  "status": "structure_only",
+  "note": "Estrutura aparência/mobilidade/funções. Normas e âncoras oficiais OMES exigem protocolo licenciado.",
   "domains": {},
   "age_bands": []
 }

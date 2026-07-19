@@ -5,7 +5,12 @@ from pydantic import Field
 from app.schemas.common import CamelModel
 
 FidelityBadge = Literal[
-    "official-structure", "partial-norms", "draft-knowledge", "DEV-SAMPLE"
+    "official-structure",
+    "partial-norms",
+    "draft-knowledge",
+    "DEV-SAMPLE",
+    "structure-only",
+
 ]
 
 

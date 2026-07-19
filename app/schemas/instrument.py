@@ -23,6 +23,9 @@ class InstrumentManifestResponse(CamelModel):
     domains: list[dict[str, str]]
     item_count: int
     scoring_engine: Optional[str] = None
+    license_ref: Optional[str] = None
+    content_status: Optional[str] = None
+    administration_notes: Optional[str] = None
     report: dict[str, Any] = Field(default_factory=dict)
     subtests: list[dict[str, Any]] = Field(default_factory=list)
     modules: list[dict[str, Any]] = Field(default_factory=list)

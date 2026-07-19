@@ -1,100 +1,186 @@
 {
-  "version": 1,
-  "package_id": "masa-br",
+  "version": 2,
+  "package_id": "masa-br-v2",
   "instrument_slug": "masa",
   "instrument_title": "MASA — Mann Assessment of Swallowing Ability",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "publisher": "Mann — componentes clínicos públicos (pesos/âncoras oficiais no manual)",
+  "license_ref": "REQUIRES-LICENSE",
+  "content_status": "structure-only",
   "norms_region": "BR",
   "archetype": "scaled",
+  "administration_notes": "STRUCTURE-ONLY: 24 componentes clínicos amplamente citados na literatura MASA. NÃO inclui âncoras ponderadas oficiais (total máximo 200 no protocolo licenciado) nem cutoffs proprietários. Use o formulário/manual MASA licenciado para pontuação clínica válida.",
   "scale": [
     {
       "value": 0,
-      "label": "Não se aplica / Nunca"
+      "label": "Não avaliado / N/A"
     },
     {
       "value": 1,
-      "label": "Raramente"
+      "label": "Comprometimento severo (registro estrutural)"
     },
     {
       "value": 2,
-      "label": "Às vezes"
+      "label": "Comprometimento moderado (registro estrutural)"
     },
     {
       "value": 3,
-      "label": "Frequentemente"
+      "label": "Comprometimento leve (registro estrutural)"
     },
     {
       "value": 4,
-      "label": "Sempre / Muito frequente"
+      "label": "Função adequada (registro estrutural)"
+    },
+    {
+      "value": 5,
+      "label": "Dentro dos limites (registro estrutural)"
     }
   ],
   "domains": [
     {
+      "id": "GENERAL",
+      "title": "Exame geral"
+    },
+    {
+      "id": "ORAL_PREP",
+      "title": "Preparação oral"
+    },
+    {
+      "id": "ORAL_PHASE",
+      "title": "Fase oral"
+    },
+    {
+      "id": "PHARYNGEAL",
+      "title": "Fase faríngea"
+    },
+    {
+      "id": "DIET",
+      "title": "Dieta"
+    },
+    {
       "id": "TOTAL",
-      "title": "Pontuação total"
+      "title": "Registro estrutural total"
     }
   ],
   "items": [
     {
       "id": "masa_01",
       "domain": "TOTAL",
-      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+      "text": "Alerta / estado de alerta (Alertness) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_02",
       "domain": "TOTAL",
-      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+      "text": "Cooperação (Cooperation) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_03",
       "domain": "TOTAL",
-      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+      "text": "Compreensão auditiva (Auditory comprehension) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_04",
       "domain": "TOTAL",
-      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+      "text": "Respiração (Respiration) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_05",
       "domain": "TOTAL",
-      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+      "text": "Frequência respiratória para deglutir (Respiratory rate for swallow) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_06",
       "domain": "TOTAL",
-      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+      "text": "Disfasia (Dysphasia) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_07",
       "domain": "TOTAL",
-      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+      "text": "Disartria (Dysarthria) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_08",
       "domain": "TOTAL",
-      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+      "text": "Saliva (Saliva) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_09",
       "domain": "TOTAL",
-      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+      "text": "Selamento labial (Lip seal) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_10",
       "domain": "TOTAL",
-      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+      "text": "Movimento de língua (Tongue movement) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_11",
       "domain": "TOTAL",
-      "text": "[Sample] Item 11 — descrição resumida do comportamento/indicador clínico."
+      "text": "Força de língua (Tongue strength) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     },
     {
       "id": "masa_12",
       "domain": "TOTAL",
-      "text": "[Sample] Item 12 — descrição resumida do comportamento/indicador clínico."
+      "text": "Coordenação de língua (Tongue coordination) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_13",
+      "domain": "TOTAL",
+      "text": "Preparação oral (Oral preparation) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_14",
+      "domain": "TOTAL",
+      "text": "Reflexo de engasgo / gag (Gag) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_15",
+      "domain": "TOTAL",
+      "text": "Palato (Palate) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_16",
+      "domain": "TOTAL",
+      "text": "Clareza do bolo / clearance oral (Bolus clearance) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_17",
+      "domain": "TOTAL",
+      "text": "Trânsito oral (Oral transit) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_18",
+      "domain": "TOTAL",
+      "text": "Reflexo de tosse (Cough reflex) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_19",
+      "domain": "TOTAL",
+      "text": "Tosse voluntária (Voluntary cough) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_20",
+      "domain": "TOTAL",
+      "text": "Voz (Voice) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_21",
+      "domain": "TOTAL",
+      "text": "Traqueostomia (Tracheostomy) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_22",
+      "domain": "TOTAL",
+      "text": "Fase faríngea (Pharyngeal phase) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_23",
+      "domain": "TOTAL",
+      "text": "Resposta faríngea (Pharyngeal response) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
+    },
+    {
+      "id": "masa_24",
+      "domain": "TOTAL",
+      "text": "Dieta / recomendações dietéticas (Diet) — registrar observação estrutural (âncoras e pesos oficiais no manual MASA licenciado)."
     }
   ],
   "scoring": {
@@ -114,30 +200,38 @@
           "masa_09",
           "masa_10",
           "masa_11",
-          "masa_12"
+          "masa_12",
+          "masa_13",
+          "masa_14",
+          "masa_15",
+          "masa_16",
+          "masa_17",
+          "masa_18",
+          "masa_19",
+          "masa_20",
+          "masa_21",
+          "masa_22",
+          "masa_23",
+          "masa_24"
         ]
       }
     },
+    "note": "Soma estrutural deste app NÃO equivale ao escore MASA oficial (máx. 200 ponderado). Interpretação clínica de risco de aspiração deve seguir o protocolo licenciado.",
     "interpretations": [
       {
         "min": 0,
-        "max": 24,
-        "label": "Disfagia significativa"
+        "max": 71,
+        "label": "Registro estrutural incompleto ou escores baixos — validar no MASA licenciado (não é o total oficial ponderado)"
       },
       {
-        "min": 25,
-        "max": 48,
-        "label": "Disfagia leve a moderada"
-      },
-      {
-        "min": 49,
-        "max": 60,
-        "label": "Função de deglutição preservada"
+        "min": 72,
+        "max": 120,
+        "label": "Checkpoints majoritariamente preenchidos — transferir escores oficiais do kit MASA (máx. 200 ponderado)"
       }
     ]
   },
   "report": {
-    "template_id": "masa-br-v1",
+    "template_id": "masa-br-v2",
     "sections": [
       "identificacao",
       "resultados",

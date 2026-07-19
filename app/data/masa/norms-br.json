@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "region": "BR",
-  "status": "stub",
-  "note": "Normas brasileiras em desenvolvimento — scoring raw até publicação licenciada.",
+  "status": "structure_only",
+  "note": "Componentes estruturais apenas. Escore ponderado oficial (máx. 200) e cutoffs exigem protocolo MASA licenciado.",
   "domains": {},
   "age_bands": []
 }

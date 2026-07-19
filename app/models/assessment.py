@@ -10,7 +10,13 @@ from app.db.base import Base, TimestampMixin, new_uuid
 ASSESSMENT_STATUS_COMPLETED = "completed"
 
 FIDELITY_BADGES = frozenset(
-    {"official-structure", "partial-norms", "draft-knowledge", "DEV-SAMPLE"}
+    {
+        "official-structure",
+        "partial-norms",
+        "draft-knowledge",
+        "DEV-SAMPLE",
+        "structure-only",
+    }
 )
 
 

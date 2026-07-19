@@ -1,32 +1,30 @@
 {
-  "version": 1,
-  "package_id": "cars-br",
+  "version": 2,
+  "package_id": "cars-br-v2",
   "instrument_slug": "cars",
   "instrument_title": "CARS — Childhood Autism Rating Scale",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "publisher": "Schopler et al. — estrutura pública (áreas e faixas)",
+  "license_ref": "PUBLIC-STRUCTURE-CARS",
+  "content_status": "official-structure",
   "norms_region": "BR",
   "archetype": "scaled",
+  "administration_notes": "Estrutura pública das 15 áreas CARS e faixas de corte clássicas. Âncoras comportamentais detalhadas do manual WPS/editor NÃO estão incluídas — use o kit/manual licenciado para âncoras oficiais. Escala 1–4 por área; total 15–60.",
   "scale": [
     {
-      "value": 0,
-      "label": "Não se aplica / Nunca"
-    },
-    {
       "value": 1,
-      "label": "Raramente"
+      "label": "Dentro dos limites"
     },
     {
       "value": 2,
-      "label": "Às vezes"
+      "label": "Levemente anormal"
     },
     {
       "value": 3,
-      "label": "Frequentemente"
+      "label": "Moderadamente anormal"
     },
     {
       "value": 4,
-      "label": "Sempre / Muito frequente"
+      "label": "Severamente anormal"
     }
   ],
   "domains": [
@@ -39,77 +37,77 @@
     {
       "id": "cars_01",
       "domain": "TOTAL",
-      "text": "[Sample] Item 1 — descrição resumida do comportamento/indicador clínico."
+      "text": "Relacionamento com pessoas"
     },
     {
       "id": "cars_02",
       "domain": "TOTAL",
-      "text": "[Sample] Item 2 — descrição resumida do comportamento/indicador clínico."
+      "text": "Imitação"
     },
     {
       "id": "cars_03",
       "domain": "TOTAL",
-      "text": "[Sample] Item 3 — descrição resumida do comportamento/indicador clínico."
+      "text": "Resposta emocional"
     },
     {
       "id": "cars_04",
       "domain": "TOTAL",
-      "text": "[Sample] Item 4 — descrição resumida do comportamento/indicador clínico."
+      "text": "Uso do corpo"
     },
     {
       "id": "cars_05",
       "domain": "TOTAL",
-      "text": "[Sample] Item 5 — descrição resumida do comportamento/indicador clínico."
+      "text": "Uso de objetos"
     },
     {
       "id": "cars_06",
       "domain": "TOTAL",
-      "text": "[Sample] Item 6 — descrição resumida do comportamento/indicador clínico."
+      "text": "Adaptação a mudanças"
     },
     {
       "id": "cars_07",
       "domain": "TOTAL",
-      "text": "[Sample] Item 7 — descrição resumida do comportamento/indicador clínico."
+      "text": "Resposta visual"
     },
     {
       "id": "cars_08",
       "domain": "TOTAL",
-      "text": "[Sample] Item 8 — descrição resumida do comportamento/indicador clínico."
+      "text": "Resposta auditiva"
     },
     {
       "id": "cars_09",
       "domain": "TOTAL",
-      "text": "[Sample] Item 9 — descrição resumida do comportamento/indicador clínico."
+      "text": "Resposta e uso do paladar, olfato e tato"
     },
     {
       "id": "cars_10",
       "domain": "TOTAL",
-      "text": "[Sample] Item 10 — descrição resumida do comportamento/indicador clínico."
+      "text": "Medo ou nervosismo"
     },
     {
       "id": "cars_11",
       "domain": "TOTAL",
-      "text": "[Sample] Item 11 — descrição resumida do comportamento/indicador clínico."
+      "text": "Comunicação verbal"
     },
     {
       "id": "cars_12",
       "domain": "TOTAL",
-      "text": "[Sample] Item 12 — descrição resumida do comportamento/indicador clínico."
+      "text": "Comunicação não verbal"
     },
     {
       "id": "cars_13",
       "domain": "TOTAL",
-      "text": "[Sample] Item 13 — descrição resumida do comportamento/indicador clínico."
+      "text": "Nível de atividade"
     },
     {
       "id": "cars_14",
       "domain": "TOTAL",
-      "text": "[Sample] Item 14 — descrição resumida do comportamento/indicador clínico."
+      "text": "Nível e consistência da resposta intelectual"
     },
     {
       "id": "cars_15",
       "domain": "TOTAL",
-      "text": "[Sample] Item 15 — descrição resumida do comportamento/indicador clínico."
+      "text": "Impressões gerais"
     }
   ],
   "scoring": {
@@ -140,17 +138,17 @@
       {
         "min": 15,
         "max": 29,
-        "label": "Sem indícios significativos de autismo"
+        "label": "Não autista (total < 30)"
       },
       {
         "min": 30,
         "max": 36,
-        "label": "Autismo leve a moderado"
+        "label": "Autismo leve a moderado (30–36)"
       },
       {
         "min": 37,
         "max": 60,
-        "label": "Autismo severo"
+        "label": "Autismo severo (total ≥ 37)"
       }
     ],
     "cutoffs": [
@@ -158,12 +156,18 @@
         "domain": "TOTAL",
         "operator": ">=",
         "value": 30,
-        "label": "Corte clínico TEA"
+        "label": "Corte TEA (leve-moderado ou superior)"
+      },
+      {
+        "domain": "TOTAL",
+        "operator": ">=",
+        "value": 37,
+        "label": "Corte autismo severo"
       }
     ]
   },
   "report": {
-    "template_id": "cars-br-v1",
+    "template_id": "cars-br-v2",
     "sections": [
       "identificacao",
       "resultados",

@@ -1,173 +1,337 @@
 {
-  "version": 1,
-  "package_id": "ados-2-br",
+  "version": 2,
+  "package_id": "ados-2-br-v2",
   "instrument_slug": "ados-2",
-  "instrument_title": "ADOS-2 — Autism Diagnostic Observation Schedule",
-  "publisher": "Development sample",
-  "license_ref": "DEV-SAMPLE",
+  "instrument_title": "ADOS-2 — Autism Diagnostic Observation Schedule, Second Edition",
+  "publisher": "Western Psychological Services — estrutura de módulos (sem itens proprietários)",
+  "license_ref": "REQUIRES-LICENSE",
+  "content_status": "structure-only",
   "norms_region": "BR",
   "archetype": "observational",
+  "administration_notes": "Pacote STRUCTURE-ONLY: módulos Toddler/1/2/3/4 e checkpoints de registro. NÃO inclui atividades, códigos de observação nem algoritmos de classificação proprietários. Administração clínica exige kit ADOS-2 licenciado, treinamento e materiais oficiais.",
   "scale": [
     {
       "value": 0,
-      "label": "Ausente / Não observado"
+      "label": "Não administrado / pendente"
     },
     {
       "value": 1,
-      "label": "Parcial / Emergente"
+      "label": "Parcialmente registrado"
     },
     {
       "value": 2,
-      "label": "Presente / Adequado"
+      "label": "Módulo/algoritmo registrado (kit licenciado)"
     }
   ],
   "domains": [
     {
-      "id": "MOD1",
-      "title": "Módulo MOD1"
+      "id": "toddler",
+      "title": "Módulo Toddler"
     },
     {
-      "id": "MOD2",
-      "title": "Módulo MOD2"
+      "id": "mod1",
+      "title": "Módulo 1"
+    },
+    {
+      "id": "mod2",
+      "title": "Módulo 2"
+    },
+    {
+      "id": "mod3",
+      "title": "Módulo 3"
+    },
+    {
+      "id": "mod4",
+      "title": "Módulo 4"
     }
   ],
   "modules": {
-    "MOD1": {
-      "id": "MOD1",
-      "title": "Módulo MOD1",
+    "toddler": {
+      "id": "toddler",
+      "title": "Módulo Toddler",
+      "domain": "toddler",
+      "module_kind": "observational",
+      "description": "Crianças pequenas / linguagem mínima (kit ADOS-2)",
+      "filler": "clinician",
+      "item_count": 3,
       "items": [
         {
-          "id": "mod1_01",
-          "domain": "MOD1",
-          "module": "MOD1",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+          "id": "toddler_complete",
+          "domain": "toddler",
+          "module": "toddler",
+          "text": "Registrar conclusão do Módulo Toddler (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
         },
         {
-          "id": "mod1_02",
-          "domain": "MOD1",
-          "module": "MOD1",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+          "id": "toddler_sa",
+          "domain": "toddler",
+          "module": "toddler",
+          "text": "Módulo Toddler: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
         },
         {
-          "id": "mod1_03",
-          "domain": "MOD1",
-          "module": "MOD1",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
-        },
-        {
-          "id": "mod1_04",
-          "domain": "MOD1",
-          "module": "MOD1",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+          "id": "toddler_rrb",
+          "domain": "toddler",
+          "module": "toddler",
+          "text": "Módulo Toddler: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
         }
       ]
     },
-    "MOD2": {
-      "id": "MOD2",
-      "title": "Módulo MOD2",
+    "mod1": {
+      "id": "mod1",
+      "title": "Módulo 1",
+      "domain": "mod1",
+      "module_kind": "observational",
+      "description": "Sem fala fluente — frases mínimas",
+      "filler": "clinician",
+      "item_count": 3,
       "items": [
         {
-          "id": "mod2_01",
-          "domain": "MOD2",
-          "module": "MOD2",
-          "text": "[Sample] Atividade 1 — observação clínica estruturada."
+          "id": "mod1_complete",
+          "domain": "mod1",
+          "module": "mod1",
+          "text": "Registrar conclusão do Módulo 1 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
         },
         {
-          "id": "mod2_02",
-          "domain": "MOD2",
-          "module": "MOD2",
-          "text": "[Sample] Atividade 2 — observação clínica estruturada."
+          "id": "mod1_sa",
+          "domain": "mod1",
+          "module": "mod1",
+          "text": "Módulo 1: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
         },
         {
-          "id": "mod2_03",
-          "domain": "MOD2",
-          "module": "MOD2",
-          "text": "[Sample] Atividade 3 — observação clínica estruturada."
+          "id": "mod1_rrb",
+          "domain": "mod1",
+          "module": "mod1",
+          "text": "Módulo 1: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
+        }
+      ]
+    },
+    "mod2": {
+      "id": "mod2",
+      "title": "Módulo 2",
+      "domain": "mod2",
+      "module_kind": "observational",
+      "description": "Fala com frases, ainda não fluente",
+      "filler": "clinician",
+      "item_count": 3,
+      "items": [
+        {
+          "id": "mod2_complete",
+          "domain": "mod2",
+          "module": "mod2",
+          "text": "Registrar conclusão do Módulo 2 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
         },
         {
-          "id": "mod2_04",
-          "domain": "MOD2",
-          "module": "MOD2",
-          "text": "[Sample] Atividade 4 — observação clínica estruturada."
+          "id": "mod2_sa",
+          "domain": "mod2",
+          "module": "mod2",
+          "text": "Módulo 2: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
+        },
+        {
+          "id": "mod2_rrb",
+          "domain": "mod2",
+          "module": "mod2",
+          "text": "Módulo 2: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
+        }
+      ]
+    },
+    "mod3": {
+      "id": "mod3",
+      "title": "Módulo 3",
+      "domain": "mod3",
+      "module_kind": "observational",
+      "description": "Linguagem fluente — criança/adolescente",
+      "filler": "clinician",
+      "item_count": 3,
+      "items": [
+        {
+          "id": "mod3_complete",
+          "domain": "mod3",
+          "module": "mod3",
+          "text": "Registrar conclusão do Módulo 3 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
+        },
+        {
+          "id": "mod3_sa",
+          "domain": "mod3",
+          "module": "mod3",
+          "text": "Módulo 3: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
+        },
+        {
+          "id": "mod3_rrb",
+          "domain": "mod3",
+          "module": "mod3",
+          "text": "Módulo 3: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
+        }
+      ]
+    },
+    "mod4": {
+      "id": "mod4",
+      "title": "Módulo 4",
+      "domain": "mod4",
+      "module_kind": "observational",
+      "description": "Linguagem fluente — adolescente/adulto",
+      "filler": "clinician",
+      "item_count": 3,
+      "items": [
+        {
+          "id": "mod4_complete",
+          "domain": "mod4",
+          "module": "mod4",
+          "text": "Registrar conclusão do Módulo 4 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
+        },
+        {
+          "id": "mod4_sa",
+          "domain": "mod4",
+          "module": "mod4",
+          "text": "Módulo 4: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
+        },
+        {
+          "id": "mod4_rrb",
+          "domain": "mod4",
+          "module": "mod4",
+          "text": "Módulo 4: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
         }
       ]
     }
   },
   "items": [
     {
-      "id": "mod1_01",
-      "domain": "MOD1",
-      "module": "MOD1",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+      "id": "toddler_complete",
+      "domain": "toddler",
+      "module": "toddler",
+      "text": "Registrar conclusão do Módulo Toddler (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
     },
     {
-      "id": "mod1_02",
-      "domain": "MOD1",
-      "module": "MOD1",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+      "id": "toddler_sa",
+      "domain": "toddler",
+      "module": "toddler",
+      "text": "Módulo Toddler: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
     },
     {
-      "id": "mod1_03",
-      "domain": "MOD1",
-      "module": "MOD1",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+      "id": "toddler_rrb",
+      "domain": "toddler",
+      "module": "toddler",
+      "text": "Módulo Toddler: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
     },
     {
-      "id": "mod1_04",
-      "domain": "MOD1",
-      "module": "MOD1",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+      "id": "mod1_complete",
+      "domain": "mod1",
+      "module": "mod1",
+      "text": "Registrar conclusão do Módulo 1 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
     },
     {
-      "id": "mod2_01",
-      "domain": "MOD2",
-      "module": "MOD2",
-      "text": "[Sample] Atividade 1 — observação clínica estruturada."
+      "id": "mod1_sa",
+      "domain": "mod1",
+      "module": "mod1",
+      "text": "Módulo 1: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
     },
     {
-      "id": "mod2_02",
-      "domain": "MOD2",
-      "module": "MOD2",
-      "text": "[Sample] Atividade 2 — observação clínica estruturada."
+      "id": "mod1_rrb",
+      "domain": "mod1",
+      "module": "mod1",
+      "text": "Módulo 1: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
     },
     {
-      "id": "mod2_03",
-      "domain": "MOD2",
-      "module": "MOD2",
-      "text": "[Sample] Atividade 3 — observação clínica estruturada."
+      "id": "mod2_complete",
+      "domain": "mod2",
+      "module": "mod2",
+      "text": "Registrar conclusão do Módulo 2 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
     },
     {
-      "id": "mod2_04",
-      "domain": "MOD2",
-      "module": "MOD2",
-      "text": "[Sample] Atividade 4 — observação clínica estruturada."
+      "id": "mod2_sa",
+      "domain": "mod2",
+      "module": "mod2",
+      "text": "Módulo 2: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
+    },
+    {
+      "id": "mod2_rrb",
+      "domain": "mod2",
+      "module": "mod2",
+      "text": "Módulo 2: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
+    },
+    {
+      "id": "mod3_complete",
+      "domain": "mod3",
+      "module": "mod3",
+      "text": "Registrar conclusão do Módulo 3 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
+    },
+    {
+      "id": "mod3_sa",
+      "domain": "mod3",
+      "module": "mod3",
+      "text": "Módulo 3: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
+    },
+    {
+      "id": "mod3_rrb",
+      "domain": "mod3",
+      "module": "mod3",
+      "text": "Módulo 3: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
+    },
+    {
+      "id": "mod4_complete",
+      "domain": "mod4",
+      "module": "mod4",
+      "text": "Registrar conclusão do Módulo 4 (kit licenciado ADOS-2). Estímulos e protocolos oficiais obrigatórios."
+    },
+    {
+      "id": "mod4_sa",
+      "domain": "mod4",
+      "module": "mod4",
+      "text": "Módulo 4: registrar conclusão do algoritmo Afeto Social / Social Affect (pontuação oficial no kit)."
+    },
+    {
+      "id": "mod4_rrb",
+      "domain": "mod4",
+      "module": "mod4",
+      "text": "Módulo 4: registrar conclusão do algoritmo Comportamentos Restritos e Repetitivos / RRB (pontuação oficial no kit)."
     }
   ],
   "scoring": {
     "engine": "observational_rubric",
     "modules": {
-      "MOD1": {
+      "toddler": {
         "method": "mean",
         "item_ids": [
-          "mod1_01",
-          "mod1_02",
-          "mod1_03",
-          "mod1_04"
+          "toddler_complete",
+          "toddler_sa",
+          "toddler_rrb"
         ]
       },
-      "MOD2": {
+      "mod1": {
         "method": "mean",
         "item_ids": [
-          "mod2_01",
-          "mod2_02",
-          "mod2_03",
-          "mod2_04"
+          "mod1_complete",
+          "mod1_sa",
+          "mod1_rrb"
+        ]
+      },
+      "mod2": {
+        "method": "mean",
+        "item_ids": [
+          "mod2_complete",
+          "mod2_sa",
+          "mod2_rrb"
+        ]
+      },
+      "mod3": {
+        "method": "mean",
+        "item_ids": [
+          "mod3_complete",
+          "mod3_sa",
+          "mod3_rrb"
+        ]
+      },
+      "mod4": {
+        "method": "mean",
+        "item_ids": [
+          "mod4_complete",
+          "mod4_sa",
+          "mod4_rrb"
         ]
       }
-    }
+    },
+    "note": "Escores aqui refletem apenas progresso de registro estrutural. Classificação diagnóstica oficial (corte SA/RRB/total) deve ser calculada com o algoritmo do kit licenciado."
   },
   "report": {
-    "template_id": "ados-2-br-v1",
+    "template_id": "ados-2-br-v2",
     "sections": [
       "identificacao",
       "resultados",
