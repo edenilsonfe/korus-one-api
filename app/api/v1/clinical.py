@@ -123,6 +123,11 @@ async def get_protocol(protocol_id: str, db: AsyncSession = Depends(get_db)):
 @router.get("/assessments", response_model=PaginatedResponse[AssessmentResponse])
 async def list_assessments_global(
     protocol: str | None = None,
+    status_filter: str | None = Query(
+        None,
+        alias="status",
+        description="Filtro por status: draft | completed | cancelled",
+    ),
     q: str | None = None,
     page: int = Query(1, ge=1),
     limit: int = Query(30, ge=1, le=100),
@@ -137,6 +142,15 @@ async def list_assessments_global(
     )
     if protocol:
         query = query.where(Assessment.protocol_id == protocol.lower())
+    if status_filter:
+        normalized = status_filter.strip().lower()
+        allowed = {"draft", "completed", "cancelled"}
+        if normalized not in allowed:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Status inválido. Use: {', '.join(sorted(allowed))}",
+            )
+        query = query.where(Assessment.status == normalized)
     if q:
         query = query.where(Patient.name.ilike(f"%{q}%"))
     total = await db.scalar(select(func.count()).select_from(query.subquery()))
