@@ -215,7 +215,8 @@ async def test_invalidate_sessions_rejects_old_refresh(db):
             json={"email": "sessions@x.com", "password": "testpass123"},
         )
         assert login.status_code == 200
-        old_refresh = login.json()["refreshToken"]
+        old_refresh = login.cookies.get("korus_refresh")
+        assert old_refresh
 
         resp = await client.post(
             f"/api/v1/admin/professionals/{target.id}/invalidate-sessions",

@@ -11,7 +11,8 @@ from app.models.professional import Professional
 
 
 @pytest.mark.asyncio
-async def test_delete_patient_returns_204(api_client, db_session, professional):
+async def test_delete_patient_returns_204(api_client, db_session, professional, monkeypatch):
+    monkeypatch.setattr("app.api.v1.auth.enforce_login_rate_limit", lambda *_a, **_k: None)
     patient = Patient(
         professional_id=professional.id,
         name="Para excluir",
@@ -29,23 +30,19 @@ async def test_delete_patient_returns_204(api_client, db_session, professional):
         "/api/v1/auth/login",
         json={"email": professional.email, "password": "testpass123"},
     )
-    token = login.json()["accessToken"]
+    assert login.status_code == 200
+    assert "korus_access" in login.cookies
 
-    deleted = await api_client.delete(
-        f"/api/v1/patients/{patient.id}",
-        headers={"Authorization": f"Bearer {token}"},
-    )
+    deleted = await api_client.delete(f"/api/v1/patients/{patient.id}")
     assert deleted.status_code == 204
 
-    missing = await api_client.get(
-        f"/api/v1/patients/{patient.id}",
-        headers={"Authorization": f"Bearer {token}"},
-    )
+    missing = await api_client.get(f"/api/v1/patients/{patient.id}")
     assert missing.status_code == 404
 
 
 @pytest.mark.asyncio
-async def test_delete_patient_other_professional_returns_404(api_client, db_session, professional):
+async def test_delete_patient_other_professional_returns_404(api_client, db_session, professional, monkeypatch):
+    monkeypatch.setattr("app.api.v1.auth.enforce_login_rate_limit", lambda *_a, **_k: None)
     other = Professional(
         email=f"other-{uuid4().hex[:8]}@test.com",
         password_hash=hash_password("testpass123"),
@@ -71,10 +68,8 @@ async def test_delete_patient_other_professional_returns_404(api_client, db_sess
         "/api/v1/auth/login",
         json={"email": professional.email, "password": "testpass123"},
     )
-    token = login.json()["accessToken"]
+    assert login.status_code == 200
+    assert "korus_access" in login.cookies
 
-    response = await api_client.delete(
-        f"/api/v1/patients/{foreign.id}",
-        headers={"Authorization": f"Bearer {token}"},
-    )
+    response = await api_client.delete(f"/api/v1/patients/{foreign.id}")
     assert response.status_code == 404
