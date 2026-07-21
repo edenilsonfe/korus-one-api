@@ -14,6 +14,11 @@ from sqlalchemy.orm import selectinload
 from app.models.assessment import Assessment
 from app.models.attachment import Attachment
 from app.models.battery_evidence import BatteryItemEvidence, BatterySessionEvent
+from app.services.attachment_upload import (
+    assert_declared_matches_sniff,
+    normalize_content_type,
+    sanitize_filename,
+)
 from app.services.storage import storage_service
 
 UPLOAD_READ_CHUNK_SIZE = 1024 * 1024
@@ -154,13 +159,22 @@ class BatteryEvidenceService:
                 )
             chunks.append(chunk)
         body = b"".join(chunks)
+        if not body:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Arquivo vazio não é permitido.",
+            )
 
-        content_type = file.content_type or "application/octet-stream"
+        content_type = normalize_content_type(file.content_type)
         allowed = EVIDENCE_CONTENT_TYPES.get(kind, set())
         if allowed and content_type not in allowed:
-            raise HTTPException(status_code=400, detail=f"Content-type não permitido: {content_type}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Content-type não permitido: {content_type or (file.content_type or 'desconhecido')}",
+            )
 
-        filename = file.filename or f"{kind}-upload"
+        assert_declared_matches_sniff(content_type, body)
+        filename = sanitize_filename(file.filename or f"{kind}-upload")
         key = storage_service.make_key(battery.patient_id, filename)
         await storage_service.upload(key, body, content_type)
 

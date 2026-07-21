@@ -20,6 +20,11 @@ from app.schemas.resource import (
     ResourceScope,
     ResourceUpdateBody,
 )
+from app.services.attachment_upload import (
+    assert_declared_matches_sniff,
+    normalize_content_type,
+    sanitize_filename,
+)
 from app.services.storage import storage_service
 
 UPLOAD_READ_CHUNK_SIZE = 1024 * 1024
@@ -61,7 +66,7 @@ async def read_upload_body(file: UploadFile, max_bytes: int = RESOURCE_MAX_BYTES
 
 
 def validate_content_type(content_type: str | None) -> tuple[str, str]:
-    normalized = (content_type or "").split(";", 1)[0].strip().lower()
+    normalized = normalize_content_type(content_type)
     resource_format = RESOURCE_ALLOWED_CONTENT_TYPES.get(normalized)
     if resource_format is None:
         allowed = ", ".join(sorted(RESOURCE_ALLOWED_CONTENT_TYPES))
@@ -70,6 +75,23 @@ def validate_content_type(content_type: str | None) -> tuple[str, str]:
             detail=f"Tipo de arquivo não suportado. Permitidos: {allowed}.",
         )
     return normalized, resource_format
+
+
+def validate_resource_upload(
+    *,
+    content_type: str | None,
+    filename: str | None,
+    body: bytes,
+) -> tuple[str, str, str]:
+    """Return (normalized_content_type, resource_format, safe_filename)."""
+    if not body:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Arquivo vazio não é permitido.",
+        )
+    normalized, resource_format = validate_content_type(content_type)
+    assert_declared_matches_sniff(normalized, body)
+    return normalized, resource_format, sanitize_filename(filename or "material")
 
 
 def parse_categories_form(raw: str | None) -> list[str]:
@@ -201,9 +223,12 @@ class ResourceService:
         body: ResourceCreateBody,
     ) -> Resource:
         upload_body = await read_upload_body(file)
-        content_type, resource_format = validate_content_type(file.content_type)
+        content_type, resource_format, filename = validate_resource_upload(
+            content_type=file.content_type,
+            filename=file.filename,
+            body=upload_body,
+        )
         resource_id = uuid.uuid4()
-        filename = file.filename or "material"
         storage_key = storage_service.make_resource_key(resource_id, filename)
         await storage_service.upload(storage_key, upload_body, content_type)
 
@@ -248,8 +273,12 @@ class ResourceService:
 
         if file is not None:
             upload_body = await read_upload_body(file)
-            content_type, resource_format = validate_content_type(file.content_type)
-            storage_key = storage_service.make_resource_key(resource.id, file.filename or "material")
+            content_type, resource_format, filename = validate_resource_upload(
+                content_type=file.content_type,
+                filename=file.filename,
+                body=upload_body,
+            )
+            storage_key = storage_service.make_resource_key(resource.id, filename)
             await storage_service.upload(storage_key, upload_body, content_type)
             resource.storage_key = storage_key
             resource.content_type = content_type
@@ -275,9 +304,12 @@ class ResourceService:
         body: AdminResourceCreateBody,
     ) -> Resource:
         upload_body = await read_upload_body(file)
-        content_type, resource_format = validate_content_type(file.content_type)
+        content_type, resource_format, filename = validate_resource_upload(
+            content_type=file.content_type,
+            filename=file.filename,
+            body=upload_body,
+        )
         resource_id = uuid.uuid4()
-        filename = file.filename or "material"
         storage_key = storage_service.make_resource_key(resource_id, filename)
         await storage_service.upload(storage_key, upload_body, content_type)
 
@@ -318,8 +350,12 @@ class ResourceService:
 
         if file is not None:
             upload_body = await read_upload_body(file)
-            content_type, resource_format = validate_content_type(file.content_type)
-            storage_key = storage_service.make_resource_key(resource.id, file.filename or "material")
+            content_type, resource_format, filename = validate_resource_upload(
+                content_type=file.content_type,
+                filename=file.filename,
+                body=upload_body,
+            )
+            storage_key = storage_service.make_resource_key(resource.id, filename)
             await storage_service.upload(storage_key, upload_body, content_type)
             resource.storage_key = storage_key
             resource.content_type = content_type
