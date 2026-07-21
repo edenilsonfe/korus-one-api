@@ -79,16 +79,17 @@ async def _issue_tokens(
     return access_token, refresh_token
 
 
-def _token_response(access_token: str, refresh_token: str) -> TokenResponse:
+def _token_response() -> TokenResponse:
+    # JWTs stay in HttpOnly cookies only — never echo usable tokens in JSON.
     return TokenResponse(
-        access_token=access_token,
-        refresh_token=refresh_token,
+        access_token="",
+        refresh_token="",
     )
 
 
 def _apply_auth_cookies(response: Response, access_token: str, refresh_token: str) -> TokenResponse:
     set_auth_cookies(response, access_token, refresh_token)
-    return _token_response(access_token, refresh_token)
+    return _token_response()
 
 
 def _resolve_refresh_token(request: Request, body: RefreshRequest) -> str:
