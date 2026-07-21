@@ -37,7 +37,11 @@ def create_app() -> FastAPI:
     validate_settings(settings)
     if init_sentry(settings):
         logger.info("Sentry initialized")
-    app = FastAPI(title=settings.app_name, lifespan=lifespan)
+    if not settings.debug:
+        docs_kwargs = {"docs_url": None, "redoc_url": None, "openapi_url": None}
+    else:
+        docs_kwargs = {}
+    app = FastAPI(title=settings.app_name, lifespan=lifespan, **docs_kwargs)
     cors_kwargs: dict = {
         "allow_credentials": True,
         "allow_methods": ["*"],

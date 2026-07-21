@@ -27,6 +27,7 @@ EXEMPT_PATH_PREFIXES: tuple[str, ...] = (
     # Platform staff console (accounts, future modules) — gated by require_staff.
     "/api/v1/admin",
 )
+# /docs, /redoc, /openapi.json only exist when debug=True (see create_app).
 EXEMPT_PATHS = frozenset({"/health", "/docs", "/redoc", "/openapi.json"})
 
 
