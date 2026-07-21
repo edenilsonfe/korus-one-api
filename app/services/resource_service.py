@@ -376,4 +376,7 @@ class ResourceService:
         resource = await self.get_accessible(professional, resource_id)
         resource.downloads += 1
         await self.db.flush()
-        return await storage_service.presigned_url(resource.storage_key)
+        return await storage_service.presigned_url(
+            resource.storage_key,
+            filename=resource.title,
+        )

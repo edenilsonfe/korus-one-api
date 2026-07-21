@@ -203,7 +203,11 @@ class BatteryEvidenceService:
         await self.db.commit()
         await self.db.refresh(evidence)
         result = self._to_evidence_dict(evidence)
-        result["url"] = await storage_service.presigned_url(key)
+        result["url"] = await storage_service.presigned_url(
+            key,
+            filename=attachment.name,
+            as_attachment=False,
+        )
         return result
 
     async def delete_evidence(
@@ -247,7 +251,11 @@ class BatteryEvidenceService:
         ).scalar_one_or_none()
         if not evidence or not evidence.attachment:
             raise HTTPException(status_code=404, detail="Evidência ou anexo não encontrado")
-        return await storage_service.presigned_url(evidence.attachment.storage_key)
+        return await storage_service.presigned_url(
+            evidence.attachment.storage_key,
+            filename=evidence.attachment.name,
+            as_attachment=False,
+        )
 
     async def list_events(
         self,
