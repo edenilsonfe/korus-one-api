@@ -7,6 +7,7 @@ import pytest
 from fastapi import HTTPException
 
 from app.services.attachment_upload import (
+    assert_declared_matches_sniff,
     sanitize_filename,
     sniff_content_type,
     validate_attachment_upload,
@@ -91,3 +92,10 @@ def test_validate_accepts_minimal_ooxml_docx():
     )
     assert ctype == _DOCX_MIME
     assert name == "ok.docx"
+
+
+def test_assert_declared_matches_sniff_rejects_mismatch():
+    assert_declared_matches_sniff("image/png", b"\x89PNG\r\n\x1a\nxxxx")
+    with pytest.raises(HTTPException) as exc:
+        assert_declared_matches_sniff("image/png", b"%PDF-1.4\ndata")
+    assert exc.value.status_code == 400

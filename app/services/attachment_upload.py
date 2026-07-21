@@ -126,6 +126,28 @@ def _is_valid_docx_ooxml(body: bytes) -> bool:
     return has_content_types and has_word
 
 
+def assert_declared_matches_sniff(
+    declared: str,
+    body: bytes,
+    compat_map: dict[str, frozenset[str] | None] | None = None,
+) -> None:
+    """Raise 400 when magic bytes disagree with a sniffable declared type.
+
+    Types absent from the map (or mapped to None) skip magic checks — use that
+    only for formats without reliable sniff (see module docstring / STOP notes).
+    """
+    table = _SNIFF_COMPAT if compat_map is None else compat_map
+    expected = table.get(declared)
+    if expected is None:
+        return
+    sniffed = sniff_content_type(body)
+    if sniffed is None or sniffed not in expected:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Conteúdo do arquivo não corresponde ao tipo declarado.",
+        )
+
+
 def validate_attachment_upload(
     *,
     content_type: str | None,
@@ -148,15 +170,8 @@ def validate_attachment_upload(
         )
 
     safe_name = sanitize_filename(filename)
+    assert_declared_matches_sniff(declared, body)
     sniffed = sniff_content_type(body)
-    expected = _SNIFF_COMPAT.get(declared)
-    if expected is not None:
-        if sniffed is None or sniffed not in expected:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Conteúdo do arquivo não corresponde ao tipo declarado.",
-            )
-
     if declared == _DOCX_MIME and sniffed == "application/zip":
         if not _is_valid_docx_ooxml(body):
             raise HTTPException(

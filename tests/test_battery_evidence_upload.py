@@ -1,4 +1,4 @@
-"""Unit tests for chunked battery evidence upload size cap."""
+"""Unit tests for chunked battery evidence upload size cap + sniff."""
 
 from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -8,6 +8,10 @@ import pytest
 from fastapi import HTTPException
 
 from app.services.battery_evidence_service import BatteryEvidenceService, EVIDENCE_SIZE_LIMITS
+
+_JPEG = b"\xff\xd8\xff\xe0" + b"x" * 28
+_PNG = b"\x89PNG\r\n\x1a\n" + b"x" * 24
+_PDF = b"%PDF-1.4\ndata"
 
 
 class _ChunkedUploadFile:
@@ -59,7 +63,7 @@ def _make_service() -> tuple[BatteryEvidenceService, MagicMock, MagicMock]:
 async def test_upload_under_limit_calls_storage(monkeypatch):
     monkeypatch.setitem(EVIDENCE_SIZE_LIMITS, "photo", 64)
     service, _db, battery = _make_service()
-    body = b"x" * 32
+    body = _JPEG
     file = _ChunkedUploadFile(body)
 
     with patch("app.services.battery_evidence_service.storage_service") as storage:
@@ -102,3 +106,71 @@ async def test_upload_over_limit_returns_413_and_skips_storage(monkeypatch):
         assert "excede limite" in exc_info.value.detail
         storage.upload.assert_not_called()
         storage.make_key.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_upload_rejects_svg_content_type():
+    service, _db, _battery = _make_service()
+    file = _ChunkedUploadFile(
+        b"<svg xmlns='http://www.w3.org/2000/svg'></svg>",
+        content_type="image/svg+xml",
+        filename="x.svg",
+    )
+
+    with patch("app.services.battery_evidence_service.storage_service") as storage:
+        storage.upload = AsyncMock()
+        with pytest.raises(HTTPException) as exc_info:
+            await service.upload_evidence(
+                uuid4(),
+                professional_id=uuid4(),
+                file=file,
+                kind="photo",
+            )
+        assert exc_info.value.status_code == 400
+        storage.upload.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_upload_rejects_magic_mismatch():
+    service, _db, _battery = _make_service()
+    file = _ChunkedUploadFile(_PDF, content_type="image/png", filename="fake.png")
+
+    with patch("app.services.battery_evidence_service.storage_service") as storage:
+        storage.upload = AsyncMock()
+        with pytest.raises(HTTPException) as exc_info:
+            await service.upload_evidence(
+                uuid4(),
+                professional_id=uuid4(),
+                file=file,
+                kind="photo",
+            )
+        assert exc_info.value.status_code == 400
+        assert "não corresponde" in exc_info.value.detail
+        storage.upload.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_upload_sanitizes_path_traversal_filename(monkeypatch):
+    monkeypatch.setitem(EVIDENCE_SIZE_LIMITS, "photo", 64)
+    service, _db, battery = _make_service()
+    file = _ChunkedUploadFile(_PNG, content_type="image/png", filename="../../etc/passwd.png")
+
+    with patch("app.services.battery_evidence_service.storage_service") as storage:
+        storage.make_key.return_value = "patients/key/passwd.png"
+        storage.upload = AsyncMock()
+        storage.presigned_url = AsyncMock(return_value="https://example.com/passwd.png")
+
+        await service.upload_evidence(
+            uuid4(),
+            professional_id=uuid4(),
+            file=file,
+            kind="photo",
+        )
+
+        storage.make_key.assert_called_once_with(battery.patient_id, "passwd.png")
+        added_attachment = next(
+            call.args[0]
+            for call in service.db.add.call_args_list
+            if getattr(call.args[0], "name", None) == "passwd.png"
+        )
+        assert added_attachment.name == "passwd.png"

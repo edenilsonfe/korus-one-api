@@ -3,6 +3,7 @@
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from fastapi import HTTPException
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
@@ -230,6 +231,35 @@ async def test_create_rejects_unsupported_mime(resources_env):
         files=files,
     )
     assert res.status_code == 400
+
+
+def test_validate_resource_upload_sanitizes_and_sniffs():
+    from app.services.resource_service import validate_resource_upload
+
+    ctype, fmt, name = validate_resource_upload(
+        content_type="application/pdf",
+        filename="../../etc/passwd.pdf",
+        body=b"%PDF-1.4 safe",
+    )
+    assert ctype == "application/pdf"
+    assert fmt == "PDF"
+    assert name == "passwd.pdf"
+
+    with pytest.raises(HTTPException) as exc:
+        validate_resource_upload(
+            content_type="image/svg+xml",
+            filename="x.svg",
+            body=b"<svg></svg>",
+        )
+    assert exc.value.status_code == 400
+
+    with pytest.raises(HTTPException) as exc:
+        validate_resource_upload(
+            content_type="image/png",
+            filename="fake.png",
+            body=b"%PDF-1.4\ndata",
+        )
+    assert exc.value.status_code == 400
 
 
 @pytest.mark.asyncio
