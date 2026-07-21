@@ -28,11 +28,12 @@ async def test_login_returns_opaque_refresh_and_cookies(api_client, professional
     )
     assert response.status_code == 200
     body = response.json()
-    assert "accessToken" in body
-    assert "refreshToken" in body
-    assert body["refreshToken"]
+    assert body.get("accessToken", "") == ""
+    assert body.get("refreshToken", "") == ""
+    assert body.get("tokenType") == "bearer"
     assert "korus_access" in response.cookies
     assert "korus_refresh" in response.cookies
+    assert response.cookies["korus_refresh"]
 
 
 @pytest.mark.asyncio
@@ -42,19 +43,23 @@ async def test_refresh_rotates_opaque_token(api_client, professional):
         json={"email": professional.email, "password": "testpass123"},
     )
     assert login.status_code == 200
-    old_refresh = login.json()["refreshToken"]
+    old_refresh = login.cookies["korus_refresh"]
+    assert login.json().get("refreshToken", "") == ""
 
     refreshed = await api_client.post(
         "/api/v1/auth/refresh",
-        json={"refreshToken": old_refresh},
+        json={"refreshToken": ""},
     )
     assert refreshed.status_code == 200
-    new_refresh = refreshed.json()["refreshToken"]
+    assert refreshed.json().get("refreshToken", "") == ""
+    new_refresh = refreshed.cookies["korus_refresh"]
     assert new_refresh != old_refresh
 
+    # Avoid jar cookie (rotated) shadowing the revoked raw token in the body.
     reuse = await api_client.post(
         "/api/v1/auth/refresh",
         json={"refreshToken": old_refresh},
+        cookies={},
     )
     assert reuse.status_code == 401
 
@@ -65,17 +70,18 @@ async def test_logout_revokes_refresh(api_client, professional):
         "/api/v1/auth/login",
         json={"email": professional.email, "password": "testpass123"},
     )
-    refresh_token = login.json()["refreshToken"]
+    refresh_token = login.cookies["korus_refresh"]
 
     logout = await api_client.post(
         "/api/v1/auth/logout",
-        json={"refreshToken": refresh_token},
+        json={"refreshToken": ""},
     )
     assert logout.status_code == 200
 
     refresh = await api_client.post(
         "/api/v1/auth/refresh",
         json={"refreshToken": refresh_token},
+        cookies={},
     )
     assert refresh.status_code == 401
 

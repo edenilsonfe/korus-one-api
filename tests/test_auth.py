@@ -1,8 +1,13 @@
-import pytest
-from httpx import ASGITransport, AsyncClient
+import re
 from uuid import uuid4
 
+import pytest
+from httpx import ASGITransport, AsyncClient
+
 from app.main import app
+
+# JWT-shaped values (three base64url segments) must not appear in auth JSON.
+_JWT_RE = re.compile(r"eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+")
 
 
 @pytest.fixture
@@ -10,6 +15,13 @@ async def client():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+
+
+def _assert_auth_json_has_no_usable_jwt(data: dict) -> None:
+    assert data.get("accessToken", "") == ""
+    assert data.get("refreshToken", "") == ""
+    assert data.get("tokenType") == "bearer"
+    assert _JWT_RE.search(str(data)) is None
 
 
 @pytest.mark.asyncio
@@ -34,14 +46,18 @@ async def test_register_and_login(client):
         },
     )
     if reg.status_code == 201:
-        assert "accessToken" in reg.json()
+        _assert_auth_json_has_no_usable_jwt(reg.json())
+        assert "korus_access" in reg.cookies
     login = await client.post("/api/v1/auth/login", json={"email": email, "password": "securepass123"})
     if login.status_code == 200:
-        assert "accessToken" in login.json()
+        _assert_auth_json_has_no_usable_jwt(login.json())
+        assert "korus_access" in login.cookies
 
 
 @pytest.mark.asyncio
-async def test_register_without_cpf_creates_demo_patient(api_client):
+async def test_register_without_cpf_creates_demo_patient(api_client, monkeypatch):
+    # Avoid shared in-memory rate-limit state from other auth tests in the same run.
+    monkeypatch.setattr("app.api.v1.auth.enforce_register_rate_limit", lambda *_a, **_k: None)
     email = f"nocpf-{uuid4().hex[:8]}@test.com"
     reg = await api_client.post(
         "/api/v1/auth/register",
@@ -53,11 +69,10 @@ async def test_register_without_cpf_creates_demo_patient(api_client):
         },
     )
     assert reg.status_code == 201
-    token = reg.json()["accessToken"]
-    patients = await api_client.get(
-        "/api/v1/patients",
-        headers={"Authorization": f"Bearer {token}"},
-    )
+    _assert_auth_json_has_no_usable_jwt(reg.json())
+    assert "korus_access" in reg.cookies
+    # Session via HttpOnly cookie — not Authorization Bearer from JSON.
+    patients = await api_client.get("/api/v1/patients")
     assert patients.status_code == 200
     names = [p["name"] for p in patients.json()["items"]]
     assert "Paciente demonstração" in names
