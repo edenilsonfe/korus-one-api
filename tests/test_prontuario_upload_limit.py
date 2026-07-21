@@ -129,7 +129,7 @@ async def test_upload_over_limit_rejected_and_under_limit_succeeds(monkeypatch):
             assert "tamanho máximo" in resp.json()["detail"]
             mock_upload.assert_not_called()
 
-            body = b"conteudo pequeno"
+            body = b"%PDF-1.4\nconteudo pequeno"
             resp = await client.post(
                 f"/api/v1/patients/{patient.id}/attachments",
                 files={"file": ("laudo.pdf", body, "application/pdf")},
@@ -137,7 +137,87 @@ async def test_upload_over_limit_rejected_and_under_limit_succeeds(monkeypatch):
             )
             assert resp.status_code == 201
             assert resp.json()["sizeBytes"] == len(body)
+            assert resp.json()["name"] == "laudo.pdf"
             mock_upload.assert_called_once()
+            assert mock_upload.await_args.args[2] == "application/pdf"
+
+    _clear_override()
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_upload_rejects_disallowed_content_type(monkeypatch):
+    engine = await _engine()
+    factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with factory() as db:
+        professional = await _make_professional(db)
+        patient = await _make_patient(db, professional)
+
+    headers = {"Authorization": f"Bearer {create_access_token(professional.id)}"}
+    client = await _client(engine, monkeypatch)
+    async with client:
+        with patch("app.api.v1.prontuario.storage_service.upload", new_callable=AsyncMock) as mock_upload:
+            resp = await client.post(
+                f"/api/v1/patients/{patient.id}/attachments",
+                files={"file": ("evil.svg", b"<svg xmlns='http://www.w3.org/2000/svg'></svg>", "image/svg+xml")},
+                headers=headers,
+            )
+            assert resp.status_code == 400
+            assert "não suportado" in resp.json()["detail"]
+            mock_upload.assert_not_called()
+
+    _clear_override()
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_upload_rejects_mismatched_magic_bytes(monkeypatch):
+    engine = await _engine()
+    factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with factory() as db:
+        professional = await _make_professional(db)
+        patient = await _make_patient(db, professional)
+
+    headers = {"Authorization": f"Bearer {create_access_token(professional.id)}"}
+    client = await _client(engine, monkeypatch)
+    async with client:
+        with patch("app.api.v1.prontuario.storage_service.upload", new_callable=AsyncMock) as mock_upload:
+            resp = await client.post(
+                f"/api/v1/patients/{patient.id}/attachments",
+                files={"file": ("fake.pdf", b"not-a-pdf", "application/pdf")},
+                headers=headers,
+            )
+            assert resp.status_code == 400
+            assert "não corresponde" in resp.json()["detail"]
+            mock_upload.assert_not_called()
+
+    _clear_override()
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_upload_sanitizes_path_traversal_filename(monkeypatch):
+    engine = await _engine()
+    factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with factory() as db:
+        professional = await _make_professional(db)
+        patient = await _make_patient(db, professional)
+
+    headers = {"Authorization": f"Bearer {create_access_token(professional.id)}"}
+    client = await _client(engine, monkeypatch)
+    async with client:
+        with patch("app.api.v1.prontuario.storage_service.upload", new_callable=AsyncMock) as mock_upload:
+            body = b"%PDF-1.4\nok"
+            resp = await client.post(
+                f"/api/v1/patients/{patient.id}/attachments",
+                files={"file": ("../../etc/passwd.pdf", body, "application/pdf")},
+                headers=headers,
+            )
+            assert resp.status_code == 201
+            assert resp.json()["name"] == "passwd.pdf"
+            key = mock_upload.await_args.args[0]
+            assert "../" not in key
+            assert "passwd.pdf" in key
 
     _clear_override()
     await engine.dispose()

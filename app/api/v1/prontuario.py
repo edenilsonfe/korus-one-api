@@ -14,6 +14,10 @@ from app.models.attachment import Attachment
 from app.models.evolution import Evolution
 from app.models.professional import Professional
 from app.schemas.prontuario import AnamneseCreate, AnamneseResponse, EvolutionCreate, EvolutionResponse
+from app.services.attachment_upload import (
+    validate_attachment_category,
+    validate_attachment_upload,
+)
 from app.services.storage import storage_service
 from app.services.clinical_activity import record_evolution
 from app.services.timeline import create_timeline_event
@@ -154,6 +158,7 @@ async def upload_attachment(
     db: AsyncSession = Depends(get_db),
 ):
     await get_patient_for_professional(patient_id, professional, db)
+    category = validate_attachment_category(category)
     max_bytes = get_settings().max_upload_bytes
     chunks: list[bytes] = []
     total_read = 0
@@ -171,12 +176,17 @@ async def upload_attachment(
             )
         chunks.append(chunk)
     body = b"".join(chunks)
-    key = storage_service.make_key(patient_id, file.filename or "upload")
-    await storage_service.upload(key, body, file.content_type or "application/octet-stream")
+    content_type, safe_name = validate_attachment_upload(
+        content_type=file.content_type,
+        filename=file.filename,
+        body=body,
+    )
+    key = storage_service.make_key(patient_id, safe_name)
+    await storage_service.upload(key, body, content_type)
     attachment = Attachment(
         patient_id=patient_id,
         professional_id=professional.id,
-        name=file.filename or "upload",
+        name=safe_name,
         category=category,
         size_bytes=len(body),
         storage_key=key,

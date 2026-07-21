@@ -1,8 +1,22 @@
 from datetime import date as DateType
 
-from pydantic import Field, field_validator
+from pydantic import EmailStr, Field, TypeAdapter, field_validator
 
 from app.schemas.common import CamelModel
+
+_email_adapter = TypeAdapter(EmailStr)
+
+
+def _normalize_optional_email(value: str | None) -> str:
+    """Allow blank caregiver email; otherwise require EmailStr."""
+    if value is None:
+        return ""
+    normalized = str(value).strip()
+    if not normalized:
+        return ""
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in normalized):
+        raise ValueError("E-mail contém caracteres inválidos")
+    return str(_email_adapter.validate_python(normalized))
 
 
 class CaregiverCreate(CamelModel):
@@ -15,6 +29,11 @@ class CaregiverCreate(CamelModel):
     is_primary: bool = False
     whatsapp_opt_in: bool = False
 
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str | None) -> str:
+        return _normalize_optional_email(value)
+
 
 class CaregiverUpdate(CamelModel):
     name: str | None = None
@@ -24,6 +43,13 @@ class CaregiverUpdate(CamelModel):
     notes: str | None = None
     is_primary: bool | None = None
     whatsapp_opt_in: bool | None = None
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return _normalize_optional_email(value)
 
 
 class CaregiverResponse(CamelModel):
