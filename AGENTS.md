@@ -3,7 +3,7 @@ description:
 alwaysApply: false
 ---
 
-# AGENTS.md — Korus One API
+# AGENTS.md — Korus Fono API
 
 Instruções para agentes de IA que trabalham neste repositório. Leia este arquivo e o `README.md` antes de implementar mudanças. O contrato com o frontend vive aqui — o web espelha schemas e rotas **manualmente**.
 
@@ -11,14 +11,14 @@ Instruções para agentes de IA que trabalham neste repositório. Leia este arqu
 
 | Item | Valor |
 | ---- | ----- |
-| Produto | **Korus One** — Sistema Operacional para Terapias Infantis |
+| Produto | **Korus Fono** — Sistema Operacional para Terapias Infantis |
 | Especialidade inicial | Fonoaudiologia (linguagem, TEA, desenvolvimento infantil) |
 | Repositório backend | `korus-one-api` (este repo) |
 | Repositório frontend | `korus-one-web` (TanStack Start / React) |
 | Papel deste repo | **Autoridade do contrato** — schemas Pydantic + rotas FastAPI |
 | Prefixo HTTP | `/api/v1` (ver `settings.api_v1_prefix`) |
 
-Credenciais demo (seed): `camila.rocha@korusone.com` / `demo12345`.
+Credenciais demo (seed): `admin@admin.com` / `admin123`.
 
 ---
 

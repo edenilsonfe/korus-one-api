@@ -64,7 +64,7 @@ async def _resource(
         categories=["Linguagem"],
         format="PDF",
         file_size_bytes=128,
-        author=owner.name if owner else "Equipe KorusOne",
+        author=owner.name if owner else "Equipe KorusFono",
         storage_key=f"resources/test/{title}.pdf",
         content_type="application/pdf",
     )

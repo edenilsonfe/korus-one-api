@@ -21,7 +21,7 @@ class MetaWhatsAppService:
     async def disconnect(self, professional_id: UUID):
         raise HTTPException(
             status_code=status.HTTP_501_NOT_IMPLEMENTED,
-            detail="Provider Meta ainda não implementado no Korus One.",
+            detail="Provider Meta ainda não implementado no Korus Fono.",
         )
 
     async def send_text_message(
@@ -29,7 +29,7 @@ class MetaWhatsAppService:
     ) -> WhatsAppSendResult:
         raise HTTPException(
             status_code=status.HTTP_501_NOT_IMPLEMENTED,
-            detail="Provider Meta ainda não implementado no Korus One.",
+            detail="Provider Meta ainda não implementado no Korus Fono.",
         )
 
     async def send_appointment_reminder(
@@ -37,5 +37,5 @@ class MetaWhatsAppService:
     ) -> WhatsAppSendResult:
         raise HTTPException(
             status_code=status.HTTP_501_NOT_IMPLEMENTED,
-            detail="Provider Meta ainda não implementado no Korus One.",
+            detail="Provider Meta ainda não implementado no Korus Fono.",
         )

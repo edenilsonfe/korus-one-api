@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-PRODUCT_NAME = "Korus One"
+PRODUCT_NAME = "Korus Fono"
 
 
 @dataclass(frozen=True)

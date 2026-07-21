@@ -290,7 +290,7 @@ class ResourceService:
             format=resource_format,
             file_size_bytes=len(upload_body),
             pages=body.pages,
-            author=body.author or "Equipe KorusOne",
+            author=body.author or "Equipe KorusFono",
             storage_key=storage_key,
             content_type=content_type,
             accent=body.accent,

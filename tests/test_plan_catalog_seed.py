@@ -20,8 +20,8 @@ async def test_seed_deactivates_non_canonical_plans(db_session):
     )
     db_session.add(
         Plan(
-            slug="korusone_pro_monthly",
-            name="KorusOne Pro",
+            slug="korusfono_pro_monthly",
+            name="KorusFono Pro",
             price_cents=9700,
             billing_interval="monthly",
             is_active=True,
@@ -35,6 +35,6 @@ async def test_seed_deactivates_non_canonical_plans(db_session):
     rows = await db_session.execute(select(Plan))
     plans = {p.slug: p for p in rows.scalars().all()}
 
-    assert plans["korusone_pro_monthly"].is_active is True
+    assert plans["korusfono_pro_monthly"].is_active is True
     assert plans["legacy_monthly"].is_active is False
     assert len(CANONICAL_PLAN_SLUGS) == 2

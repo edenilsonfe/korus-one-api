@@ -323,7 +323,7 @@ class BillingCheckoutService:
             ccv=ccv,
             holder_info=holder_info,
             remote_ip=remote_ip,
-            description=f"Assinatura {plan.name} — KorusOne ({installment_count}x)",
+            description=f"Assinatura {plan.name} — KorusFono ({installment_count}x)",
             external_reference=f"{professional.id}:{plan.slug}",
         )
 

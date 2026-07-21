@@ -18,7 +18,7 @@ def export_battery_pdf(battery: BatteryResponse, package: InstrumentContentPacka
     doc = SimpleDocTemplate(buffer, pagesize=A4)
     styles = getSampleStyleSheet()
     story: list[Any] = [
-        Paragraph("KorusOne", styles["Title"]),
+        Paragraph("KorusFono", styles["Title"]),
         Paragraph(package.instrument_title, styles["Heading1"]),
         Spacer(1, 12),
         Paragraph(f"Paciente: {battery.patient_name or battery.patient_id}", styles["Normal"]),

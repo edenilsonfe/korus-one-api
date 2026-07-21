@@ -1,9 +1,9 @@
-# Korus One — Notificações in-app (anúncios broadcast)
+# Korus Fono — Notificações in-app (anúncios broadcast)
 
 **Data:** 8 de julho de 2026
 **Repositórios:** `korus-one-api` (FastAPI / Python) · `korus-one-web` (TanStack Start + Vite)
 **Status:** Design aprovado via grill — pronto para implementação
-**Referência:** `afeto-clinic-manager` + `myclinic-back` (spec `2026-07-01-notificacoes-in-app-design.md`), adaptada ao stack e ao modelo de domínio do Korus One.
+**Referência:** `afeto-clinic-manager` + `myclinic-back` (spec `2026-07-01-notificacoes-in-app-design.md`), adaptada ao stack e ao modelo de domínio do Korus Fono.
 
 ---
 
@@ -11,7 +11,7 @@
 
 ### Problema
 
-O Korus One não possui um canal in-app para comunicar aos profissionais **novidades de produto** (funcionalidades novas, tutoriais) nem **avisos operacionais da plataforma** (manutenção programada, mudanças de política). Hoje o único feedback in-app são os **toasts** (Sonner + shadcn), efêmeros e por dispositivo — não servem como histórico consultável e cross-device.
+O Korus Fono não possui um canal in-app para comunicar aos profissionais **novidades de produto** (funcionalidades novas, tutoriais) nem **avisos operacionais da plataforma** (manutenção programada, mudanças de política). Hoje o único feedback in-app são os **toasts** (Sonner + shadcn), efêmeros e por dispositivo — não servem como histórico consultável e cross-device.
 
 ### Solução
 
@@ -25,7 +25,7 @@ Notificações **não** substituem toasts: toast continua sendo feedback de aç�
 
 ### Decisão de escopo (v1)
 
-**v1 = broadcast apenas.** O schema nasce com a coluna `kind` (`'broadcast'` | `'personal'`) e `recipient_professional_id` (nullable) **pronta para `personal` futuro sem migração**, mas nesta entrega só emitimos broadcasts. Justificativa: em Korus One o `Professional` é o **único** usuário da conta — notificar a si mesmo de ações que ele mesmo desencadeou (agenda, equipe) seria ruído. Os poucos gatilhos pessoais que valeriam a pena (WhatsApp desconectou, cobrança/trial) ficam para v1.1.
+**v1 = broadcast apenas.** O schema nasce com a coluna `kind` (`'broadcast'` | `'personal'`) e `recipient_professional_id` (nullable) **pronta para `personal` futuro sem migração**, mas nesta entrega só emitimos broadcasts. Justificativa: em Korus Fono o `Professional` é o **único** usuário da conta — notificar a si mesmo de ações que ele mesmo desencadeou (agenda, equipe) seria ruído. Os poucos gatilhos pessoais que valeriam a pena (WhatsApp desconectou, cobrança/trial) ficam para v1.1.
 
 ### Objetivos
 
@@ -122,7 +122,7 @@ O `LEFT JOIN` retorna `NULL` em `seen_at`/`read_at` para broadcasts nunca tocado
 
 ### Permissão de plataforma — flag `is_staff`
 
-Korus One **não tem** tabela `roles` nem `require_roles`. Em vez de introduzir um sistema de papéis só para isto, adicionamos uma flag booleana direto no `Professional`:
+Korus Fono **não tem** tabela `roles` nem `require_roles`. Em vez de introduzir um sistema de papéis só para isto, adicionamos uma flag booleana direto no `Professional`:
 
 - Coluna `is_staff: bool = False` em `professionals` (+ migration).
 - `GET /api/v1/me` passa a retornar `isStaff`.

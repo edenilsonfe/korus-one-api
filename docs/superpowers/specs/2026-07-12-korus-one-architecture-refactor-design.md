@@ -1,7 +1,7 @@
-# Korus One — Architecture Refactor (C1–C5)
+# Korus Fono — Architecture Refactor (C1–C5)
 
 - **Data:** 2026-07-12
-- **Origem:** `architecture-review-20260712-204203.html` (review de arquitetura Korus One)
+- **Origem:** `architecture-review-20260712-204203.html` (review de arquitetura Korus Fono)
 - **Repos:** `korus-one-api` + `korus-one-web`
 - **Domínio:** Instrumento/Protocolo · Aplicação · Paciente · Timeline · Responsável
 - **Estado do app:** em desenvolvimento — **sem retrocompatibilidade** a preservar; rotas/shapes/views legados podem ser reescritos ou removidos livremente.

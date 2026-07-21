@@ -2,7 +2,7 @@
 
 Orchestrates read-only queries against the logged-in professional's own data
 using OpenCode Zen function calling. Adapted from myclinic-back's
-management_assistant, simplified to the Korus One single-professional domain.
+management_assistant, simplified to the Korus Fono single-professional domain.
 
 Pipeline: direct tool call → (if no tool) retry reinforced → (if still none)
 fallback. Sanitizes the final reply against leaked tool markup.

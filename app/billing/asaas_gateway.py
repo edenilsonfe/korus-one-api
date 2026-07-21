@@ -179,7 +179,7 @@ class AsaasPaymentGateway:
             "value": round(price_cents / 100, 2),
             "nextDueDate": self._next_due_date(),
             "cycle": self._cycle_from_interval(billing_interval),
-            "description": f"Assinatura {plan_name} — KorusOne",
+            "description": f"Assinatura {plan_name} — KorusFono",
             "externalReference": f"{account_id}:{plan_slug}",
         }
         data = await request_json(
@@ -232,7 +232,7 @@ class AsaasPaymentGateway:
                     headers=self._headers(),
                     json_body={
                         "value": round(price_cents / 100, 2),
-                        "description": f"Assinatura {plan_name} — KorusOne",
+                        "description": f"Assinatura {plan_name} — KorusFono",
                         "externalReference": f"{account_id}:{plan_slug}",
                         "updatePendingPayments": True,
                     },

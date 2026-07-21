@@ -2,7 +2,7 @@
 
 Used for logging/telemetry to understand where the model fails to call tools.
 Adapted from myclinic-back management_assistant/query_heuristics.py to the
-Korus One domain (single professional practice, no branches).
+Korus Fono domain (single professional practice, no branches).
 """
 
 from __future__ import annotations

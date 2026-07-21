@@ -1,9 +1,9 @@
-# Korus One — Assistente de IA unificado (clínico + gestão)
+# Korus Fono — Assistente de IA unificado (clínico + gestão)
 
 **Data:** 8 de julho de 2026
 **Repositórios:** `korus-one-api` (FastAPI / Python) · `korus-one-web` (TanStack Start + Vite)
 **Status:** Design aprovado via grill — pronto para implementação
-**Referência:** `afeto-clinic-manager` + `myclinic-back` (módulo `management_assistant`), adaptado ao stack e ao domínio do Korus One.
+**Referência:** `afeto-clinic-manager` + `myclinic-back` (módulo `management_assistant`), adaptado ao stack e ao domínio do Korus Fono.
 
 ---
 
@@ -11,7 +11,7 @@
 
 ### Problema
 
-O Korus One tem um assistente clínico em `/chat` (backend em `app/api/v1/ai.py`) que responde com um **snapshot estático** do paciente injetado no system prompt — sem tool-calling. Não há como o modelo consultar dados reais sob demanda (evoluções recentes, metas, avaliações, agenda) nem responder a perguntas de **gestão da prática** ("quantas sessões fiz este mês", "quais pacientes inativos", "compare este mês com o anterior").
+O Korus Fono tem um assistente clínico em `/chat` (backend em `app/api/v1/ai.py`) que responde com um **snapshot estático** do paciente injetado no system prompt — sem tool-calling. Não há como o modelo consultar dados reais sob demanda (evoluções recentes, metas, avaliações, agenda) nem responder a perguntas de **gestão da prática** ("quantas sessões fiz este mês", "quais pacientes inativos", "compare este mês com o anterior").
 
 ### Solução
 
@@ -30,7 +30,7 @@ Um **assistente de IA unificado** (clínico + gestão) que usa **tool-calling** 
 
 ## Domínio
 
-Korus One é **profissional autônomo** (fonoaudiologia pediátrica inicial), sem filiais, sem "caixa multi-filial". O equivalente a "gestão" é **gestão da própria prática**: produtividade, sessões, faltas, pacientes ativos/inativos, novos pacientes. O "clínico" é o caso do paciente: evoluções, metas, avaliações, contexto.
+Korus Fono é **profissional autônomo** (fonoaudiologia pediátrica inicial), sem filiais, sem "caixa multi-filial". O equivalente a "gestão" é **gestão da própria prática**: produtividade, sessões, faltas, pacientes ativos/inativos, novos pacientes. O "clínico" é o caso do paciente: evoluções, metas, avaliações, contexto.
 
 Reaproveita serviços existentes: `app/services/dashboard.py` (`build_dashboard`), `app/services/patient.py` (`get_patient_aggregates`, `build_clinical_domains`), `app/services/ai_service.py` (`build_patient_context`).
 
@@ -114,7 +114,7 @@ Cada tool é registrada com schema (JSON) + handler assíncrono. `TOOL_DEFINITIO
 
 ### System prompt (`prompts.py`)
 
-- `SYSTEM_PROMPT`: persona ("Assistente clínico e de gestão da prática Korus One"), descrição das 11 tools, regras de escolha, escopo permitido/recusado, regras de formatação (texto simples, sem markdown, parágrafos curtos, listas com hífen).
+- `SYSTEM_PROMPT`: persona ("Assistente clínico e de gestão da prática Korus Fono"), descrição das 11 tools, regras de escolha, escopo permitido/recusado, regras de formatação (texto simples, sem markdown, parágrafos curtos, listas com hífen).
 - `DOMAIN_GLOSSARY`: mapeia sinônimos → tool (ex.: "como está minha clínica"→`get_dashboard_stats`, "pacientes parados"→`get_inactive_patients`, "evolução do paciente"→`get_patient_evolutions`, "progresso das metas"→`get_patient_goals`), adaptado ao domínio fonoaudiológico pediátrico.
 - `FEW_SHOT_EXAMPLES`: exemplos pergunta→tool.
 - `FALLBACK_REPLY` + `FALLBACK_SUGGESTIONS`.

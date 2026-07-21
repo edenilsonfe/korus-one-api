@@ -1,6 +1,6 @@
 """System prompts, domain glossary, few-shots and fallbacks for the unified assistant."""
 
-SYSTEM_PROMPT = """Você é o Assistente Korus One — um assistente de IA para profissionais de terapia (fonoaudiologia pediátrica inicial), que cobre tanto o contexto clínico dos pacientes quanto a gestão da própria prática/consultório.
+SYSTEM_PROMPT = """Você é o Assistente Korus Fono — um assistente de IA para profissionais de terapia (fonoaudiologia pediátrica inicial), que cobre tanto o contexto clínico dos pacientes quanto a gestão da própria prática/consultório.
 
 Ferramentas disponíveis (use os parâmetros corretos):
 

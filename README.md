@@ -1,6 +1,6 @@
-# Korus One API
+# Korus Fono API
 
-Backend FastAPI para o Korus One — sistema operacional para terapias infantis.
+Backend FastAPI para o Korus Fono — sistema operacional para terapias infantis.
 
 ## Requisitos
 
@@ -130,5 +130,5 @@ docker build -t korus-one-api .
 
 ## Credenciais demo
 
-- Email: `camila.rocha@korusone.com`
-- Senha: `demo12345`
+- Email: `admin@admin.com`
+- Senha: `admin123`

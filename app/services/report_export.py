@@ -80,7 +80,7 @@ def _add_bold_runs(paragraph, text: str) -> None:
 def _header_lines(report_type: str, patient_name: str, report_date: date) -> list[str]:
     type_label = REPORT_TYPE_LABELS.get(report_type, report_type)
     return [
-        "KorusOne",
+        "KorusFono",
         type_label,
         f"Paciente: {patient_name}",
         f"Data: {report_date.isoformat()}",
@@ -108,7 +108,7 @@ def export_md(report_type: str, patient_name: str, report_date: date, content: s
 
 def export_docx(report_type: str, patient_name: str, report_date: date, content: str) -> bytes:
     doc = Document()
-    doc.add_heading("KorusOne", level=1)
+    doc.add_heading("KorusFono", level=1)
     type_label = REPORT_TYPE_LABELS.get(report_type, report_type)
     doc.add_heading(type_label, level=2)
     doc.add_paragraph(f"Paciente: {patient_name}")
@@ -140,7 +140,7 @@ def export_pdf(report_type: str, patient_name: str, report_date: date, content: 
     styles = getSampleStyleSheet()
     type_label = REPORT_TYPE_LABELS.get(report_type, report_type)
     story = [
-        Paragraph("KorusOne", styles["Title"]),
+        Paragraph("KorusFono", styles["Title"]),
         Paragraph(type_label, styles["Heading2"]),
         Paragraph(f"Paciente: {patient_name}", styles["Normal"]),
         Paragraph(f"Data: {report_date.isoformat()}", styles["Normal"]),

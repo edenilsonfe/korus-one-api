@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    app_name: str = "Korus One API"
+    app_name: str = "Korus Fono API"
     debug: bool = False
     api_v1_prefix: str = "/api/v1"
     cors_origins: str = (
@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6380"
 
     resend_api_key: str = ""
-    email_from: str = "Korus One <noreply@korusone.com.br>"
+    email_from: str = "Korus Fono <noreply@korusfono.com.br>"
     email_sending_enabled: bool = False
     password_token_expire_minutes: int = 60
     password_reset_cooldown_seconds: int = 60
