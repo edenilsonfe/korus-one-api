@@ -1,6 +1,7 @@
 """Transactional email templates (subject + HTML + plain text)."""
 
 from dataclasses import dataclass
+from html import escape
 
 PRODUCT_NAME = "Korus Fono"
 
@@ -34,13 +35,15 @@ def password_reset_email(
 ) -> RenderedEmail:
     """Password recovery email."""
     subject = f"Redefinição de senha - {PRODUCT_NAME}"
+    safe_name = escape(user_name, quote=True)
+    safe_url = escape(reset_url, quote=True)
     inner = f"""
-      <p>Olá {user_name},</p>
+      <p>Olá {safe_name},</p>
       <p>Recebemos uma solicitação para redefinir a senha da sua conta no
       {PRODUCT_NAME}.</p>
       <p>Para criar uma nova senha, clique no botão abaixo:</p>
       <p style="margin: 28px 0;">
-        <a href="{reset_url}"
+        <a href="{safe_url}"
            style="background: #0ea5a4; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 9999px;">
           Redefinir senha
         </a>
