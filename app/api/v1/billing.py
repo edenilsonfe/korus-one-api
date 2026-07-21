@@ -1,5 +1,6 @@
 """Billing plan catalog, checkout and webhooks."""
 
+import hmac
 import json
 import logging
 import re
@@ -457,7 +458,7 @@ async def billing_webhook(
     if provider_key == "asaas":
         webhook_token = (settings.asaas_webhook_token or "").strip()
         token = (request.headers.get("asaas-access-token") or "").strip()
-        if not webhook_token or not token or token != webhook_token:
+        if not webhook_token or not token or not hmac.compare_digest(token, webhook_token):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Asaas webhook token")
     elif provider_key == "stub":
         if not settings.debug:
