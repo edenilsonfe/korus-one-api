@@ -9,6 +9,8 @@ class Settings(BaseSettings):
 
     app_name: str = "Korus Fono API"
     debug: bool = False
+    # Exige ALLOW_DEBUG=true junto com DEBUG=true (dev/testes). Nunca em produção.
+    allow_debug: bool = False
     api_v1_prefix: str = "/api/v1"
     cors_origins: str = (
         "http://localhost:3000,"
@@ -148,9 +150,32 @@ class Settings(BaseSettings):
 
 
 INSECURE_JWT_SECRETS = frozenset({"change-me-in-production", ""})
+PRODUCTION_SENTRY_ENVS = frozenset({"production", "prod"})
+
+
+def is_production_runtime(settings: Settings) -> bool:
+    env = (settings.sentry_environment or "").strip().lower()
+    return env in PRODUCTION_SENTRY_ENVS
 
 
 def validate_settings(settings: Settings) -> None:
+    if is_production_runtime(settings):
+        if settings.debug:
+            raise RuntimeError(
+                "DEBUG=true não é permitido com SENTRY_ENVIRONMENT de produção "
+                "(production|prod)"
+            )
+        if settings.effective_billing_provider == "stub":
+            raise RuntimeError(
+                "Billing stub não é permitido em produção "
+                "(SENTRY_ENVIRONMENT=production|prod); use BILLING_PROVIDER=asaas "
+                "com ASAAS_API_KEY"
+            )
+    elif settings.debug and not settings.allow_debug:
+        raise RuntimeError(
+            "DEBUG=true exige ALLOW_DEBUG=true (não defina ALLOW_DEBUG em produção)"
+        )
+
     if settings.debug:
         return
     secret = (settings.jwt_secret or "").strip()

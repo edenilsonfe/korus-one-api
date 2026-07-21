@@ -4,6 +4,9 @@ from datetime import date, timedelta
 
 os.environ.setdefault("JWT_SECRET", "test-secret-for-pytest-only-not-for-prod")
 os.environ.setdefault("AUTH_RATE_LIMIT_FAIL_CLOSED", "false")
+# Worktree/CI sem .env: app sobe em modo debug (exige ALLOW_DEBUG).
+os.environ.setdefault("DEBUG", "true")
+os.environ.setdefault("ALLOW_DEBUG", "true")
 
 import pytest
 from httpx import ASGITransport, AsyncClient
