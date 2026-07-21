@@ -16,6 +16,8 @@ from app.models.attachment import Attachment
 from app.models.battery_evidence import BatteryItemEvidence, BatterySessionEvent
 from app.services.storage import storage_service
 
+UPLOAD_READ_CHUNK_SIZE = 1024 * 1024
+
 EVIDENCE_SIZE_LIMITS: dict[str, int] = {
     "photo": 10 * 1024 * 1024,
     "video": 200 * 1024 * 1024,
@@ -137,10 +139,21 @@ class BatteryEvidenceService:
         if not battery.patient_id:
             raise HTTPException(status_code=400, detail="Paciente não encontrado")
 
-        body = await file.read()
         limit = EVIDENCE_SIZE_LIMITS[kind]
-        if len(body) > limit:
-            raise HTTPException(status_code=413, detail=f"Arquivo excede limite de {limit // (1024 * 1024)} MB")
+        chunks: list[bytes] = []
+        total_read = 0
+        while True:
+            chunk = await file.read(UPLOAD_READ_CHUNK_SIZE)
+            if not chunk:
+                break
+            total_read += len(chunk)
+            if total_read > limit:
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail=f"Arquivo excede limite de {limit // (1024 * 1024)} MB",
+                )
+            chunks.append(chunk)
+        body = b"".join(chunks)
 
         content_type = file.content_type or "application/octet-stream"
         allowed = EVIDENCE_CONTENT_TYPES.get(kind, set())
