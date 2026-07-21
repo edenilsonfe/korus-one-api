@@ -1,5 +1,8 @@
 """Unit tests for attachment upload validation helpers."""
 
+import io
+import zipfile
+
 import pytest
 from fastapi import HTTPException
 
@@ -8,6 +11,18 @@ from app.services.attachment_upload import (
     sniff_content_type,
     validate_attachment_upload,
 )
+
+_DOCX_MIME = (
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+)
+
+
+def _zip_bytes(*members: tuple[str, bytes]) -> bytes:
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        for name, data in members:
+            zf.writestr(name, data)
+    return buf.getvalue()
 
 
 def test_sanitize_filename_strips_path_and_controls():
@@ -50,3 +65,29 @@ def test_validate_accepts_matching_pdf():
     )
     assert ctype == "application/pdf"
     assert name == "laudo.pdf"
+
+
+def test_validate_rejects_bare_zip_as_docx():
+    bare = _zip_bytes(("foo.txt", b"hello"))
+    with pytest.raises(HTTPException) as exc:
+        validate_attachment_upload(
+            content_type=_DOCX_MIME,
+            filename="fake.docx",
+            body=bare,
+        )
+    assert exc.value.status_code == 400
+    assert exc.value.detail == "Arquivo DOCX inválido."
+
+
+def test_validate_accepts_minimal_ooxml_docx():
+    body = _zip_bytes(
+        ("[Content_Types].xml", b"<Types/>"),
+        ("word/document.xml", b"<w:document/>"),
+    )
+    ctype, name = validate_attachment_upload(
+        content_type=_DOCX_MIME,
+        filename="ok.docx",
+        body=body,
+    )
+    assert ctype == _DOCX_MIME
+    assert name == "ok.docx"

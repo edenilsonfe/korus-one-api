@@ -2,9 +2,15 @@
 
 from __future__ import annotations
 
+import io
 import re
+import zipfile
 
 from fastapi import HTTPException, status
+
+_DOCX_MIME = (
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+)
 
 # Matches the patient hub accept list, minus SVG (XSS when rendered as <img>).
 ATTACHMENT_ALLOWED_CONTENT_TYPES: frozenset[str] = frozenset(
@@ -108,6 +114,18 @@ def validate_attachment_category(category: str) -> str:
     return category
 
 
+def _is_valid_docx_ooxml(body: bytes) -> bool:
+    """Require minimal OOXML members so arbitrary ZIPs are not accepted as DOCX."""
+    try:
+        with zipfile.ZipFile(io.BytesIO(body)) as zf:
+            names = zf.namelist()
+    except zipfile.BadZipFile:
+        return False
+    has_content_types = "[Content_Types].xml" in names
+    has_word = any(name.startswith("word/") for name in names)
+    return has_content_types and has_word
+
+
 def validate_attachment_upload(
     *,
     content_type: str | None,
@@ -137,6 +155,13 @@ def validate_attachment_upload(
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Conteúdo do arquivo não corresponde ao tipo declarado.",
+            )
+
+    if declared == _DOCX_MIME and sniffed == "application/zip":
+        if not _is_valid_docx_ooxml(body):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Arquivo DOCX inválido.",
             )
 
     return declared, safe_name
