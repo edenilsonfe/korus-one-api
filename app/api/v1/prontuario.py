@@ -228,5 +228,10 @@ async def get_attachment_url(
     attachment = result.scalar_one_or_none()
     if not attachment:
         raise HTTPException(status_code=404, detail="Anexo não encontrado")
-    url = await storage_service.presigned_url(attachment.storage_key)
+    # Preview (img/iframe) needs inline; downloads still get a safe filename.
+    url = await storage_service.presigned_url(
+        attachment.storage_key,
+        filename=attachment.name,
+        as_attachment=False,
+    )
     return {"url": url}

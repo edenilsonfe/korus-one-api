@@ -1,3 +1,4 @@
+import re
 import uuid
 from contextlib import asynccontextmanager
 from typing import Any
@@ -6,6 +7,9 @@ import aioboto3
 from botocore.config import Config
 
 from app.core.config import Settings, get_settings
+
+_SAFE_FILENAME_RE = re.compile(r"[^\w.\- ()\[\]]+", re.UNICODE)
+DEFAULT_PRESIGN_EXPIRES = 600
 
 
 def s3_client_kwargs(settings: Settings) -> dict[str, Any]:
@@ -19,6 +23,17 @@ def s3_client_kwargs(settings: Settings) -> dict[str, Any]:
     if endpoint:
         kwargs["endpoint_url"] = endpoint
     return kwargs
+
+
+def safe_content_disposition_filename(key: str, filename: str | None = None) -> str:
+    raw = (filename or key).replace("\\", "/")
+    base = raw.rsplit("/", 1)[-1].strip().strip(".")
+    if not base:
+        base = "download"
+    base = re.sub(r"[\x00-\x1f\x7f]", "", base)
+    base = base.replace('"', "")
+    base = _SAFE_FILENAME_RE.sub("_", base).strip("._") or "download"
+    return base[:180]
 
 
 class StorageService:
@@ -49,11 +64,25 @@ class StorageService:
             )
         return key
 
-    async def presigned_url(self, key: str, expires: int = 3600) -> str:
+    async def presigned_url(
+        self,
+        key: str,
+        expires: int = DEFAULT_PRESIGN_EXPIRES,
+        *,
+        filename: str | None = None,
+        as_attachment: bool = True,
+    ) -> str:
+        safe = safe_content_disposition_filename(key, filename)
+        disposition = "attachment" if as_attachment else "inline"
+        params = {
+            "Bucket": self.settings.s3_bucket,
+            "Key": key,
+            "ResponseContentDisposition": f'{disposition}; filename="{safe}"',
+        }
         async with self._client() as client:
             return await client.generate_presigned_url(
                 "get_object",
-                Params={"Bucket": self.settings.s3_bucket, "Key": key},
+                Params=params,
                 ExpiresIn=expires,
             )
 
