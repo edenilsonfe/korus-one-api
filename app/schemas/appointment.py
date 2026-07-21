@@ -1,8 +1,12 @@
 from datetime import date as DateType, time as TimeType
 
-from pydantic import Field
-
 from app.schemas.common import CamelModel
+
+
+class WeekdaySlot(CamelModel):
+    weekday: int
+    time: TimeType
+    duration: int = 50
 
 
 class AppointmentCreate(CamelModel):
@@ -10,12 +14,13 @@ class AppointmentCreate(CamelModel):
     date: DateType
     time: TimeType
     type: str
-    duration: int = 45
+    duration: int = 50
     status: str = "pendente"
     appointment_type: str = "avulso"
     frequency: str | None = None
     end_date: DateType | None = None
     weekdays: list[int] | None = None
+    weekday_slots: list[WeekdaySlot] | None = None
 
 
 class AppointmentUpdate(CamelModel):
@@ -41,6 +46,7 @@ class AppointmentResponse(CamelModel):
     frequency: str | None = None
     end_date: str | None = None
     weekdays: list[int] | None = None
+    weekday_slots: list[WeekdaySlot] | None = None
 
 
 class AppointmentCreateResponse(AppointmentResponse):

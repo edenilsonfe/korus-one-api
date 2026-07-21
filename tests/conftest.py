@@ -136,8 +136,8 @@ def clear_spm_cache():
 
 @pytest.fixture(autouse=True)
 def clear_instrument_cache():
-    from app.services.instrument_content_package import get_instrument_content_package
+    from app.services.instrument_content_package import clear_instrument_content_package_cache
 
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()
     yield
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()

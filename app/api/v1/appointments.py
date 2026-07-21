@@ -15,8 +15,11 @@ from app.schemas.appointment import (
     AppointmentCreateResponse,
     AppointmentResponse,
     AppointmentUpdate,
+    WeekdaySlot,
 )
 from app.services.appointment_series_slots import (
+    WeekdaySlotRule,
+    end_time_from_duration,
     iter_recurring_child_slots,
     validate_recurrent_range,
 )
@@ -27,9 +30,10 @@ router = APIRouter(prefix="/appointments", tags=["appointments"])
 VALID_FREQUENCIES = {"semanal", "quinzenal", "mensal", "personalizado"}
 
 
-def _end_time_from_duration(start: time, duration: int) -> time:
-    start_dt = datetime.combine(date.today(), start)
-    return (start_dt + timedelta(minutes=duration)).time()
+def _serialize_weekday_slots(raw: list[dict] | None) -> list[WeekdaySlot] | None:
+    if not raw:
+        return None
+    return [WeekdaySlot.model_validate(item) for item in raw]
 
 
 def _to_response(appt: Appointment, patient_name: str, therapist: str) -> AppointmentResponse:
@@ -48,7 +52,72 @@ def _to_response(appt: Appointment, patient_name: str, therapist: str) -> Appoin
         frequency=appt.frequency,
         end_date=appt.end_date.isoformat() if appt.end_date else None,
         weekdays=appt.weekdays,
+        weekday_slots=_serialize_weekday_slots(appt.weekday_slots),
     )
+
+
+def _normalize_personalizado_slots(body: AppointmentCreate) -> tuple[list[int], list[WeekdaySlotRule], list[dict]]:
+    """Return weekdays, rules, and JSON-serializable slot dicts for personalizado."""
+    if body.weekday_slots:
+        rules: list[WeekdaySlotRule] = []
+        payload: list[dict] = []
+        weekdays: list[int] = []
+        seen: set[int] = set()
+        for slot in body.weekday_slots:
+            if slot.weekday < 0 or slot.weekday > 6:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Dias da semana inválidos",
+                )
+            if slot.weekday in seen:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Dia da semana duplicado nos horários personalizados",
+                )
+            seen.add(slot.weekday)
+            weekdays.append(slot.weekday)
+            rules.append(
+                WeekdaySlotRule(
+                    weekday=slot.weekday,
+                    start_time=slot.time,
+                    duration=slot.duration,
+                )
+            )
+            payload.append(
+                {
+                    "weekday": slot.weekday,
+                    "time": slot.time.strftime("%H:%M:%S")
+                    if slot.time.second
+                    else slot.time.strftime("%H:%M"),
+                    "duration": slot.duration,
+                }
+            )
+        return weekdays, rules, payload
+
+    if not body.weekdays or len(body.weekdays) < 1:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Selecione ao menos um dia da semana",
+        )
+    invalid = [d for d in body.weekdays if d < 0 or d > 6]
+    if invalid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Dias da semana inválidos",
+        )
+    rules = [
+        WeekdaySlotRule(weekday=d, start_time=body.time, duration=body.duration)
+        for d in body.weekdays
+    ]
+    payload = [
+        {
+            "weekday": d,
+            "time": body.time.strftime("%H:%M:%S") if body.time.second else body.time.strftime("%H:%M"),
+            "duration": body.duration,
+        }
+        for d in body.weekdays
+    ]
+    return list(body.weekdays), rules, payload
 
 
 async def _check_conflict(
@@ -107,6 +176,10 @@ async def create_appointment(
     patient = await get_patient_for_professional(UUID(body.patient_id), professional, db)
     appointment_type = body.appointment_type or "avulso"
 
+    recurrence_weekdays: list[int] | None = None
+    weekday_rules: list[WeekdaySlotRule] | None = None
+    weekday_slots_payload: list[dict] | None = None
+
     if appointment_type == "recorrente":
         if not body.frequency or body.frequency not in VALID_FREQUENCIES:
             raise HTTPException(
@@ -123,22 +196,13 @@ async def create_appointment(
         except ValueError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
         if body.frequency == "personalizado":
-            if not body.weekdays or len(body.weekdays) < 1:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Selecione ao menos um dia da semana",
-                )
-            invalid = [d for d in body.weekdays if d < 0 or d > 6]
-            if invalid:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Dias da semana inválidos",
-                )
+            recurrence_weekdays, weekday_rules, weekday_slots_payload = _normalize_personalizado_slots(
+                body
+            )
 
     await _check_conflict(db, professional.id, body.date, body.time, body.duration)
 
-    end_time = _end_time_from_duration(body.time, body.duration)
-    recurrence_weekdays = body.weekdays if body.frequency == "personalizado" else None
+    end_time = end_time_from_duration(body.time, body.duration)
     anchor = Appointment(
         professional_id=professional.id,
         patient_id=patient.id,
@@ -151,6 +215,7 @@ async def create_appointment(
         frequency=body.frequency if appointment_type == "recorrente" else None,
         end_date=body.end_date if appointment_type == "recorrente" else None,
         weekdays=recurrence_weekdays,
+        weekday_slots=weekday_slots_payload,
     )
     db.add(anchor)
     await db.flush()
@@ -163,22 +228,27 @@ async def create_appointment(
             body.end_date,
             body.time,
             end_time,
-            body.weekdays,
+            recurrence_weekdays,
+            duration=body.duration,
+            weekday_rules=weekday_rules,
         ):
-            await _check_conflict(db, professional.id, slot.start_date, slot.start_time, body.duration)
+            await _check_conflict(
+                db, professional.id, slot.start_date, slot.start_time, slot.duration
+            )
             child = Appointment(
                 professional_id=professional.id,
                 patient_id=patient.id,
                 date=slot.start_date,
                 time=slot.start_time,
                 type=body.type,
-                duration=body.duration,
+                duration=slot.duration,
                 status=body.status,
                 appointment_type="recorrente",
                 series_id=anchor.id,
                 frequency=body.frequency,
                 end_date=body.end_date,
                 weekdays=recurrence_weekdays,
+                weekday_slots=weekday_slots_payload,
             )
             db.add(child)
             children_created += 1

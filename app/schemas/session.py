@@ -7,7 +7,7 @@ from app.schemas.common import CamelModel
 
 class SessionCreate(CamelModel):
     date: datetime | None = None
-    duration: int = 45
+    duration: int = 50
     type: str = "Terapia individual"
     objectives: list[str] = Field(default_factory=list)
     notes: str = ""

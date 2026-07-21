@@ -4,11 +4,14 @@ from app.services.battery_scoring_service import (
     score_observational_module,
     synthesize_battery_scores,
 )
-from app.services.instrument_content_package import get_instrument_content_package
+from app.services.instrument_content_package import (
+    clear_instrument_content_package_cache,
+    get_instrument_content_package,
+)
 
 
 def _clear():
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()
 
 
 def test_amiofe_legacy_module_resolves():

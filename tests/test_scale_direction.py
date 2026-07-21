@@ -1,11 +1,14 @@
 """Tests for observational scale_direction (lower_is_better inversion)."""
 
 from app.services.battery_scoring_service import score_observational_module
-from app.services.instrument_content_package import get_instrument_content_package
+from app.services.instrument_content_package import (
+    clear_instrument_content_package_cache,
+    get_instrument_content_package,
+)
 
 
 def _clear_cache():
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()
 
 
 def test_mbgr_lower_is_better_inverts_severe_scores():

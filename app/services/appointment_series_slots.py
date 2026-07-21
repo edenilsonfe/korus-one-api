@@ -16,6 +16,19 @@ class AppointmentSlot:
     start_date: date
     start_time: time
     end_time: time
+    duration: int
+
+
+@dataclass(frozen=True)
+class WeekdaySlotRule:
+    weekday: int
+    start_time: time
+    duration: int
+
+
+def end_time_from_duration(start: time, duration: int) -> time:
+    start_dt = datetime.combine(date.today(), start)
+    return (start_dt + timedelta(minutes=duration)).time()
 
 
 def _frequency_dates(
@@ -72,6 +85,12 @@ def _frequency_dates(
     return result
 
 
+def rules_by_weekday(rules: list[WeekdaySlotRule] | None) -> dict[int, WeekdaySlotRule]:
+    if not rules:
+        return {}
+    return {rule.weekday: rule for rule in rules}
+
+
 def iter_recurring_child_slots(
     frequency: str | None,
     start_date: date,
@@ -79,17 +98,26 @@ def iter_recurring_child_slots(
     start_time: time,
     end_time: time,
     weekdays: list[int] | None = None,
+    *,
+    duration: int | None = None,
+    weekday_rules: list[WeekdaySlotRule] | None = None,
 ) -> Iterable[AppointmentSlot]:
     """Yield expected child slots (excludes the anchor's first day)."""
     if not end_date:
         return
 
+    default_duration = duration if duration is not None else 50
+    by_weekday = rules_by_weekday(weekday_rules)
     dates = _frequency_dates(frequency or "semanal", start_date, end_date, weekdays)
     for appointment_date in dates[1:]:
+        rule = by_weekday.get(appointment_date.weekday())
+        slot_time = rule.start_time if rule else start_time
+        slot_duration = rule.duration if rule else default_duration
         yield AppointmentSlot(
             start_date=appointment_date,
-            start_time=start_time,
-            end_time=end_time,
+            start_time=slot_time,
+            end_time=end_time_from_duration(slot_time, slot_duration),
+            duration=slot_duration,
         )
 
 

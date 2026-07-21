@@ -339,5 +339,18 @@ def _load_package(slug: str) -> InstrumentContentPackage:
 
 
 @lru_cache(maxsize=32)
-def get_instrument_content_package(slug: str) -> InstrumentContentPackage:
+def _cached_instrument_content_package(slug: str, manifest_mtime: float) -> InstrumentContentPackage:
+    del manifest_mtime  # used only as cache key so package updates reload without process restart
     return _load_package(slug)
+
+
+def get_instrument_content_package(slug: str) -> InstrumentContentPackage:
+    try:
+        mtime = _resolve_manifest_path(slug).stat().st_mtime
+    except OSError:
+        mtime = 0.0
+    return _cached_instrument_content_package(slug, mtime)
+
+
+def clear_instrument_content_package_cache() -> None:
+    _cached_instrument_content_package.cache_clear()

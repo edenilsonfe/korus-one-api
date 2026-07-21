@@ -4,11 +4,14 @@ from app.services.battery_scoring_service import (
     score_developmental_module,
     synthesize_battery_scores,
 )
-from app.services.instrument_content_package import get_instrument_content_package
+from app.services.instrument_content_package import (
+    clear_instrument_content_package_cache,
+    get_instrument_content_package,
+)
 
 
 def _clear_cache():
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()
 
 
 def test_denver_delay_detection_by_age():

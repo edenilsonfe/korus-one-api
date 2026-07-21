@@ -22,7 +22,7 @@ class Appointment(Base, TimestampMixin):
     date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     time: Mapped[time] = mapped_column(Time, nullable=False)
     type: Mapped[str] = mapped_column(String(100), nullable=False)
-    duration: Mapped[int] = mapped_column(Integer, nullable=False, default=45)
+    duration: Mapped[int] = mapped_column(Integer, nullable=False, default=50)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="pendente")
     appointment_type: Mapped[str] = mapped_column(String(32), nullable=False, default="avulso")
     series_id: Mapped[uuid.UUID | None] = mapped_column(
@@ -31,5 +31,6 @@ class Appointment(Base, TimestampMixin):
     frequency: Mapped[str | None] = mapped_column(String(32), nullable=True)
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     weekdays: Mapped[list[int] | None] = mapped_column(JSON, nullable=True)
+    weekday_slots: Mapped[list[dict] | None] = mapped_column(JSON, nullable=True)
 
     patient: Mapped["Patient"] = relationship(back_populates="appointments")  # noqa: F821

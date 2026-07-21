@@ -2,15 +2,18 @@
 
 import pytest
 
-from app.services.instrument_content_package import get_instrument_content_package
+from app.services.instrument_content_package import (
+    clear_instrument_content_package_cache,
+    get_instrument_content_package,
+)
 from app.services.instrument_scoring_service import InstrumentScoringService
 
 
 @pytest.fixture(autouse=True)
 def clear_package_cache():
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()
     yield
-    get_instrument_content_package.cache_clear()
+    clear_instrument_content_package_cache()
 
 
 def test_fois_scaled_sum():

@@ -19,7 +19,7 @@ class Session(Base, TimestampMixin):
         UUID(as_uuid=True), ForeignKey("professionals.id"), nullable=False, index=True
     )
     date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
-    duration: Mapped[int] = mapped_column(Integer, nullable=False, default=45)
+    duration: Mapped[int] = mapped_column(Integer, nullable=False, default=50)
     type: Mapped[str] = mapped_column(String(100), nullable=False)
     objectives: Mapped[list[str]] = mapped_column(ARRAY(String), default=list, nullable=False)
     notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
