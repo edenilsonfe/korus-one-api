@@ -40,9 +40,6 @@ class StubPaymentGateway:
             "expiration_date": None,
         }
 
-    async def pay_with_credit_card(self, **_: Any) -> dict[str, Any]:
-        return {"status": "CONFIRMED"}
-
     async def create_subscription(
         self,
         *,

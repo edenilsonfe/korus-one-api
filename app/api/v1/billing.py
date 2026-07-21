@@ -15,7 +15,6 @@ from app.billing import PaymentGatewayConfigError, get_payment_gateway
 from app.billing.checkout_urls import build_checkout_return_urls
 from app.billing.errors import PaymentGatewayError
 from app.billing.webhook_normalizer import get_normalizer
-from app.core.client_ip import get_client_ip
 from app.core.config import get_settings
 from app.core.deps import get_current_professional
 from app.db.session import get_db
@@ -25,8 +24,6 @@ from app.schemas.billing import (
     BillingMeResponse,
     CheckoutRequest,
     CheckoutResponse,
-    CreditCardPaymentRequest,
-    CreditCardPaymentResponse,
     PaymentSessionResponse,
     PixCheckoutResponse,
     PlanChangePreviewResponse,
@@ -386,35 +383,6 @@ async def generate_pix_checkout(
 ):
     service = BillingCheckoutService(db)
     return await service.generate_pix(session_id=session_id, professional=professional)
-
-
-def _client_ip(request: Request) -> str:
-    return get_client_ip(request, default="127.0.0.1")
-
-
-@router.post("/checkout/{session_id}/credit-card", response_model=CreditCardPaymentResponse)
-async def pay_checkout_credit_card(
-    session_id: str,
-    payload: CreditCardPaymentRequest,
-    request: Request,
-    db: AsyncSession = Depends(get_db),
-    professional: Professional = Depends(get_current_professional),
-):
-    service = BillingCheckoutService(db)
-    return await service.pay_credit_card(
-        session_id=session_id,
-        professional=professional,
-        holder_name=payload.holder_name.strip(),
-        number=payload.number.strip(),
-        expiry_month=payload.expiry_month.strip(),
-        expiry_year=payload.expiry_year.strip(),
-        ccv=payload.ccv.strip(),
-        postal_code=payload.postal_code.strip(),
-        address_number=payload.address_number.strip(),
-        phone=payload.phone.strip(),
-        installment_count=payload.installment_count,
-        remote_ip=_client_ip(request),
-    )
 
 
 @router.post("/reconcile", response_model=ReconcileResponse)

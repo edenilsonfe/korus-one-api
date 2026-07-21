@@ -6,7 +6,6 @@ import asyncio
 import re
 from datetime import date, timedelta
 from typing import Any
-from urllib.parse import urlencode
 
 from app.billing.errors import PaymentGatewayConfigError, PaymentGatewayError
 from app.billing.http_client import request_json
@@ -278,6 +277,13 @@ class AsaasPaymentGateway:
         from app.billing.checkout_urls import build_in_app_payment_url
 
         payment_id = str(payment.get("id") or subscription_id)
+        # Best-effort: redirect back to /planos/retorno after paying on Asaas invoice.
+        await self.set_payment_callback(payment_id, success_url=success_url)
+
+        try:
+            invoice_url = self._payment_checkout_url(payment)
+        except PaymentGatewayError:
+            invoice_url = None
 
         return {
             "external_subscription_id": subscription_id,
@@ -286,6 +292,7 @@ class AsaasPaymentGateway:
             "checkout_url": build_in_app_payment_url(payment_id),
             "status": "pending",
             "external_customer_id": str(customer_id),
+            "invoice_url": invoice_url,
         }
 
     async def ensure_pix_billing(self, payment_id: str) -> dict[str, Any]:
@@ -322,104 +329,25 @@ class AsaasPaymentGateway:
             "expiration_date": last.get("expirationDate") or last.get("expiration_date"),
         }
 
-    async def pay_with_credit_card(
-        self,
-        *,
-        payment_id: str,
-        holder_name: str,
-        number: str,
-        expiry_month: str,
-        expiry_year: str,
-        ccv: str,
-        holder_info: dict[str, Any],
-    ) -> dict[str, Any]:
-        return await request_json(
-            "POST",
-            f"{self._base_url}/payments/{payment_id}/payWithCreditCard",
-            headers=self._headers(),
-            json_body={
-                "creditCard": {
-                    "holderName": holder_name,
-                    "number": number,
-                    "expiryMonth": expiry_month,
-                    "expiryYear": expiry_year,
-                    "ccv": ccv,
-                },
-                "creditCardHolderInfo": holder_info,
-            },
-        )
-
-    async def delete_payment(self, payment_id: str) -> None:
+    async def set_payment_callback(self, payment_id: str, *, success_url: str) -> None:
+        """Attach Asaas invoice return URL. Failures are ignored (PIX still works)."""
+        if not success_url:
+            return
         try:
             await request_json(
-                "DELETE",
+                "POST",
                 f"{self._base_url}/payments/{payment_id}",
                 headers=self._headers(),
+                json_body={
+                    "callback": {
+                        "successUrl": success_url,
+                        "autoRedirect": True,
+                    }
+                },
             )
-        except PaymentGatewayError as exc:
-            if exc.status_code != 404:
-                raise
-
-    async def pay_with_credit_card_installments(
-        self,
-        *,
-        customer_id: str,
-        total_value_cents: int,
-        installment_count: int,
-        holder_name: str,
-        number: str,
-        expiry_month: str,
-        expiry_year: str,
-        ccv: str,
-        holder_info: dict[str, Any],
-        remote_ip: str,
-        description: str,
-        external_reference: str,
-    ) -> dict[str, Any]:
-        if installment_count < 2:
-            raise PaymentGatewayError("Parcelamento exige ao menos 2 parcelas")
-        if total_value_cents <= 0:
-            raise PaymentGatewayError("Valor inválido para cobrança parcelada")
-        payload: dict[str, Any] = {
-            "customer": customer_id,
-            "billingType": "CREDIT_CARD",
-            "dueDate": date.today().isoformat(),
-            "installmentCount": installment_count,
-            "totalValue": round(total_value_cents / 100, 2),
-            "description": description,
-            "externalReference": external_reference,
-            "creditCard": {
-                "holderName": holder_name,
-                "number": number,
-                "expiryMonth": expiry_month,
-                "expiryYear": expiry_year,
-                "ccv": ccv,
-            },
-            "creditCardHolderInfo": holder_info,
-            "remoteIp": remote_ip or "127.0.0.1",
-        }
-        data = await request_json(
-            "POST",
-            f"{self._base_url}/payments",
-            headers=self._headers(),
-            json_body=payload,
-        )
-        if not data.get("id"):
-            raise PaymentGatewayError("Asaas não retornou id da cobrança parcelada")
-        return data
-
-    async def defer_subscription_renewal(
-        self, *, subscription_id: str, next_due_date: str
-    ) -> dict[str, Any]:
-        return await request_json(
-            "POST",
-            f"{self._base_url}/subscriptions/{subscription_id}",
-            headers=self._headers(),
-            json_body={
-                "nextDueDate": next_due_date,
-                "updatePendingPayments": False,
-            },
-        )
+        except PaymentGatewayError:
+            # ponytail: callback is UX; webhook/reconcile still activate the plan
+            return
 
     async def create_subscription(
         self,

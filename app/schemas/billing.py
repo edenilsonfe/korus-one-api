@@ -116,6 +116,8 @@ class PaymentSessionResponse(CamelModel):
     charge_cents: int | None = None
     change_type: str | None = None
     credit_cents: int | None = None
+    # Fatura Asaas (cartão fora do nosso origin) — null no stub / se indisponível
+    invoice_url: str | None = None
 
 
 class PixCheckoutResponse(CamelModel):
@@ -124,22 +126,3 @@ class PixCheckoutResponse(CamelModel):
     encoded_image: str | None = None
     payload: str | None = None
     expiration_date: str | None = None
-
-
-class CreditCardPaymentRequest(CamelModel):
-    holder_name: str
-    number: str
-    expiry_month: str
-    expiry_year: str
-    ccv: str
-    postal_code: str
-    address_number: str
-    phone: str
-    installment_count: int = Field(default=1, ge=1, le=12)
-
-
-class CreditCardPaymentResponse(CamelModel):
-    session_id: str
-    provider: str
-    status: str
-    message: str

@@ -4,7 +4,6 @@ from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from fastapi import HTTPException
 
 from app.billing.types import InternalBillingEventType
 from app.billing.webhook_normalizer import StubWebhookNormalizer
@@ -72,26 +71,13 @@ async def test_stub_webhook_activates_subscription(db_session):
     assert sub.status == "active"
 
 
-def _card_kwargs() -> dict:
-    return {
-        "holder_name": "Test User",
-        "number": "5162306219378829",
-        "expiry_month": "05",
-        "expiry_year": "2030",
-        "ccv": "123",
-        "postal_code": "01310100",
-        "address_number": "100",
-        "phone": "11999990000",
-    }
-
-
 @pytest.mark.asyncio
-async def test_credit_card_installments_rejected_on_monthly(db_session):
-    plan = Plan(**{**COMMERCIAL_PLAN_SEEDS[0], "billing_interval": "monthly"})
+async def test_get_session_stub_has_null_invoice_url(db_session):
+    plan = Plan(**COMMERCIAL_PLAN_SEEDS[0])
     professional = Professional(
-        email="installments-monthly@test.com",
+        email="invoice-stub@test.com",
         password_hash="hash",
-        name="Monthly User",
+        name="Stub Invoice User",
         cpf="24971563792",
         subscription_status="trialing",
         trial_started_at=datetime.now(UTC),
@@ -105,32 +91,28 @@ async def test_credit_card_installments_rejected_on_monthly(db_session):
         plan_id=plan.id,
         status="incomplete",
         provider="stub",
-        external_subscription_id="stub_sub_monthly",
-        external_checkout_id="stub_pay_monthly",
+        external_subscription_id="stub_sub_invoice",
+        external_checkout_id="stub_pay_invoice",
     )
     db_session.add(sub)
     await db_session.commit()
 
     service = BillingCheckoutService(db_session)
-    with pytest.raises(HTTPException) as exc_info:
-        await service.pay_credit_card(
-            session_id="stub_pay_monthly",
-            professional=professional,
-            installment_count=10,
-            **_card_kwargs(),
-        )
-    assert exc_info.value.status_code == 422
-    assert "anual" in str(exc_info.value.detail).lower()
+    session = await service.get_session(
+        session_id="stub_pay_invoice", professional=professional
+    )
+    assert session["provider"] == "stub"
+    assert session["invoice_url"] is None
+    assert session["status"] == "pending"
 
 
 @pytest.mark.asyncio
-async def test_credit_card_installments_accepts_range_on_yearly_stub(db_session):
-    yearly = next(p for p in COMMERCIAL_PLAN_SEEDS if p["billing_interval"] == "yearly")
-    plan = Plan(**yearly)
+async def test_get_session_asaas_exposes_invoice_url(db_session):
+    plan = Plan(**COMMERCIAL_PLAN_SEEDS[0])
     professional = Professional(
-        email="installments-range@test.com",
+        email="invoice-asaas@test.com",
         password_hash="hash",
-        name="Range User",
+        name="Asaas Invoice User",
         cpf="24971563792",
         subscription_status="trialing",
         trial_started_at=datetime.now(UTC),
@@ -143,81 +125,57 @@ async def test_credit_card_installments_accepts_range_on_yearly_stub(db_session)
         professional_id=professional.id,
         plan_id=plan.id,
         status="incomplete",
-        provider="stub",
-        external_subscription_id="stub_sub_range",
-        external_checkout_id="stub_pay_range",
+        provider="asaas",
+        external_subscription_id="sub_asaas_invoice",
+        external_checkout_id="pay_asaas_invoice",
     )
     db_session.add(sub)
     await db_session.commit()
 
+    invoice = "https://sandbox.asaas.com/i/pay_asaas_invoice"
+    gateway = AsyncMock()
+    gateway.get_payment = AsyncMock(
+        return_value={
+            "id": "pay_asaas_invoice",
+            "status": "PENDING",
+            "value": 97.0,
+            "invoiceUrl": invoice,
+        }
+    )
+
     service = BillingCheckoutService(db_session)
-    with (
-        patch(
-            "app.services.billing_checkout_service.PlanChangeService.apply_pending_upgrade",
-            new_callable=AsyncMock,
-            return_value=False,
-        ),
-        patch(
-            "app.services.billing_checkout_service.BillingReconciliationService.simulate_stub_payment",
-            new_callable=AsyncMock,
-            return_value={"applied": True, "message": "Pagamento simulado."},
-        ),
+    with patch(
+        "app.services.billing_checkout_service.AsaasPaymentGateway",
+        return_value=gateway,
     ):
-        result = await service.pay_credit_card(
-            session_id="stub_pay_range",
-            professional=professional,
-            installment_count=3,
-            **_card_kwargs(),
+        session = await service.get_session(
+            session_id="pay_asaas_invoice", professional=professional
         )
-    assert result["status"] == "paid"
+
+    assert session["invoice_url"] == invoice
+    assert session["status"] == "pending"
+    assert session["charge_cents"] == 9700
 
 
 @pytest.mark.asyncio
-async def test_credit_card_installments_accepted_on_yearly_stub(db_session):
-    yearly = next(p for p in COMMERCIAL_PLAN_SEEDS if p["billing_interval"] == "yearly")
-    plan = Plan(**yearly)
-    professional = Professional(
-        email="installments-yearly@test.com",
-        password_hash="hash",
-        name="Yearly User",
-        cpf="24971563792",
-        subscription_status="trialing",
-        trial_started_at=datetime.now(UTC),
-        trial_ends_at=datetime.now(UTC),
-    )
-    db_session.add_all([plan, professional])
-    await db_session.flush()
+async def test_credit_card_pan_route_removed():
+    from httpx import ASGITransport, AsyncClient
 
-    sub = Subscription(
-        professional_id=professional.id,
-        plan_id=plan.id,
-        status="incomplete",
-        provider="stub",
-        external_subscription_id="stub_sub_yearly",
-        external_checkout_id="stub_pay_yearly",
-    )
-    db_session.add(sub)
-    await db_session.commit()
+    from app.main import app
 
-    service = BillingCheckoutService(db_session)
-    # Stub reconcile hits sqlite UUID binding quirks; mock post-pay path.
-    with (
-        patch(
-            "app.services.billing_checkout_service.PlanChangeService.apply_pending_upgrade",
-            new_callable=AsyncMock,
-            return_value=False,
-        ),
-        patch(
-            "app.services.billing_checkout_service.BillingReconciliationService.simulate_stub_payment",
-            new_callable=AsyncMock,
-            return_value={"applied": True, "message": "Pagamento simulado."},
-        ),
-    ):
-        result = await service.pay_credit_card(
-            session_id="stub_pay_yearly",
-            professional=professional,
-            installment_count=10,
-            **_card_kwargs(),
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post(
+            "/api/v1/billing/checkout/any/credit-card",
+            json={
+                "holderName": "X",
+                "number": "5162306219378829",
+                "expiryMonth": "05",
+                "expiryYear": "2030",
+                "ccv": "123",
+                "postalCode": "01310100",
+                "addressNumber": "100",
+                "phone": "11999990000",
+            },
         )
-    assert result["status"] == "paid"
-    assert result["provider"] == "stub"
+    assert response.status_code == 404

@@ -2,30 +2,24 @@
 
 Canonical plan bodies live in the sibling repo:
 
-`/home/dev/Documentos/projetos/korus-one-web/plans/`
+`C:/Users/ed/Documents/projetos/korus-one-web/plans/`
 
-This API repo is touched by the following plans (execute from
-`/home/dev/Documentos/projetos/korus-one-api` unless the plan says otherwise):
+## Wave 2 (security) — status
 
 | Plan | Title | Status |
 |------|-------|--------|
-| 001 | Validar `token_version` no access token | DONE |
-| 002 | Corrigir IDOR de evoluções por `session_id` | DONE |
-| 003 | Endurecer webhooks de billing | DONE |
-| 004 | Não logar URL de reset com token | DONE |
-| 006 | Rejeitar `jwt_secret` default fora de debug | DONE |
-| 008 | Batch de agregados na listagem de pacientes | DONE |
-| 009 | Listar conversas IA sem histórico completo (API half) | DONE |
-| 011 | Testes HTTP de isolamento multi-tenant | DONE |
-| 012 | Limite de tamanho no upload de anexo | DONE |
-| 014 | Ownership antes de `build_patient_context` | DONE |
-| 015 | Spike Recursos (API half) | DONE |
-| 016 | Spike fidelidade protocolos | DONE |
-| 017 | Spike export PDF (API half) | DONE |
+| 018 | Asaas webhook `compare_digest` | DONE |
+| 019 | Escapar HTML no e-mail de reset | DONE |
+| 020 | Desligar OpenAPI docs fora de debug | DONE |
+| 021 | IP confiável para rate-limit de auth (XFF) | DONE |
+| 022 | Evidência de bateria: upload chunked + cap | DONE |
+| 025 | DOCX exige estrutura OOXML | DONE |
+| 026 | Omitir JWT do JSON de auth (API half) | DONE |
+| 027 | Bloquear `DEBUG`/billing stub em produção | DONE |
+| 028 | Magic sniff em evidências e recursos | DONE |
+| 029 | Presigned URL TTL + Content-Disposition (API half) | DONE |
+| 031 | Spike+impl fatura Asaas cartão (API half) | DONE |
 
-Update status in **both** this file and `korus-one-web/plans/README.md` when a
-plan finishes.
+Web-only: **023 DONE**, **024 DONE**, **030 TODO**.
 
-Web-only plans (005, 007, 010, 013) do not modify this repo.
-
-**Excluded by operator:** CI/CD workflows.
+Update both indexes when a plan finishes.

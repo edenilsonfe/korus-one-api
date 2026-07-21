@@ -1,6 +1,6 @@
 # Spike: cartão tokenizado / fora do escopo PCI (plano 031 — Fase A)
 
-**Status:** SPIKE DONE — awaiting approval  
+**Status:** APPROVED (opção A) — Fase B implemented (hosted invoice)  
 **Branch alvo:** `advisor/031-pci-tokenize-spike`  
 **Data:** 2026-07-21  
 **Repos lidos:** `app/billing/asaas_gateway.py`, `app/services/billing_checkout_service.py`, `app/schemas/billing.py`, `app/api/v1/billing.py`, `app/billing/stub_gateway.py`, web `PaymentCheckout.tsx`, `src/lib/security-headers.ts`  
@@ -147,12 +147,16 @@ Rollback: reverter flag para in_app (aceitar regressão PCI temporária).
 
 ---
 
-## Próximo passo (humano)
+## Decisão e implementação
 
-Aprovar uma das linhas:
+**Aprovado:** opção **A** (2026-07-21).
 
-- **A (recomendada):** Fase B = fatura Asaas para cartão; remover captura PAN do web/API; PIX in-app.
-- **B (rejeitada pelo spike para meta PCI):** Fase B = aceitar só `creditCardToken` com tokenize server-side — **não** reduz escopo na primeira compra.
-- **C:** Manter in_app + formalizar SAQ-D (fora do espírito do 031).
+Implementado:
 
-**Não iniciar implementação (Fase B) até aprovação.**
+- `GET /billing/checkout/{session_id}` → `invoiceUrl` (fatura Asaas)
+- `POST .../credit-card` com PAN/CVV **removido**
+- WEB: “Pagar com cartão” → redirect top-level para `invoiceUrl` (allowlist plano 024)
+- PIX in-app inalterado; stub usa “Simular cartão (dev)”
+- Callback Asaas `successUrl` → `/planos/retorno` (best-effort em `set_payment_callback`)
+
+Parcelamento anual: escolhido na UI da fatura Asaas (não mais no form Korus).
