@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
     auth_rate_limit_fail_closed: bool = True
+    # How many reverse-proxy hops to skip from the right of X-Forwarded-For
+    # when deriving the client IP (auth rate-limit, billing remote_ip, etc.).
+    # Default 1 = single trusted proxy (e.g. Railway / Cloudflare edge).
+    trusted_proxy_count: int = 1
 
     redis_url: str = "redis://localhost:6380"
 

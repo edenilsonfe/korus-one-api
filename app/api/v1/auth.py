@@ -11,6 +11,7 @@ from app.core.auth_cookies import (
     clear_auth_cookies,
     set_auth_cookies,
 )
+from app.core.client_ip import get_client_ip
 from app.core.config import get_settings
 from app.core.demo_patient import (
     DEMO_AVATAR_COLOR,
@@ -61,12 +62,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 def _request_ip(request: Request) -> str:
-    x_forwarded_for = request.headers.get("x-forwarded-for", "")
-    if x_forwarded_for:
-        return x_forwarded_for.split(",")[0].strip()
-    if request.client and request.client.host:
-        return request.client.host
-    return "unknown"
+    return get_client_ip(request)
 
 
 def send_password_reset_email_task(to_email: str, user_name: str, raw_token: str) -> None:

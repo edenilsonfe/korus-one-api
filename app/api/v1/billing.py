@@ -14,6 +14,7 @@ from app.billing import PaymentGatewayConfigError, get_payment_gateway
 from app.billing.checkout_urls import build_checkout_return_urls
 from app.billing.errors import PaymentGatewayError
 from app.billing.webhook_normalizer import get_normalizer
+from app.core.client_ip import get_client_ip
 from app.core.config import get_settings
 from app.core.deps import get_current_professional
 from app.db.session import get_db
@@ -387,12 +388,7 @@ async def generate_pix_checkout(
 
 
 def _client_ip(request: Request) -> str:
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
-    if request.client and request.client.host:
-        return request.client.host
-    return "127.0.0.1"
+    return get_client_ip(request, default="127.0.0.1")
 
 
 @router.post("/checkout/{session_id}/credit-card", response_model=CreditCardPaymentResponse)
