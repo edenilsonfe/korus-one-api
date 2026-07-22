@@ -126,3 +126,8 @@ class PixCheckoutResponse(CamelModel):
     encoded_image: str | None = None
     payload: str | None = None
     expiration_date: str | None = None
+
+
+class CardInvoiceResponse(CamelModel):
+    session_id: str
+    invoice_url: str

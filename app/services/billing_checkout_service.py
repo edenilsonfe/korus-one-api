@@ -144,3 +144,45 @@ class BillingCheckoutService:
             "payload": pix.get("payload"),
             "expiration_date": pix.get("expiration_date"),
         }
+
+    async def prepare_card_invoice(
+        self, *, session_id: str, professional: Professional
+    ) -> dict[str, Any]:
+        """Flip cobrança to CREDIT_CARD and return a fresh invoiceUrl for hosted card UI."""
+        sub = await self._get_subscription(
+            session_id=session_id, professional_id=str(professional.id)
+        )
+        provider = (sub.provider or "stub").lower()
+        payment_id = str(sub.external_checkout_id or session_id)
+
+        if provider != "asaas":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Fatura de cartão disponível apenas com o provedor Asaas.",
+            )
+
+        try:
+            gateway = AsaasPaymentGateway()
+            payment = await gateway.ensure_card_billing(payment_id)
+        except (PaymentGatewayConfigError, PaymentGatewayError) as exc:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=str(exc),
+            ) from exc
+
+        invoice_url: str | None = None
+        for key in ("invoiceUrl", "bankSlipUrl", "transactionReceiptUrl"):
+            value = payment.get(key)
+            if value:
+                invoice_url = str(value)
+                break
+        if not invoice_url:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Asaas não retornou URL da fatura para cartão.",
+            )
+
+        return {
+            "session_id": session_id,
+            "invoice_url": invoice_url,
+        }

@@ -307,6 +307,23 @@ class AsaasPaymentGateway:
             )
         return payment
 
+    async def ensure_card_billing(self, payment_id: str) -> dict[str, Any]:
+        """Force CREDIT_CARD so invoiceUrl shows card form (+ installments when enabled).
+
+        Checkout auto-PIX locks billingType=PIX; without this flip the hosted invoice
+        has no card fields.
+        """
+        payment = await self.get_payment(payment_id)
+        billing_type = str(payment.get("billingType", "")).upper()
+        if billing_type != "CREDIT_CARD":
+            payment = await request_json(
+                "POST",
+                f"{self._base_url}/payments/{payment_id}",
+                headers=self._headers(),
+                json_body={"billingType": "CREDIT_CARD"},
+            )
+        return payment
+
     async def get_pix_qr_code(self, payment_id: str) -> dict[str, Any]:
         await self.ensure_pix_billing(payment_id)
         last: dict[str, Any] = {}

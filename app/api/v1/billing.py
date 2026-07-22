@@ -22,6 +22,7 @@ from app.models.billing import Plan, Subscription
 from app.models.professional import Professional
 from app.schemas.billing import (
     BillingMeResponse,
+    CardInvoiceResponse,
     CheckoutRequest,
     CheckoutResponse,
     PaymentSessionResponse,
@@ -383,6 +384,19 @@ async def generate_pix_checkout(
 ):
     service = BillingCheckoutService(db)
     return await service.generate_pix(session_id=session_id, professional=professional)
+
+
+@router.post("/checkout/{session_id}/prepare-card", response_model=CardInvoiceResponse)
+async def prepare_card_invoice(
+    session_id: str,
+    db: AsyncSession = Depends(get_db),
+    professional: Professional = Depends(get_current_professional),
+):
+    """Garante billingType=CREDIT_CARD e devolve invoiceUrl (form de cartão/parcelas no Asaas)."""
+    service = BillingCheckoutService(db)
+    return await service.prepare_card_invoice(
+        session_id=session_id, professional=professional
+    )
 
 
 @router.post("/reconcile", response_model=ReconcileResponse)

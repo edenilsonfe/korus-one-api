@@ -179,3 +179,52 @@ async def test_credit_card_pan_route_removed():
             },
         )
     assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_prepare_card_invoice_flips_pix_to_credit_card(db_session):
+    plan = Plan(**COMMERCIAL_PLAN_SEEDS[0])
+    professional = Professional(
+        email="prepare-card@test.com",
+        password_hash="hash",
+        name="Prepare Card User",
+        cpf="24971563792",
+        subscription_status="trialing",
+        trial_started_at=datetime.now(UTC),
+        trial_ends_at=datetime.now(UTC),
+    )
+    db_session.add_all([plan, professional])
+    await db_session.flush()
+
+    sub = Subscription(
+        professional_id=professional.id,
+        plan_id=plan.id,
+        status="incomplete",
+        provider="asaas",
+        external_subscription_id="sub_prepare_card",
+        external_checkout_id="pay_prepare_card",
+    )
+    db_session.add(sub)
+    await db_session.commit()
+
+    invoice = "https://sandbox.asaas.com/i/pay_prepare_card"
+    gateway = AsyncMock()
+    gateway.ensure_card_billing = AsyncMock(
+        return_value={
+            "id": "pay_prepare_card",
+            "billingType": "CREDIT_CARD",
+            "invoiceUrl": invoice,
+        }
+    )
+
+    service = BillingCheckoutService(db_session)
+    with patch(
+        "app.services.billing_checkout_service.AsaasPaymentGateway",
+        return_value=gateway,
+    ):
+        result = await service.prepare_card_invoice(
+            session_id="pay_prepare_card", professional=professional
+        )
+
+    assert result["invoice_url"] == invoice
+    gateway.ensure_card_billing.assert_awaited_once_with("pay_prepare_card")
