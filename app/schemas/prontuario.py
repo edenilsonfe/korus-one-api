@@ -24,8 +24,31 @@ class AnamneseCreate(CamelModel):
     value: str
 
 
-class AnamneseResponse(CamelModel):
+class AnamneseEntryInput(CamelModel):
+    section: str
+    value: str
+
+
+class AnamneseBulkUpsert(CamelModel):
+    entries: list[AnamneseEntryInput] = Field(default_factory=list)
+
+
+class AnamneseComplete(CamelModel):
+    entries: list[AnamneseEntryInput] | None = None
+
+
+class AnamneseEntryResponse(CamelModel):
     id: str
     patient_id: str
     section: str
     value: str
+
+
+# Compat alias — same shape as entry.
+AnamneseResponse = AnamneseEntryResponse
+
+
+class AnamneseDocumentResponse(CamelModel):
+    status: str
+    completed_at: str | None = None
+    entries: list[AnamneseEntryResponse]

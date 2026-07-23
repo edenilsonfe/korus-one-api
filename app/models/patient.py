@@ -23,6 +23,8 @@ class Patient(Base, TimestampMixin):
     avatar_color: Mapped[str] = mapped_column(String(64), nullable=False)
     therapy_plan_content: Mapped[str | None] = mapped_column(Text, nullable=True)
     therapy_plan_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    anamnese_status: Mapped[str] = mapped_column(String(32), nullable=False, default="draft")
+    anamnese_completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     professional: Mapped["Professional"] = relationship(back_populates="patients")  # noqa: F821
     caregivers: Mapped[list["Caregiver"]] = relationship(back_populates="patient", cascade="all, delete-orphan")  # noqa: F821

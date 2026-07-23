@@ -9,11 +9,20 @@ from app.core.config import get_settings
 from app.core.deps import get_current_professional, get_patient_for_professional
 from app.core.utils import utcnow
 from app.db.session import get_db
-from app.models.anamnese import AnamneseEntry
 from app.models.attachment import Attachment
 from app.models.evolution import Evolution
 from app.models.professional import Professional
-from app.schemas.prontuario import AnamneseCreate, AnamneseResponse, EvolutionCreate, EvolutionResponse
+from app.schemas.prontuario import (
+    AnamneseBulkUpsert,
+    AnamneseComplete,
+    AnamneseCreate,
+    AnamneseDocumentResponse,
+    AnamneseEntryInput,
+    AnamneseResponse,
+    EvolutionCreate,
+    EvolutionResponse,
+)
+from app.services import anamnese_service
 from app.services.attachment_upload import (
     validate_attachment_category,
     validate_attachment_upload,
@@ -79,20 +88,39 @@ async def create_evolution(
     )
 
 
-@router.get("/anamnese", response_model=list[AnamneseResponse])
+@router.get("/anamnese", response_model=AnamneseDocumentResponse)
 async def list_anamnese(
     patient_id: UUID,
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
-    await get_patient_for_professional(patient_id, professional, db)
-    result = await db.execute(
-        select(AnamneseEntry).where(AnamneseEntry.patient_id == patient_id).order_by(AnamneseEntry.section.asc())
-    )
-    return [
-        AnamneseResponse(id=str(a.id), patient_id=str(a.patient_id), section=a.section, value=a.value)
-        for a in result.scalars().all()
-    ]
+    patient = await get_patient_for_professional(patient_id, professional, db)
+    entries = await anamnese_service.list_entries(db, patient_id)
+    return anamnese_service.document_response(patient, entries)
+
+
+@router.put("/anamnese", response_model=AnamneseDocumentResponse)
+async def bulk_upsert_anamnese(
+    patient_id: UUID,
+    body: AnamneseBulkUpsert,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    patient = await get_patient_for_professional(patient_id, professional, db)
+    anamnese_service.assert_editable(patient)
+    entries = await anamnese_service.upsert_entries(db, patient_id=patient_id, entries=body.entries)
+    return anamnese_service.document_response(patient, entries)
+
+
+@router.post("/anamnese/complete", response_model=AnamneseDocumentResponse)
+async def complete_anamnese(
+    patient_id: UUID,
+    body: AnamneseComplete,
+    professional: Professional = Depends(get_current_professional),
+    db: AsyncSession = Depends(get_db),
+):
+    patient = await get_patient_for_professional(patient_id, professional, db)
+    return await anamnese_service.complete_anamnese(db, patient=patient, entries=body.entries)
 
 
 @router.post("/anamnese", response_model=AnamneseResponse, status_code=status.HTTP_201_CREATED)
@@ -102,18 +130,21 @@ async def upsert_anamnese(
     professional: Professional = Depends(get_current_professional),
     db: AsyncSession = Depends(get_db),
 ):
-    await get_patient_for_professional(patient_id, professional, db)
-    result = await db.execute(
-        select(AnamneseEntry).where(AnamneseEntry.patient_id == patient_id, AnamneseEntry.section == body.section)
+    patient = await get_patient_for_professional(patient_id, professional, db)
+    anamnese_service.assert_editable(patient)
+    entries = await anamnese_service.upsert_entries(
+        db,
+        patient_id=patient_id,
+        entries=[AnamneseEntryInput(section=body.section, value=body.value)],
     )
-    entry = result.scalar_one_or_none()
-    if entry:
-        entry.value = body.value
-    else:
-        entry = AnamneseEntry(patient_id=patient_id, section=body.section, value=body.value)
-        db.add(entry)
-    await db.flush()
-    return AnamneseResponse(id=str(entry.id), patient_id=str(patient_id), section=entry.section, value=entry.value)
+    section = body.section.strip()
+    entry = next(e for e in entries if e.section == section)
+    return AnamneseResponse(
+        id=str(entry.id),
+        patient_id=str(patient_id),
+        section=entry.section,
+        value=entry.value,
+    )
 
 
 UPLOAD_READ_CHUNK_SIZE = 1024 * 1024
