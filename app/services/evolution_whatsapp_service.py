@@ -31,7 +31,11 @@ from app.services.evolution_webhook_auth import (
     normalize_evolution_event,
 )
 from app.services.whatsapp_types import WhatsAppSendResult
-from app.utils.credential_encryption import decrypt_secret, encrypt_secret
+from app.utils.credential_encryption import (
+    CredentialEncryptionError,
+    decrypt_secret,
+    encrypt_secret,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -184,7 +188,27 @@ class EvolutionWhatsAppService:
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Instância Evolution sem credencial configurada.",
             )
-        return decrypt_secret(token)
+        try:
+            return decrypt_secret(token)
+        except CredentialEncryptionError as exc:
+            # Key rotated / mismatch: Evolution accepts the global admin key for
+            # instance ops. Prefer reconnect so the row is re-encrypted.
+            settings = get_settings()
+            if settings.evolution_global_api_key:
+                logger.warning(
+                    "Could not decrypt Evolution credential for connection %s; "
+                    "falling back to EVOLUTION_GLOBAL_API_KEY. Reconnect WhatsApp "
+                    "to store a fresh encrypted instance key.",
+                    connection.id,
+                )
+                return settings.evolution_global_api_key
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "Credencial WhatsApp não pôde ser lida (chave de criptografia "
+                    "alterada). Desconecte e reconecte o WhatsApp."
+                ),
+            ) from exc
 
     def _instance_name(self, connection: WhatsAppConnection) -> str:
         name = connection.evolution_instance_name
@@ -201,8 +225,7 @@ class EvolutionWhatsAppService:
         try:
             api_key = self._instance_api_key(connection)
         except HTTPException:
-            settings = get_settings()
-            api_key = settings.evolution_global_api_key
+            api_key = get_settings().evolution_global_api_key
             if not api_key:
                 return
         name = connection.evolution_instance_name
@@ -325,38 +348,47 @@ class EvolutionWhatsAppService:
         existing = await self.get_active_connection(professional_id)
 
         if existing and existing.evolution_instance_name:
-            api_key = self._instance_api_key(existing)
-            instance_name = existing.evolution_instance_name
             try:
-                state_payload = await self.client.connection_state(
-                    instance_name, api_key=api_key
-                )
-                evolution_state = EvolutionApiClient.extract_connection_state(state_payload)
-                self._apply_evolution_state(existing, evolution_state)
-                qrcode_base64 = None
-                if evolution_state in (None, "close", "closed", "connecting"):
-                    connect_payload = await self.client.connect_instance(
+                api_key = self._instance_api_key(existing)
+            except HTTPException:
+                # Undecryptable row without global key — recreate below.
+                existing = None
+            else:
+                instance_name = existing.evolution_instance_name
+                try:
+                    state_payload = await self.client.connection_state(
                         instance_name, api_key=api_key
                     )
-                    qrcode_base64 = EvolutionApiClient.extract_qrcode_base64(connect_payload)
-                await self._ensure_webhook(instance_name, api_key)
-                await self._sync_phone_from_instances(existing, api_key)
-                await self.db.commit()
-                await self.db.refresh(existing)
-                return EvolutionConnectResult(
-                    connection=existing,
-                    qrcode_base64=qrcode_base64,
-                    connection_state=evolution_state,
-                )
-            except HTTPException:
-                raise
-            except EvolutionApiError as exc:
-                existing.last_error = exc.message
-                await self.db.commit()
-                raise HTTPException(
-                    status_code=status.HTTP_502_BAD_GATEWAY,
-                    detail=f"Falha ao conectar instância Evolution: {exc.message}",
-                ) from exc
+                    evolution_state = EvolutionApiClient.extract_connection_state(
+                        state_payload
+                    )
+                    self._apply_evolution_state(existing, evolution_state)
+                    qrcode_base64 = None
+                    if evolution_state in (None, "close", "closed", "connecting"):
+                        connect_payload = await self.client.connect_instance(
+                            instance_name, api_key=api_key
+                        )
+                        qrcode_base64 = EvolutionApiClient.extract_qrcode_base64(
+                            connect_payload
+                        )
+                    await self._ensure_webhook(instance_name, api_key)
+                    await self._sync_phone_from_instances(existing, api_key)
+                    await self.db.commit()
+                    await self.db.refresh(existing)
+                    return EvolutionConnectResult(
+                        connection=existing,
+                        qrcode_base64=qrcode_base64,
+                        connection_state=evolution_state,
+                    )
+                except HTTPException:
+                    raise
+                except EvolutionApiError as exc:
+                    existing.last_error = exc.message
+                    await self.db.commit()
+                    raise HTTPException(
+                        status_code=status.HTTP_502_BAD_GATEWAY,
+                        detail=f"Falha ao conectar instância Evolution: {exc.message}",
+                    ) from exc
 
         await self._soft_disconnect_existing(professional_id)
 

@@ -162,6 +162,21 @@ def test_verify_evolution_webhook_hmac(evolution_env):
     assert verify_evolution_webhook_request(request, body) is True
 
 
+def test_instance_api_key_falls_back_to_global_on_decrypt_mismatch(evolution_env):
+    """After WHATSAPP_CREDENTIAL_ENCRYPTION_KEY rotation, old ciphertext still sends via global key."""
+    other = Fernet(Fernet.generate_key())
+    connection = WhatsAppConnection(
+        id=uuid.uuid4(),
+        professional_id=uuid.uuid4(),
+        provider="evolution",
+        status=CONNECTION_STATUS_ACTIVE,
+        evolution_instance_name="korus-test",
+        encrypted_instance_api_key=other.encrypt(b"stale-instance-key").decode(),
+    )
+    service = EvolutionWhatsAppService(MagicMock())
+    assert service._instance_api_key(connection) == "global-key"
+
+
 @pytest.mark.asyncio
 async def test_ensure_connection_open_fail_closed(evolution_env, db_session: AsyncSession):
     pro = Professional(
