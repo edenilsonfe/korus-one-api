@@ -23,6 +23,9 @@ from app.services.appointment_series_slots import (
     iter_recurring_child_slots,
     validate_recurrent_range,
 )
+from app.services.appointment_whatsapp_events import (
+    resolve_appointment_update_whatsapp_event,
+)
 from app.services.whatsapp_queue import enqueue_whatsapp_appointment_event
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
@@ -296,14 +299,14 @@ async def update_appointment(
     await db.commit()
     await db.refresh(appt)
 
-    if data.get("status") == "cancelado" and old_status != "cancelado":
-        background_tasks.add_task(
-            enqueue_whatsapp_appointment_event, appt.id, "cancelled"
-        )
-    elif (appt.date != old_date or appt.time != old_time) and appt.status != "cancelado":
-        background_tasks.add_task(
-            enqueue_whatsapp_appointment_event, appt.id, "rescheduled"
-        )
+    event = resolve_appointment_update_whatsapp_event(
+        old_status=old_status,
+        new_status=appt.status,
+        status_changed="status" in data,
+        date_or_time_changed=appt.date != old_date or appt.time != old_time,
+    )
+    if event:
+        background_tasks.add_task(enqueue_whatsapp_appointment_event, appt.id, event)
 
     return _to_response(appt, patient.name, professional.name)
 
